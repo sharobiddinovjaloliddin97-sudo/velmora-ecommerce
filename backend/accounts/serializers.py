@@ -197,7 +197,6 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
                 "new_password_confirm": "Parollar bir xil emas."
             })
 
-        print("\n========== PASSWORD RESET DEBUG ==========")
 
         try:
             user_id = force_str(
@@ -222,10 +221,6 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
         ) as error:
 
 
-            print(
-                "==========================================\n"
-            )
-
             raise serializers.ValidationError(
                 "Password reset havolasi yaroqsiz."
             )
@@ -235,10 +230,6 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
             user,
             attrs["token"],
         ):
-
-            print(
-                "==========================================\n"
-            )
 
             raise serializers.ValidationError(
                 "Password reset havolasi yaroqsiz yoki muddati tugagan."
@@ -251,14 +242,6 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
         )
 
         attrs["user"] = user
-
-        print(
-            "RESET TOKEN VALID"
-        )
-
-        print(
-            "==========================================\n"
-        )
 
         return attrs
 

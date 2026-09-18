@@ -1,20 +1,32 @@
-from pathlib import Path
 import os
-from pathlib import Path
-from dotenv import load_dotenv
 from datetime import timedelta
-from corsheaders.defaults import default_headers
+from pathlib import Path
 
+from corsheaders.defaults import default_headers
+from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-load_dotenv(BASE_DIR / ".env")
+load_dotenv(BASE_DIR.parent / ".env")
 
 
-SECRET_KEY = os.environ["SECRET_KEY"]
+SECRET_KEY = os.getenv(
+    "DJANGO_SECRET_KEY",
+    "unsafe-development-key",
+)
 
-DEBUG = os.getenv("DEBUG", "False").lower() == "true"
+DEBUG = os.getenv(
+    "DEBUG",
+    "True",
+).lower() == "true"
 
-ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
+ALLOWED_HOSTS = [
+    host.strip()
+    for host in os.getenv(
+        "ALLOWED_HOSTS",
+        "127.0.0.1,localhost",
+    ).split(",")
+    if host.strip()
+]
 
 
 # Application definition
@@ -53,9 +65,14 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
+    origin.strip()
+    for origin in os.getenv(
+        "CORS_ALLOWED_ORIGINS",
+        "http://localhost:5173,http://127.0.0.1:5173",
+    ).split(",")
+    if origin.strip()
 ]
 
 CORS_ALLOW_CREDENTIALS = True
@@ -64,6 +81,15 @@ CORS_ALLOW_HEADERS = (
     *default_headers,
     "idempotency-key",
 )
+
+CSRF_TRUSTED_ORIGINS = [
+    origin.strip()
+    for origin in os.getenv(
+        "CSRF_TRUSTED_ORIGINS",
+        "http://localhost:5173,http://127.0.0.1:5173",
+    ).split(",")
+    if origin.strip()
+]
 
 ROOT_URLCONF = 'config.urls'
 
@@ -91,8 +117,8 @@ DATABASES = {
         "NAME": os.environ["DB_NAME"],
         "USER": os.environ["DB_USER"],
         "PASSWORD": os.environ["DB_PASSWORD"],
-        "HOST": os.getenv("DB_HOST", "localhost"),
-        "PORT": os.getenv("DB_PORT", "5432"),
+        "HOST": os.environ["DB_HOST"],
+        "PORT": os.environ["DB_PORT"],
     }
 }
 
@@ -166,13 +192,6 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
 
-
-
-REST_FRAMEWORK["DEFAULT_AUTHENTICATION_CLASSES"] = [
-    "rest_framework_simplejwt.authentication.JWTAuthentication",
-]
-
-
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(
         minutes=15
@@ -186,12 +205,18 @@ SIMPLE_JWT = {
 
 
 JWT_REFRESH_COOKIE_NAME = "velmora_refresh"
-JWT_REFRESH_COOKIE_SECURE = False
-JWT_REFRESH_COOKIE_SAMESITE = "Lax"
-JWT_REFRESH_COOKIE_MAX_AGE = 7 * 24 * 60 * 60
-
-
-CORS_ALLOW_CREDENTIALS = True
+JWT_REFRESH_COOKIE_SECURE = (
+    os.getenv(
+        "JWT_REFRESH_COOKIE_SECURE",
+        "False",
+    ).lower()
+    == "true"
+)
+JWT_REFRESH_COOKIE_SAMESITE = os.getenv(
+    "JWT_REFRESH_COOKIE_SAMESITE",
+    "Lax",
+)
+JWT_REFRESH_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
 
 PASSWORD_RESET_TIMEOUT = 30 * 60  # 30 minut
 
