@@ -264,3 +264,8 @@ else:
         "DEFAULT_FROM_EMAIL",
         "no-reply@velmora.local",
     )
+
+SECURE_PROXY_SSL_HEADER = (
+    "HTTP_X_FORWARDED_PROTO",
+    "https",
+)
