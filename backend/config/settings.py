@@ -157,17 +157,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
-
-STORAGES = {
-    "default": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage",
-    },
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-    },
-}
 
 AUTH_USER_MODEL = "accounts.User"
 
@@ -199,8 +190,79 @@ SPECTACULAR_SETTINGS = {
     "DESCRIPTION": "Velmora internet-do'koni REST API",
     "VERSION": "1.0.0",
 }
-MEDIA_URL = "/media/"
+
 MEDIA_ROOT = BASE_DIR / "media"
+
+
+# --- Media storage: local filesystem yoki Supabase (S3-compatible) ---
+
+USE_SUPABASE_STORAGE = (
+    os.getenv(
+        "USE_SUPABASE_STORAGE",
+        "False",
+    ).lower()
+    == "true"
+)
+
+SUPABASE_PUBLIC_MEDIA_URL = os.getenv(
+    "SUPABASE_PUBLIC_MEDIA_URL",
+    "",
+)
+
+if USE_SUPABASE_STORAGE:
+    STORAGES = {
+        "default": {
+            "BACKEND": (
+                "config.storage_backends."
+                "SupabaseMediaStorage"
+            ),
+            "OPTIONS": {
+                "bucket_name": os.environ[
+                    "SUPABASE_STORAGE_BUCKET"
+                ],
+                "access_key": os.environ[
+                    "SUPABASE_S3_ACCESS_KEY_ID"
+                ],
+                "secret_key": os.environ[
+                    "SUPABASE_S3_SECRET_ACCESS_KEY"
+                ],
+                "endpoint_url": os.environ[
+                    "SUPABASE_S3_ENDPOINT_URL"
+                ],
+                "region_name": os.environ[
+                    "SUPABASE_S3_REGION"
+                ],
+                "addressing_style": "path",
+                "signature_version": "s3v4",
+                "file_overwrite": False,
+                "default_acl": None,
+                "querystring_auth": False,
+            },
+        },
+        "staticfiles": {
+            "BACKEND": (
+                "whitenoise.storage."
+                "CompressedManifestStaticFilesStorage"
+            ),
+        },
+    }
+    MEDIA_URL = f"{SUPABASE_PUBLIC_MEDIA_URL.rstrip('/')}/"
+else:
+    STORAGES = {
+        "default": {
+            "BACKEND": (
+                "django.core.files.storage."
+                "FileSystemStorage"
+            ),
+        },
+        "staticfiles": {
+            "BACKEND": (
+                "whitenoise.storage."
+                "CompressedManifestStaticFilesStorage"
+            ),
+        },
+    }
+    MEDIA_URL = "/media/"
 
 
 SIMPLE_JWT = {
