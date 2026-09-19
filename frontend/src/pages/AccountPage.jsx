@@ -9,6 +9,8 @@ import {
 
 import api from "../api/client";
 
+import PasswordInput from "../components/PasswordInput";
+
 import {
   useAuth,
 } from "../context/AuthContext";
@@ -602,7 +604,10 @@ function AccountPage() {
 
             <div className="md:col-span-2">
 
-              <label className="mb-2 block text-sm font-medium">
+              <label
+                htmlFor="old_password"
+                className="mb-2 block text-sm font-medium"
+              >
 
                 {language === "ru"
                   ? "Текущий пароль"
@@ -610,9 +615,9 @@ function AccountPage() {
 
               </label>
 
-              <input
+              <PasswordInput
+                id="old_password"
                 name="old_password"
-                type="password"
                 required
                 autoComplete="current-password"
                 value={
@@ -621,7 +626,17 @@ function AccountPage() {
                 onChange={
                   handlePasswordChange
                 }
-                className="w-full rounded-xl border border-stone-300 px-4 py-3"
+                showLabel={
+                  language === "ru"
+                    ? "Показать пароль"
+                    : "Parolni ko‘rsatish"
+                }
+                hideLabel={
+                  language === "ru"
+                    ? "Скрыть пароль"
+                    : "Parolni yashirish"
+                }
+                className="rounded-xl border border-stone-300 px-4 py-3 outline-none transition focus:border-[#173f35]"
               />
 
             </div>
@@ -629,7 +644,10 @@ function AccountPage() {
 
             <div>
 
-              <label className="mb-2 block text-sm font-medium">
+              <label
+                htmlFor="new_password"
+                className="mb-2 block text-sm font-medium"
+              >
 
                 {language === "ru"
                   ? "Новый пароль"
@@ -637,9 +655,9 @@ function AccountPage() {
 
               </label>
 
-              <input
+              <PasswordInput
+                id="new_password"
                 name="new_password"
-                type="password"
                 required
                 autoComplete="new-password"
                 value={
@@ -648,7 +666,17 @@ function AccountPage() {
                 onChange={
                   handlePasswordChange
                 }
-                className="w-full rounded-xl border border-stone-300 px-4 py-3"
+                showLabel={
+                  language === "ru"
+                    ? "Показать пароль"
+                    : "Parolni ko‘rsatish"
+                }
+                hideLabel={
+                  language === "ru"
+                    ? "Скрыть пароль"
+                    : "Parolni yashirish"
+                }
+                className="rounded-xl border border-stone-300 px-4 py-3 outline-none transition focus:border-[#173f35]"
               />
 
             </div>
@@ -656,7 +684,10 @@ function AccountPage() {
 
             <div>
 
-              <label className="mb-2 block text-sm font-medium">
+              <label
+                htmlFor="new_password_confirm"
+                className="mb-2 block text-sm font-medium"
+              >
 
                 {language === "ru"
                   ? "Подтвердите пароль"
@@ -664,9 +695,9 @@ function AccountPage() {
 
               </label>
 
-              <input
+              <PasswordInput
+                id="new_password_confirm"
                 name="new_password_confirm"
-                type="password"
                 required
                 autoComplete="new-password"
                 value={
@@ -675,7 +706,17 @@ function AccountPage() {
                 onChange={
                   handlePasswordChange
                 }
-                className="w-full rounded-xl border border-stone-300 px-4 py-3"
+                showLabel={
+                  language === "ru"
+                    ? "Показать пароль"
+                    : "Parolni ko‘rsatish"
+                }
+                hideLabel={
+                  language === "ru"
+                    ? "Скрыть пароль"
+                    : "Parolni yashirish"
+                }
+                className="rounded-xl border border-stone-300 px-4 py-3 outline-none transition focus:border-[#173f35]"
               />
 
             </div>
@@ -881,7 +922,7 @@ function AccountPage() {
                               "uz-UZ"
                             )} so‘m`
                           : language ===
-                              "ru"
+                            "ru"
                             ? "Цена недоступна"
                             : "Narx mavjud emas"}
 
