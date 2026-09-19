@@ -331,6 +331,20 @@ SECURE_PROXY_SSL_HEADER = (
     "HTTP_X_FORWARDED_PROTO",
     "https",
 )
+
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True
+
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+
+    X_FRAME_OPTIONS = "DENY"
+
+    # HSTS'ni avval qisqa muddat bilan boshlaymiz
+    SECURE_HSTS_SECONDS = 3600
+
 BREVO_API_KEY = os.getenv("BREVO_API_KEY", "")
 
 BREVO_SENDER_EMAIL = os.getenv(
