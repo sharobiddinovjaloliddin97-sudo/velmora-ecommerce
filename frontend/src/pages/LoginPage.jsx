@@ -6,6 +6,7 @@ import {
   useNavigate,
 } from "react-router-dom";
 
+import PasswordInput from "../components/PasswordInput";
 import { useAuth } from "../context/AuthContext";
 import { useLanguage } from "../context/LanguageContext";
 
@@ -117,6 +118,7 @@ function LoginPage() {
 
 
             <div>
+
               <div className="mb-2 flex items-center justify-between gap-4">
 
                 <label
@@ -139,17 +141,28 @@ function LoginPage() {
 
               </div>
 
-              <input
+
+              <PasswordInput
                 id="password"
-                type="password"
                 required
                 autoComplete="current-password"
                 value={password}
                 onChange={(event) =>
                   setPassword(event.target.value)
                 }
-                className="w-full rounded-xl border border-stone-300 px-4 py-3 outline-none transition focus:border-[#173f35]"
+                showLabel={
+                  language === "ru"
+                    ? "Показать пароль"
+                    : "Parolni ko‘rsatish"
+                }
+                hideLabel={
+                  language === "ru"
+                    ? "Скрыть пароль"
+                    : "Parolni yashirish"
+                }
+                className="rounded-xl border border-stone-300 px-4 py-3 outline-none transition focus:border-[#173f35]"
               />
+
             </div>
 
 
@@ -195,6 +208,7 @@ function LoginPage() {
           </div>
 
         </div>
+
       </div>
 
     </div>
