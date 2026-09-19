@@ -1,7 +1,8 @@
 from django.db import models
 from django.db.models import Q
 from django.conf import settings
-
+from django.db import models, transaction
+from django.db.models import Q
 
 class Category(models.Model):
     name_uz = models.CharField(max_length=150)
@@ -68,27 +69,49 @@ class ProductImage(models.Model):
         on_delete=models.CASCADE,
         related_name="images",
     )
-
     image = models.ImageField(
         upload_to="products/%Y/%m/"
     )
+    is_primary = models.BooleanField(
+        default=False
+    )
 
     alt_text_uz = models.CharField(
-        max_length=200,
+        max_length=255,
         blank=True,
     )
 
     alt_text_ru = models.CharField(
-        max_length=200,
+        max_length=255,
         blank=True,
     )
 
-    is_primary = models.BooleanField(default=False)
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
 
-    created_at = models.DateTimeField(auto_now_add=True)
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["product"],
+                condition=Q(is_primary=True),
+                name="unique_primary_image_per_product",
+            )
+        ]
 
-    def __str__(self):
-        return f"{self.product.name_uz} image"
+    def save(self, *args, **kwargs):
+        with transaction.atomic():
+            if self.is_primary and self.product_id:
+                ProductImage.objects.filter(
+                    product_id=self.product_id,
+                    is_primary=True,
+                ).exclude(
+                    pk=self.pk
+                ).update(
+                    is_primary=False
+                )
+
+            super().save(*args, **kwargs)
 
 
 class ProductVariant(models.Model):

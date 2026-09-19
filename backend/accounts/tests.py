@@ -6,7 +6,7 @@ from django.utils.http import urlsafe_base64_encode
 
 from rest_framework import status
 from rest_framework.test import APITestCase
-
+from unittest.mock import patch
 
 User = get_user_model()
 
@@ -192,13 +192,17 @@ class AuthenticationTests(APITestCase):
             )
         )
 
-    def test_password_reset_request(self):
+    @patch("accounts.views.send_brevo_email")
+    def test_password_reset_request(
+            self,
+            mock_send_brevo_email,
+    ):
         url = reverse("password-reset")
 
         response = self.client.post(
             url,
             {
-                "email": "user@test.com"
+                "email": self.user.email,
             },
             format="json",
         )
@@ -207,6 +211,8 @@ class AuthenticationTests(APITestCase):
             response.status_code,
             status.HTTP_200_OK,
         )
+
+        mock_send_brevo_email.assert_called_once()
 
     def test_password_reset_confirm_changes_password(self):
         uid = urlsafe_base64_encode(
@@ -289,3 +295,4 @@ class AuthenticationTests(APITestCase):
             second_response.status_code,
             status.HTTP_400_BAD_REQUEST,
         )
+
