@@ -90,14 +90,6 @@ class ProductImage(models.Model):
         auto_now_add=True
     )
 
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                fields=["product"],
-                condition=Q(is_primary=True),
-                name="unique_primary_image_per_product",
-            )
-        ]
 
     def save(self, *args, **kwargs):
         with transaction.atomic():
