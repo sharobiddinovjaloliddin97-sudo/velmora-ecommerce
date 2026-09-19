@@ -331,3 +331,14 @@ SECURE_PROXY_SSL_HEADER = (
     "HTTP_X_FORWARDED_PROTO",
     "https",
 )
+BREVO_API_KEY = os.getenv("BREVO_API_KEY", "")
+
+BREVO_SENDER_EMAIL = os.getenv(
+    "BREVO_SENDER_EMAIL",
+    "",
+)
+
+BREVO_SENDER_NAME = os.getenv(
+    "BREVO_SENDER_NAME",
+    "Velmora",
+)

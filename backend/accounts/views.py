@@ -23,7 +23,7 @@ from .serializers import (
 )
 from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
-from django.core.mail import send_mail
+from accounts.services.email_service import send_brevo_email
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 User = get_user_model()
@@ -278,17 +278,16 @@ class PasswordResetRequestView(APIView):
                 f"&token={token}"
             )
 
-            send_mail(
+            send_brevo_email(
+                to_email=user.email,
                 subject="Velmora — parolni tiklash",
-                message=(
-                    "Parolingizni tiklash uchun havola:\n\n"
+                text_content=(
+                    "Velmora hisobingiz parolini tiklash uchun "
+                    "quyidagi havolani oching:\n\n"
                     f"{reset_url}\n\n"
-                    "Agar bu so'rovni siz yubormagan bo'lsangiz, "
-                    "xabarni e'tiborsiz qoldiring."
+                    "Agar bu so‘rovni siz yubormagan bo‘lsangiz, "
+                    "ushbu xabarni e’tiborsiz qoldiring."
                 ),
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[user.email],
-                fail_silently=False,
             )
 
         # User mavjud yoki yo'qligini tashqariga oshkor qilmaymiz
