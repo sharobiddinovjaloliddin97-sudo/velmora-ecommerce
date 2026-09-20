@@ -19,6 +19,10 @@ import {
   useLanguage,
 } from "../context/LanguageContext";
 
+import {
+  getOrderStatusLabel,
+} from "../utils/orderLabels";
+
 
 function AccountPage() {
   const {
@@ -831,9 +835,10 @@ function AccountPage() {
                       <div className="text-right">
 
                         <p className="font-medium">
-                          {
-                            order.status_display
-                          }
+                          {getOrderStatusLabel(
+                            order.status,
+                            language
+                          )}
                         </p>
 
                         <p className="mt-1 text-sm text-stone-500">

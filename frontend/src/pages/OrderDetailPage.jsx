@@ -14,6 +14,12 @@ import {
   useLanguage,
 } from "../context/LanguageContext";
 
+import {
+  getOrderStatusLabel,
+  getPaymentMethodLabel,
+  getPaymentStatusLabel,
+} from "../utils/orderLabels";
+
 
 function OrderDetailPage() {
   const { id } =
@@ -169,9 +175,10 @@ function OrderDetailPage() {
               </p>
 
               <p className="mt-1 font-medium">
-                {
-                  order.status_display
-                }
+                {getOrderStatusLabel(
+                  order.status,
+                  language
+                )}
               </p>
 
             </div>
@@ -186,9 +193,18 @@ function OrderDetailPage() {
               </p>
 
               <p className="mt-1 font-medium">
-                {
-                  order.payment_status_display
-                }
+                {getPaymentStatusLabel(
+                  order.payment_status,
+                  language
+                )}
+                {order.payment_method && (
+                  <span className="block text-xs font-normal text-stone-500">
+                    {getPaymentMethodLabel(
+                      order.payment_method,
+                      language
+                    )}
+                  </span>
+                )}
               </p>
 
             </div>

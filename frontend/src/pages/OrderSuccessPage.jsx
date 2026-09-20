@@ -8,6 +8,12 @@ import {
   useLanguage,
 } from "../context/LanguageContext";
 
+import {
+  getOrderStatusLabel,
+  getPaymentMethodLabel,
+  getPaymentStatusLabel,
+} from "../utils/orderLabels";
+
 
 function OrderSuccessPage() {
   const location =
@@ -64,41 +70,74 @@ function OrderSuccessPage() {
 
           <div className="mt-8 rounded-2xl bg-[#f8f5ef] p-6 text-left">
 
-            {/* NUMBER */}
+            {/* ORDER NUMBER */}
             <div className="flex justify-between gap-4">
 
               <span className="text-stone-500">
-
                 {language === "ru"
                   ? "Номер заказа"
                   : "Buyurtma raqami"}
-
               </span>
 
               <strong className="text-[#173f35]">
-                {
-                  order.order_number
-                }
+                {order.order_number}
               </strong>
 
             </div>
 
 
-            {/* STATUS */}
+            {/* ORDER STATUS */}
             <div className="mt-4 flex justify-between gap-4">
 
               <span className="text-stone-500">
-
                 {language === "ru"
-                  ? "Статус"
-                  : "Holat"}
+                  ? "Статус заказа"
+                  : "Buyurtma holati"}
+              </span>
 
+              <span className="font-medium">
+                {getOrderStatusLabel(
+                  order.status,
+                  language
+                )}
+              </span>
+
+            </div>
+
+
+            {/* PAYMENT STATUS */}
+            <div className="mt-4 flex justify-between gap-4">
+
+              <span className="text-stone-500">
+                {language === "ru"
+                  ? "Статус оплаты"
+                  : "To‘lov holati"}
+              </span>
+
+              <span className="font-medium">
+                {getPaymentStatusLabel(
+                  order.payment_status,
+                  language
+                )}
+              </span>
+
+            </div>
+
+
+            {/* PAYMENT METHOD */}
+            <div className="mt-4 flex justify-between gap-4">
+
+              <span className="text-stone-500">
+                {language === "ru"
+                  ? "Способ оплаты"
+                  : "To‘lov usuli"}
               </span>
 
               <span>
-                {
-                  order.status_display
-                }
+                {getPaymentMethodLabel(
+                  order.payment_method,
+                  language
+                )}
               </span>
 
             </div>
@@ -108,22 +147,18 @@ function OrderSuccessPage() {
             <div className="mt-4 flex justify-between gap-4">
 
               <span className="text-stone-500">
-
                 {language === "ru"
                   ? "Итого"
                   : "Jami"}
-
               </span>
 
               <strong>
-
                 {Number(
                   order.total_amount
                 ).toLocaleString(
                   "uz-UZ"
                 )}{" "}
                 so‘m
-
               </strong>
 
             </div>
@@ -133,41 +168,15 @@ function OrderSuccessPage() {
             <div className="mt-4 flex justify-between gap-4">
 
               <span className="text-stone-500">
-
                 {language === "ru"
                   ? "Доставка"
                   : "Yetkazib berish"}
-
               </span>
 
               <span className="text-green-700">
-
                 {language === "ru"
                   ? "Бесплатно"
                   : "Bepul"}
-
-              </span>
-
-            </div>
-
-
-            {/* PAYMENT */}
-            <div className="mt-4 flex justify-between gap-4">
-
-              <span className="text-stone-500">
-
-                {language === "ru"
-                  ? "Оплата"
-                  : "To‘lov"}
-
-              </span>
-
-              <span>
-
-                {language === "ru"
-                  ? "Наличными при получении"
-                  : "Qabul qilganda naqd"}
-
               </span>
 
             </div>
@@ -190,11 +199,9 @@ function OrderSuccessPage() {
               to="/account"
               className="rounded-full bg-[#173f35] px-6 py-3 font-medium text-white"
             >
-
               {language === "ru"
                 ? "Мои заказы"
                 : "Buyurtmalarim"}
-
             </Link>
 
 
@@ -202,11 +209,9 @@ function OrderSuccessPage() {
               to="/catalog"
               className="rounded-full border border-[#173f35] px-6 py-3 font-medium text-[#173f35]"
             >
-
               {language === "ru"
                 ? "Продолжить покупки"
                 : "Xaridni davom ettirish"}
-
             </Link>
 
           </div>
