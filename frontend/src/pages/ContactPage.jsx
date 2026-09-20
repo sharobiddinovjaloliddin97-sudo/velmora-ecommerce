@@ -103,21 +103,21 @@ function ContactPage() {
   return (
     <div className="min-h-screen bg-[#f8f5ef]">
 
-      <div className="mx-auto max-w-7xl px-6 py-16">
+      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-16">
 
         <div className="max-w-2xl">
 
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#52796f]">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#52796f] sm:text-sm">
             Velmora
           </p>
 
-          <h1 className="mt-3 text-5xl font-semibold text-[#173f35]">
+          <h1 className="mt-2 text-3xl font-semibold text-[#173f35] sm:mt-3 sm:text-5xl">
             {language === "ru"
               ? "Контакты"
               : "Aloqa"}
           </h1>
 
-          <p className="mt-5 leading-8 text-stone-600">
+          <p className="mt-3 text-sm leading-7 text-stone-600 sm:mt-5 sm:text-base sm:leading-8">
             {language === "ru"
               ? "Если у вас есть вопрос по товару или заказу, заполните форму ниже."
               : "Mahsulot yoki buyurtma bo‘yicha savolingiz bo‘lsa, quyidagi formani to‘ldiring."}
@@ -126,12 +126,12 @@ function ContactPage() {
         </div>
 
 
-        <div className="mt-12 grid gap-8 lg:grid-cols-[1fr_380px]">
+        <div className="mt-8 grid gap-6 sm:mt-12 sm:gap-8 lg:grid-cols-[1fr_380px]">
 
           {/* FORM */}
           <form
             onSubmit={handleSubmit}
-            className="rounded-[30px] bg-white p-7 shadow-sm"
+            className="rounded-2xl bg-white p-5 shadow-sm sm:rounded-[30px] sm:p-7"
           >
 
             <div className="space-y-5">
@@ -265,7 +265,7 @@ function ContactPage() {
             <button
               type="submit"
               disabled={submitting}
-              className="mt-6 rounded-full bg-[#173f35] px-7 py-3.5 font-medium text-white transition hover:bg-[#245448] disabled:cursor-not-allowed disabled:opacity-50"
+              className="mt-6 w-full rounded-full bg-[#173f35] px-7 py-3.5 font-medium text-white transition hover:bg-[#245448] disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
             >
               {submitting
                 ? language === "ru"
@@ -280,9 +280,9 @@ function ContactPage() {
 
 
           {/* INFO */}
-          <aside className="h-fit rounded-[30px] bg-[#173f35] p-7 text-white">
+          <aside className="h-fit rounded-2xl bg-[#173f35] p-5 text-white sm:rounded-[30px] sm:p-7">
 
-            <h2 className="text-2xl font-semibold">
+            <h2 className="text-xl font-semibold sm:text-2xl">
               {language === "ru"
                 ? "Информация"
                 : "Ma’lumot"}

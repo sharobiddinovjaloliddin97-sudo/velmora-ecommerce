@@ -385,7 +385,7 @@ function ProductDetailsPage() {
   return (
     <div className="bg-[#f8f5ef]">
 
-      <div className="mx-auto max-w-7xl px-6 py-12">
+      <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-12">
 
         {/* BACK */}
         <Link
@@ -399,7 +399,7 @@ function ProductDetailsPage() {
         </Link>
 
 
-        <div className="mt-8 grid gap-12 lg:grid-cols-2">
+        <div className="mt-6 grid gap-8 sm:mt-8 lg:grid-cols-2 lg:gap-12">
 
           {/* ========================= */}
           {/* IMAGES */}
@@ -407,7 +407,7 @@ function ProductDetailsPage() {
 
           <div>
 
-            <div className="aspect-[4/5] overflow-hidden rounded-[32px] bg-[#eee9df]">
+            <div className="aspect-[4/3] overflow-hidden rounded-2xl bg-[#eee9df] sm:aspect-[4/5] sm:rounded-[32px]">
 
               {selectedImage ? (
                 <img
@@ -435,7 +435,7 @@ function ProductDetailsPage() {
             {product.images?.length >
               1 && (
 
-              <div className="mt-4 grid grid-cols-4 gap-3">
+              <div className="mt-3 grid grid-cols-4 gap-2 sm:mt-4 sm:gap-3">
 
                 {product.images.map(
                   (image) => (
@@ -485,7 +485,7 @@ function ProductDetailsPage() {
 
           <div>
 
-            <p className="text-sm font-medium text-[#52796f]">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#52796f] sm:text-sm">
               {
                 product.category
                   ?.name
@@ -494,9 +494,9 @@ function ProductDetailsPage() {
 
 
             {/* TITLE */}
-            <div className="mt-3 flex items-start justify-between gap-5">
+            <div className="mt-2 flex items-start justify-between gap-4 sm:mt-3 sm:gap-5">
 
-              <h1 className="text-4xl font-semibold leading-tight text-[#173f35]">
+              <h1 className="text-2xl font-semibold leading-tight text-[#173f35] break-words sm:text-3xl lg:text-4xl">
                 {
                   product.name
                 }
@@ -517,7 +517,7 @@ function ProductDetailsPage() {
                       ? "Добавить в избранное"
                       : "Sevimliga qo‘shish"
                 }
-                className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-stone-200 bg-white text-2xl text-[#173f35] shadow-sm transition hover:scale-105"
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-stone-200 bg-white text-xl text-[#173f35] shadow-sm transition hover:scale-105 sm:h-12 sm:w-12 sm:text-2xl"
               >
                 {favorite
                   ? "♥"
@@ -529,7 +529,7 @@ function ProductDetailsPage() {
 
             {/* DESCRIPTION */}
             {product.description && (
-              <p className="mt-5 leading-7 text-stone-600">
+              <p className="mt-4 text-sm leading-7 text-stone-600 sm:mt-5 sm:text-base">
                 {
                   product.description
                 }
@@ -538,9 +538,9 @@ function ProductDetailsPage() {
 
 
             {/* PRICE */}
-            <div className="mt-8">
+            <div className="mt-6 sm:mt-8">
 
-              <p className="text-sm font-medium text-stone-600">
+              <p className="text-xs font-medium text-stone-500 sm:text-sm">
 
                 {language === "ru"
                   ? "Цена"
@@ -549,7 +549,7 @@ function ProductDetailsPage() {
               </p>
 
 
-              <p className="mt-1 text-3xl font-semibold text-[#173f35]">
+              <p className="mt-1 text-2xl font-semibold text-[#173f35] break-words sm:text-3xl">
 
                 {selectedVariant
                   ? `${Number(
@@ -566,94 +566,54 @@ function ProductDetailsPage() {
             </div>
 
 
-            {/* VARIANT */}
-            <div className="mt-8">
+            {/* VARIANT BUTTONS */}
+            <div className="mt-6 sm:mt-8">
 
               <label
-                htmlFor="variant"
-                className="mb-2 block font-medium text-stone-700"
+                className="mb-2 block text-sm font-medium text-stone-700"
               >
                 {language === "ru"
                   ? "Цвет и размер"
                   : "Rang va o‘lcham"}
               </label>
 
+              <div className="flex flex-wrap gap-2 sm:gap-2.5">
+                {product.variants?.map((variant) => {
+                  const isSelected = selectedVariantId === String(variant.id);
+                  const isOutOfStock = !variant.is_active || variant.stock <= 0;
 
-              <select
-                id="variant"
-                value={
-                  selectedVariantId
-                }
-                onChange={(
-                  event
-                ) => {
-
-                  setSelectedVariantId(
-                    event.target
-                      .value
-                  );
-
-                  setQuantity(1);
-
-                  setError("");
-                  setSuccess("");
-                }}
-                className="w-full rounded-xl border border-stone-300 bg-white px-4 py-3 outline-none transition focus:border-[#173f35]"
-              >
-
-                <option value="">
-
-                  {language === "ru"
-                    ? "Выберите вариант"
-                    : "Variantni tanlang"}
-
-                </option>
-
-
-                {product.variants?.map(
-                  (variant) => (
-
-                    <option
-                      key={
-                        variant.id
-                      }
-                      value={
-                        variant.id
-                      }
-                      disabled={
-                        !variant.is_active ||
-                        variant.stock <=
-                          0
-                      }
+                  return (
+                    <button
+                      key={variant.id}
+                      type="button"
+                      disabled={isOutOfStock}
+                      onClick={() => {
+                        setSelectedVariantId(String(variant.id));
+                        setQuantity(1);
+                        setError("");
+                        setSuccess("");
+                      }}
+                      className={`rounded-xl px-3.5 py-2.5 text-xs sm:text-sm font-medium transition ${
+                        isSelected
+                          ? "bg-[#173f35] text-white shadow"
+                          : isOutOfStock
+                            ? "border border-stone-200 bg-stone-100 text-stone-400 line-through cursor-not-allowed"
+                            : "border border-stone-300 bg-white text-stone-700 hover:border-[#173f35]"
+                      }`}
                     >
-
-                      {variant.color}
-                      {" — "}
-                      {variant.size}
-                      {" — "}
-
-                      {Number(
-                        variant.price
-                      ).toLocaleString(
-                        "uz-UZ"
+                      {variant.color} · {variant.size}
+                      <span className="ml-1.5 opacity-80">
+                        ({Number(variant.price).toLocaleString("uz-UZ")} so‘m)
+                      </span>
+                      {isOutOfStock && (
+                        <span className="ml-1 text-[11px] text-red-500">
+                          {language === "ru" ? "нет" : "yo‘q"}
+                        </span>
                       )}
-
-                      {" so‘m"}
-
-                      {variant.stock <=
-                      0
-                        ? language ===
-                          "ru"
-                          ? " — Нет в наличии"
-                          : " — Tugagan"
-                        : ""}
-
-                    </option>
-
-                  )
-                )}
-
-              </select>
+                    </button>
+                  );
+                })}
+              </div>
 
             </div>
 

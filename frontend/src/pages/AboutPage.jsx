@@ -11,20 +11,20 @@ function AboutPage() {
 
       {/* HERO */}
       <section className="bg-[#eee7da]">
-        <div className="mx-auto grid max-w-7xl gap-10 px-6 py-20 lg:grid-cols-2 lg:items-center">
+        <div className="mx-auto grid max-w-7xl gap-8 px-4 py-10 sm:px-6 sm:py-16 md:py-20 lg:grid-cols-2 lg:items-center">
 
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#52796f]">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#52796f] sm:text-sm">
               Velmora
             </p>
 
-            <h1 className="mt-4 text-5xl font-semibold leading-tight text-[#173f35]">
+            <h1 className="mt-3 text-3xl font-semibold leading-tight text-[#173f35] break-words sm:mt-4 sm:text-5xl">
               {language === "ru"
                 ? "Уют начинается с деталей"
                 : "Shinamlik detallardan boshlanadi"}
             </h1>
 
-            <p className="mt-6 max-w-xl text-lg leading-8 text-stone-600">
+            <p className="mt-4 max-w-xl text-base leading-7 text-stone-600 sm:mt-6 sm:text-lg sm:leading-8">
               {language === "ru"
                 ? "Velmora предлагает практичный и эстетичный домашний текстиль для комфортной атмосферы в вашем доме."
                 : "Velmora uyingizda qulay va shinam muhit yaratish uchun amaliy hamda estetik uy tekstili mahsulotlarini taklif qiladi."}
@@ -32,17 +32,17 @@ function AboutPage() {
           </div>
 
 
-          <div className="min-h-[420px] rounded-[40px] bg-gradient-to-br from-[#d6ccbc] via-[#f5efe5] to-[#a7b6aa] p-8">
+          <div className="min-h-[260px] rounded-3xl bg-gradient-to-br from-[#d6ccbc] via-[#f5efe5] to-[#a7b6aa] p-5 sm:min-h-[420px] sm:rounded-[40px] sm:p-8">
 
             <div className="flex h-full items-end">
 
-              <div className="max-w-sm rounded-[28px] bg-white/80 p-6 backdrop-blur">
+              <div className="w-full max-w-sm rounded-2xl bg-white/85 p-4 shadow-sm backdrop-blur sm:rounded-[28px] sm:p-6">
 
-                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#52796f]">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#52796f] sm:text-sm">
                   Velmora Home
                 </p>
 
-                <p className="mt-3 text-2xl font-semibold leading-snug text-[#173f35]">
+                <p className="mt-2 text-xl font-semibold leading-snug text-[#173f35] sm:mt-3 sm:text-2xl">
                   {language === "ru"
                     ? "Красота и комфорт для вашего дома"
                     : "Uyingiz uchun go‘zallik va qulaylik"}
@@ -61,17 +61,17 @@ function AboutPage() {
       {/* VALUES */}
       <section className="bg-[#fffdf8]">
 
-        <div className="mx-auto max-w-7xl px-6 py-20">
+        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-20">
 
           <div className="max-w-2xl">
 
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#52796f]">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#52796f] sm:text-sm">
               {language === "ru"
                 ? "Наш подход"
                 : "Bizning yondashuvimiz"}
             </p>
 
-            <h2 className="mt-3 text-4xl font-semibold text-[#173f35]">
+            <h2 className="mt-2 text-2xl font-semibold text-[#173f35] sm:mt-3 sm:text-4xl">
               {language === "ru"
                 ? "Просто, удобно и красиво"
                 : "Sodda, qulay va chiroyli"}
@@ -80,17 +80,17 @@ function AboutPage() {
           </div>
 
 
-          <div className="mt-10 grid gap-6 md:grid-cols-3">
+          <div className="mt-8 grid gap-4 sm:gap-6 grid-cols-1 md:grid-cols-3">
 
-            <div className="rounded-[28px] border border-stone-200 bg-white p-7">
+            <div className="rounded-2xl border border-stone-200 bg-white p-5 sm:rounded-[28px] sm:p-7">
 
-              <h3 className="text-xl font-semibold text-[#173f35]">
+              <h3 className="text-lg font-semibold text-[#173f35] sm:text-xl">
                 {language === "ru"
                   ? "Комфорт"
                   : "Qulaylik"}
               </h3>
 
-              <p className="mt-3 leading-7 text-stone-600">
+              <p className="mt-2 text-sm leading-6 text-stone-600 sm:mt-3 sm:text-base sm:leading-7">
                 {language === "ru"
                   ? "Товары для повседневного комфортного использования."
                   : "Kundalik hayotda qulay foydalanishga mos mahsulotlar."}
@@ -99,15 +99,15 @@ function AboutPage() {
             </div>
 
 
-            <div className="rounded-[28px] border border-stone-200 bg-white p-7">
+            <div className="rounded-2xl border border-stone-200 bg-white p-5 sm:rounded-[28px] sm:p-7">
 
-              <h3 className="text-xl font-semibold text-[#173f35]">
+              <h3 className="text-lg font-semibold text-[#173f35] sm:text-xl">
                 {language === "ru"
                   ? "Эстетика"
                   : "Estetika"}
               </h3>
 
-              <p className="mt-3 leading-7 text-stone-600">
+              <p className="mt-2 text-sm leading-6 text-stone-600 sm:mt-3 sm:text-base sm:leading-7">
                 {language === "ru"
                   ? "Спокойный дизайн, который легко вписывается в интерьер."
                   : "Interyerga oson mos tushadigan sokin va chiroyli dizayn."}
@@ -116,15 +116,15 @@ function AboutPage() {
             </div>
 
 
-            <div className="rounded-[28px] border border-stone-200 bg-white p-7">
+            <div className="rounded-2xl border border-stone-200 bg-white p-5 sm:rounded-[28px] sm:p-7">
 
-              <h3 className="text-xl font-semibold text-[#173f35]">
+              <h3 className="text-lg font-semibold text-[#173f35] sm:text-xl">
                 {language === "ru"
                   ? "Удобная покупка"
                   : "Qulay xarid"}
               </h3>
 
-              <p className="mt-3 leading-7 text-stone-600">
+              <p className="mt-2 text-sm leading-6 text-stone-600 sm:mt-3 sm:text-base sm:leading-7">
                 {language === "ru"
                   ? "Простой выбор товара, оформление заказа и доставка."
                   : "Mahsulot tanlash, buyurtma berish va yetkazib berish jarayoni sodda."}
@@ -142,17 +142,17 @@ function AboutPage() {
       {/* DELIVERY */}
       <section className="bg-[#173f35] text-white">
 
-        <div className="mx-auto grid max-w-7xl gap-10 px-6 py-20 lg:grid-cols-2">
+        <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:px-6 sm:py-20 lg:grid-cols-2">
 
           <div>
 
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#b8c9c0]">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#b8c9c0] sm:text-sm">
               {language === "ru"
                 ? "Доставка"
                 : "Yetkazib berish"}
             </p>
 
-            <h2 className="mt-4 text-4xl font-semibold leading-tight">
+            <h2 className="mt-3 text-2xl font-semibold leading-tight sm:mt-4 sm:text-4xl">
               {language === "ru"
                 ? "Бесплатная доставка по Ташкенту"
                 : "Toshkent bo‘ylab bepul yetkazib berish"}
@@ -185,9 +185,9 @@ function AboutPage() {
       {/* CTA */}
       <section className="bg-[#fffdf8]">
 
-        <div className="mx-auto max-w-7xl px-6 py-20 text-center">
+        <div className="mx-auto max-w-7xl px-4 py-12 text-center sm:px-6 sm:py-20">
 
-          <h2 className="text-4xl font-semibold text-[#173f35]">
+          <h2 className="text-2xl font-semibold text-[#173f35] sm:text-4xl">
             {language === "ru"
               ? "Найдите товар для своего дома"
               : "Uyingiz uchun mos mahsulotni toping"}
@@ -195,7 +195,7 @@ function AboutPage() {
 
           <Link
             to="/catalog"
-            className="mt-8 inline-block rounded-full bg-[#173f35] px-8 py-4 font-medium text-white transition hover:bg-[#245448]"
+            className="mt-6 inline-block w-full rounded-full bg-[#173f35] px-8 py-4 font-medium text-white transition hover:bg-[#245448] sm:mt-8 sm:w-auto"
           >
             {language === "ru"
               ? "Перейти в каталог"

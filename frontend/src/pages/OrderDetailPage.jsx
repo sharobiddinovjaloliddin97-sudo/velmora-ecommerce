@@ -132,7 +132,7 @@ function OrderDetailPage() {
   return (
     <div className="min-h-screen bg-[#f8f5ef]">
 
-      <div className="mx-auto max-w-4xl px-6 py-12">
+      <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 sm:py-12">
 
         <Link
           to="/account"
@@ -145,9 +145,9 @@ function OrderDetailPage() {
         </Link>
 
 
-        <div className="mt-6 rounded-[30px] bg-white p-7 shadow-sm">
+        <div className="mt-6 rounded-2xl bg-white p-5 shadow-sm sm:rounded-[30px] sm:p-7">
 
-          <p className="text-sm font-medium text-[#52796f]">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#52796f] sm:text-sm">
 
             {language === "ru"
               ? "Заказ"
@@ -156,7 +156,7 @@ function OrderDetailPage() {
           </p>
 
 
-          <h1 className="mt-2 text-3xl font-semibold text-[#173f35]">
+          <h1 className="mt-2 text-2xl font-semibold text-[#173f35] break-words sm:text-3xl">
             {
               order.order_number
             }
@@ -164,7 +164,7 @@ function OrderDetailPage() {
 
 
           {/* ORDER INFO */}
-          <div className="mt-7 grid gap-5 rounded-2xl bg-[#f8f5ef] p-5 sm:grid-cols-2">
+          <div className="mt-6 grid gap-3 rounded-2xl bg-[#f8f5ef] p-4 sm:mt-7 sm:gap-5 sm:p-5 sm:grid-cols-2">
 
             <div>
 
@@ -375,12 +375,12 @@ function OrderDetailPage() {
                     key={
                       item.id
                     }
-                    className="flex flex-wrap justify-between gap-5 border-b border-stone-100 pb-4"
+                    className="flex flex-wrap items-start justify-between gap-3 border-b border-stone-100 pb-4"
                   >
 
-                    <div>
+                    <div className="min-w-0 flex-1">
 
-                      <p className="font-medium">
+                      <p className="font-medium text-[#173f35] break-words">
                         {
                           item.product_name
                         }
@@ -443,7 +443,7 @@ function OrderDetailPage() {
 
 
             {/* TOTAL */}
-            <div className="mt-6 flex justify-between gap-5 text-xl font-semibold">
+            <div className="mt-6 flex flex-wrap items-center justify-between gap-4 text-lg font-semibold sm:text-xl">
 
               <span>
                 {language === "ru"
@@ -451,7 +451,7 @@ function OrderDetailPage() {
                   : "Jami"}
               </span>
 
-              <span className="text-[#173f35]">
+              <span className="text-[#173f35] break-words">
 
                 {Number(
                   order.total_amount

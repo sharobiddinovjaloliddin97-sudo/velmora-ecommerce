@@ -12,7 +12,7 @@ function Footer() {
   return (
     <footer className="bg-[#102f28] text-white">
 
-      <div className="mx-auto grid max-w-7xl gap-10 px-6 py-14 md:grid-cols-3">
+      <div className="mx-auto grid max-w-7xl gap-8 px-4 py-10 sm:gap-10 sm:px-6 sm:py-14 md:grid-cols-3">
 
         {/* BRAND */}
         <div>
@@ -24,7 +24,7 @@ function Footer() {
             Velmora
           </Link>
 
-          <p className="mt-4 max-w-sm text-sm leading-7 text-[#cad8d2]">
+          <p className="mt-3 max-w-sm text-sm leading-7 text-[#cad8d2] sm:mt-4">
             {language === "ru"
               ? "Домашний текстиль для комфортной и уютной атмосферы."
               : "Qulay va shinam muhit uchun uy tekstili mahsulotlari."}
@@ -36,13 +36,13 @@ function Footer() {
         {/* LINKS */}
         <div>
 
-          <h3 className="font-semibold">
+          <h3 className="font-semibold text-white">
             {language === "ru"
               ? "Навигация"
               : "Navigatsiya"}
           </h3>
 
-          <div className="mt-4 flex flex-col gap-3 text-sm text-[#cad8d2]">
+          <div className="mt-3 flex flex-col gap-2.5 text-sm text-[#cad8d2] sm:mt-4 sm:gap-3">
 
             <Link
               to="/"
@@ -88,13 +88,13 @@ function Footer() {
         {/* DELIVERY */}
         <div>
 
-          <h3 className="font-semibold">
+          <h3 className="font-semibold text-white">
             {language === "ru"
               ? "Доставка и оплата"
               : "Yetkazib berish va to‘lov"}
           </h3>
 
-          <p className="mt-4 text-sm leading-7 text-[#cad8d2]">
+          <p className="mt-3 text-sm leading-7 text-[#cad8d2] sm:mt-4">
             {language === "ru"
               ? "Бесплатная доставка по городу Ташкент. Оплата наличными при получении."
               : "Toshkent shahri bo‘ylab bepul yetkazib berish. To‘lov mahsulotni qabul qilganda naqd."}
@@ -107,7 +107,7 @@ function Footer() {
 
       <div className="border-t border-white/10">
 
-        <div className="mx-auto max-w-7xl px-6 py-6 text-sm text-[#9eb3aa]">
+        <div className="mx-auto max-w-7xl px-4 py-5 text-xs text-[#9eb3aa] sm:px-6 sm:py-6 sm:text-sm">
 
           © {year} Velmora.{" "}
 

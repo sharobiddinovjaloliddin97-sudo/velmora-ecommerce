@@ -16,6 +16,10 @@ import {
 } from "../context/AuthContext";
 
 import {
+  useFavorites,
+} from "../context/FavoritesContext";
+
+import {
   useLanguage,
 } from "../context/LanguageContext";
 
@@ -34,6 +38,9 @@ function AccountPage() {
     language,
   } = useLanguage();
 
+  const {
+    removeFavorite,
+  } = useFavorites();
 
   const [profile, setProfile] =
     useState({
@@ -370,21 +377,19 @@ function AccountPage() {
   // FAVORITES
   // =========================
 
-  const removeFavorite =
+  const handleRemoveFavorite =
     async (productId) => {
 
       try {
-        await api.delete(
-          `/favorites/${productId}/`
-        );
-
+        await removeFavorite(productId);
 
         setFavorites(
-          favorites.filter(
-            (favorite) =>
-              favorite.product.id !==
-              productId
-          )
+          (prev) =>
+            prev.filter(
+              (favorite) =>
+                favorite.product.id !==
+                productId
+            )
         );
 
       } catch (err) {
@@ -422,16 +427,16 @@ function AccountPage() {
 
 
   return (
-    <div className="min-h-screen bg-[#f8f5ef]">
+    <div className="min-h-screen bg-[#f8f5ef] pt-4 sm:pt-6 md:pt-0">
 
-      <div className="mx-auto max-w-7xl px-6 py-12">
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12">
 
-        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#52796f]">
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#52796f] sm:text-sm">
           Velmora
         </p>
 
 
-        <h1 className="mt-3 text-4xl font-semibold text-[#173f35]">
+        <h1 className="mt-2 text-2xl font-semibold text-[#173f35] sm:mt-3 sm:text-4xl">
 
           {language === "ru"
             ? "Личный кабинет"
@@ -470,9 +475,9 @@ function AccountPage() {
         {/* PROFILE */}
         {/* ========================= */}
 
-        <section className="mt-10 rounded-[30px] bg-white p-7 shadow-sm">
+        <section className="mt-8 rounded-2xl bg-white p-5 shadow-sm sm:mt-10 sm:rounded-[30px] sm:p-7">
 
-          <h2 className="text-2xl font-semibold text-[#173f35]">
+          <h2 className="text-xl font-semibold text-[#173f35] sm:text-2xl">
 
             {language === "ru"
               ? "Профиль"
@@ -564,7 +569,7 @@ function AccountPage() {
                 disabled={
                   saving
                 }
-                className="rounded-full bg-[#173f35] px-7 py-3 font-medium text-white disabled:opacity-50"
+                className="w-full rounded-full bg-[#173f35] px-7 py-3 font-medium text-white transition hover:bg-[#245448] disabled:opacity-50 sm:w-auto"
               >
 
                 {saving
@@ -588,9 +593,9 @@ function AccountPage() {
         {/* CHANGE PASSWORD */}
         {/* ========================= */}
 
-        <section className="mt-8 rounded-[30px] bg-white p-7 shadow-sm">
+        <section className="mt-6 rounded-2xl bg-white p-5 shadow-sm sm:mt-8 sm:rounded-[30px] sm:p-7">
 
-          <h2 className="text-2xl font-semibold text-[#173f35]">
+          <h2 className="text-xl font-semibold text-[#173f35] sm:text-2xl">
 
             {language === "ru"
               ? "Изменить пароль"
@@ -747,7 +752,7 @@ function AccountPage() {
                 disabled={
                   changingPassword
                 }
-                className="rounded-full bg-[#173f35] px-7 py-3 font-medium text-white disabled:opacity-50"
+                className="w-full rounded-full bg-[#173f35] px-7 py-3 font-medium text-white transition hover:bg-[#245448] disabled:opacity-50 sm:w-auto"
               >
 
                 {changingPassword
@@ -771,9 +776,9 @@ function AccountPage() {
         {/* ORDERS */}
         {/* ========================= */}
 
-        <section className="mt-8 rounded-[30px] bg-white p-7 shadow-sm">
+        <section className="mt-6 rounded-2xl bg-white p-5 shadow-sm sm:mt-8 sm:rounded-[30px] sm:p-7">
 
-          <h2 className="text-2xl font-semibold text-[#173f35]">
+          <h2 className="text-xl font-semibold text-[#173f35] sm:text-2xl">
 
             {language === "ru"
               ? "Мои заказы"
@@ -872,9 +877,9 @@ function AccountPage() {
         {/* FAVORITES */}
         {/* ========================= */}
 
-        <section className="mt-8 rounded-[30px] bg-white p-7 shadow-sm">
+        <section className="mt-6 rounded-2xl bg-white p-5 shadow-sm sm:mt-8 sm:rounded-[30px] sm:p-7">
 
-          <h2 className="text-2xl font-semibold text-[#173f35]">
+          <h2 className="text-xl font-semibold text-[#173f35] sm:text-2xl">
 
             {language === "ru"
               ? "Избранное"
@@ -895,7 +900,7 @@ function AccountPage() {
 
           ) : (
 
-            <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-6 grid gap-4 grid-cols-1 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
 
               {favorites.map(
                 (favorite) => (
@@ -911,7 +916,7 @@ function AccountPage() {
                       to={`/products/${favorite.product.slug}`}
                     >
 
-                      <h3 className="font-semibold text-[#173f35]">
+                      <h3 className="line-clamp-2 font-semibold text-[#173f35] break-words">
                         {
                           favorite.product.name
                         }
@@ -939,7 +944,7 @@ function AccountPage() {
                     <button
                       type="button"
                       onClick={() =>
-                        removeFavorite(
+                        handleRemoveFavorite(
                           favorite.product.id
                         )
                       }

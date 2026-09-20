@@ -92,16 +92,16 @@ function HomePage() {
 
       <section className="bg-[#eee7da]">
 
-        <div className="mx-auto grid min-h-[620px] max-w-7xl items-center gap-10 px-6 py-16 lg:grid-cols-2">
+        <div className="mx-auto grid min-h-[520px] max-w-7xl items-center gap-8 px-4 py-10 sm:px-6 sm:py-16 md:gap-10 lg:min-h-[620px] lg:grid-cols-2">
 
           {/* LEFT */}
           <div>
 
-            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#52796f]">
+            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#52796f] sm:text-sm">
               Velmora Home
             </p>
 
-            <h1 className="mt-5 max-w-xl text-5xl font-semibold leading-tight text-[#173f35] md:text-6xl">
+            <h1 className="mt-3 max-w-xl text-3xl font-semibold leading-tight text-[#173f35] break-words sm:mt-5 sm:text-5xl md:text-6xl">
 
               {language === "ru"
                 ? "Уют начинается с вашего дома"
@@ -109,7 +109,7 @@ function HomePage() {
 
             </h1>
 
-            <p className="mt-6 max-w-xl text-lg leading-8 text-stone-600">
+            <p className="mt-4 max-w-xl text-base leading-7 text-stone-600 sm:mt-6 sm:text-lg sm:leading-8">
 
               {language === "ru"
                 ? "Красивый и комфортный домашний текстиль для спокойной и уютной атмосферы."
@@ -118,11 +118,11 @@ function HomePage() {
             </p>
 
 
-            <div className="mt-8 flex flex-wrap gap-4">
+            <div className="mt-6 flex flex-wrap gap-3 sm:mt-8 sm:gap-4">
 
               <Link
                 to="/catalog"
-                className="rounded-full bg-[#173f35] px-7 py-4 font-medium text-white transition hover:bg-[#245448]"
+                className="w-full rounded-full bg-[#173f35] px-6 py-3.5 text-center font-medium text-white transition hover:bg-[#245448] sm:w-auto sm:px-7 sm:py-4"
               >
                 {language === "ru"
                   ? "Смотреть каталог"
@@ -131,7 +131,7 @@ function HomePage() {
 
               <Link
                 to="/about"
-                className="rounded-full border border-[#173f35] px-7 py-4 font-medium text-[#173f35] transition hover:bg-white"
+                className="w-full rounded-full border border-[#173f35] px-6 py-3.5 text-center font-medium text-[#173f35] transition hover:bg-white sm:w-auto sm:px-7 sm:py-4"
               >
                 {language === "ru"
                   ? "О бренде"
@@ -146,17 +146,17 @@ function HomePage() {
           {/* RIGHT */}
           <div className="relative">
 
-            <div className="aspect-[4/5] overflow-hidden rounded-[42px] bg-gradient-to-br from-[#d9cfbd] via-[#f4eee3] to-[#a8b7aa]">
+            <div className="aspect-[4/3] overflow-hidden rounded-3xl bg-gradient-to-br from-[#d9cfbd] via-[#f4eee3] to-[#a8b7aa] sm:aspect-[4/5] sm:rounded-[42px]">
 
-              <div className="flex h-full items-end p-8">
+              <div className="flex h-full items-end p-4 sm:p-8">
 
-                <div className="max-w-sm rounded-[28px] bg-white/80 p-6 backdrop-blur">
+                <div className="w-full max-w-sm rounded-2xl bg-white/85 p-4 shadow-sm backdrop-blur sm:rounded-[28px] sm:p-6">
 
-                  <p className="text-sm font-medium uppercase tracking-[0.2em] text-[#52796f]">
+                  <p className="text-xs font-medium uppercase tracking-[0.2em] text-[#52796f] sm:text-sm">
                     Velmora
                   </p>
 
-                  <p className="mt-3 text-2xl font-semibold leading-snug text-[#173f35]">
+                  <p className="mt-2 text-xl font-semibold leading-snug text-[#173f35] sm:mt-3 sm:text-2xl">
 
                     {language === "ru"
                       ? "Комфорт в каждой детали"
@@ -183,19 +183,19 @@ function HomePage() {
 
       <section className="bg-[#fffdf8]">
 
-        <div className="mx-auto max-w-7xl px-6 py-20">
+        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 md:py-20">
 
-          <div className="flex flex-wrap items-end justify-between gap-6">
+          <div className="flex flex-wrap items-end justify-between gap-4">
 
             <div>
 
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#52796f]">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#52796f] sm:text-sm">
                 {language === "ru"
                   ? "Коллекции"
                   : "Kolleksiyalar"}
               </p>
 
-              <h2 className="mt-3 text-4xl font-semibold text-[#173f35]">
+              <h2 className="mt-2 text-2xl font-semibold text-[#173f35] sm:mt-3 sm:text-4xl">
                 {language === "ru"
                   ? "Выберите для своего дома"
                   : "Uyingiz uchun tanlang"}
@@ -206,7 +206,7 @@ function HomePage() {
 
             <Link
               to="/catalog"
-              className="font-medium text-[#173f35] hover:underline"
+              className="text-sm font-medium text-[#173f35] hover:underline sm:text-base"
             >
               {language === "ru"
                 ? "Все товары →"
@@ -216,12 +216,12 @@ function HomePage() {
           </div>
 
 
-          <div className="mt-10 grid gap-6 md:grid-cols-3">
+          <div className="mt-8 grid gap-4 sm:gap-6 grid-cols-1 md:grid-cols-3">
 
             {/* CATEGORY 1 */}
             <Link
               to="/catalog"
-              className="group min-h-[280px] overflow-hidden rounded-[30px] bg-[#e5ddd0] p-7 transition hover:-translate-y-1"
+              className="group min-h-[220px] overflow-hidden rounded-2xl bg-[#e5ddd0] p-5 transition hover:-translate-y-1 sm:min-h-[280px] sm:rounded-[30px] sm:p-7"
             >
 
               <div className="flex h-full flex-col justify-end">
@@ -250,7 +250,7 @@ function HomePage() {
             {/* CATEGORY 2 */}
             <Link
               to="/catalog"
-              className="group min-h-[280px] overflow-hidden rounded-[30px] bg-[#d5dfd7] p-7 transition hover:-translate-y-1"
+              className="group min-h-[220px] overflow-hidden rounded-2xl bg-[#d5dfd7] p-5 transition hover:-translate-y-1 sm:min-h-[280px] sm:rounded-[30px] sm:p-7"
             >
 
               <div className="flex h-full flex-col justify-end">
@@ -279,7 +279,7 @@ function HomePage() {
             {/* CATEGORY 3 */}
             <Link
               to="/catalog"
-              className="group min-h-[280px] overflow-hidden rounded-[30px] bg-[#eee3d9] p-7 transition hover:-translate-y-1"
+              className="group min-h-[220px] overflow-hidden rounded-2xl bg-[#eee3d9] p-5 transition hover:-translate-y-1 sm:min-h-[280px] sm:rounded-[30px] sm:p-7"
             >
 
               <div className="flex h-full flex-col justify-end">
@@ -317,19 +317,19 @@ function HomePage() {
 
       <section className="bg-[#f8f5ef]">
 
-        <div className="mx-auto max-w-7xl px-6 py-20">
+        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 md:py-20">
 
-          <div className="flex flex-wrap items-end justify-between gap-6">
+          <div className="flex flex-wrap items-end justify-between gap-4">
 
             <div>
 
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#52796f]">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#52796f] sm:text-sm">
                 {language === "ru"
                   ? "Velmora рекомендует"
                   : "Velmora tavsiya qiladi"}
               </p>
 
-              <h2 className="mt-3 text-4xl font-semibold text-[#173f35]">
+              <h2 className="mt-2 text-2xl font-semibold text-[#173f35] sm:mt-3 sm:text-4xl">
                 {language === "ru"
                   ? "Избранные товары"
                   : "Tanlangan mahsulotlar"}
@@ -340,7 +340,7 @@ function HomePage() {
 
             <Link
               to="/catalog"
-              className="font-medium text-[#173f35] hover:underline"
+              className="text-sm font-medium text-[#173f35] hover:underline sm:text-base"
             >
               {language === "ru"
                 ? "Перейти в каталог →"
@@ -398,7 +398,7 @@ function HomePage() {
             !error &&
             products.length > 0 && (
 
-              <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              <div className="mt-8 grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
 
                 {products.map(
                   (product) => (
@@ -423,15 +423,15 @@ function HomePage() {
 
       <section className="bg-[#173f35] text-white">
 
-        <div className="mx-auto grid max-w-7xl gap-10 px-6 py-20 lg:grid-cols-2">
+        <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:px-6 sm:py-16 md:py-20 lg:grid-cols-2">
 
           <div>
 
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#b6c8bf]">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#b6c8bf] sm:text-sm">
               Velmora
             </p>
 
-            <h2 className="mt-4 max-w-lg text-4xl font-semibold leading-tight">
+            <h2 className="mt-3 max-w-lg text-2xl font-semibold leading-tight sm:mt-4 sm:text-4xl">
               {language === "ru"
                 ? "Создаём уют для вашего дома"
                 : "Uyingiz uchun shinamlik yaratamiz"}
@@ -451,7 +451,7 @@ function HomePage() {
 
             <Link
               to="/about"
-              className="mt-7 inline-block rounded-full bg-white px-7 py-3.5 font-medium text-[#173f35]"
+              className="mt-6 inline-block w-full rounded-full bg-white px-7 py-3.5 text-center font-medium text-[#173f35] transition hover:bg-stone-100 sm:mt-7 sm:w-auto"
             >
               {language === "ru"
                 ? "Подробнее"
@@ -471,11 +471,11 @@ function HomePage() {
 
       <section className="bg-[#fffdf8]">
 
-        <div className="mx-auto grid max-w-7xl gap-6 px-6 py-16 md:grid-cols-3">
+        <div className="mx-auto grid max-w-7xl gap-4 px-4 py-10 sm:gap-6 sm:px-6 sm:py-16 md:grid-cols-3">
 
-          <div className="rounded-[26px] border border-stone-200 p-6">
+          <div className="rounded-2xl border border-stone-200 p-5 sm:rounded-[26px] sm:p-6">
 
-            <h3 className="text-lg font-semibold text-[#173f35]">
+            <h3 className="text-base font-semibold text-[#173f35] sm:text-lg">
               {language === "ru"
                 ? "Бесплатная доставка"
                 : "Bepul yetkazib berish"}
@@ -490,9 +490,9 @@ function HomePage() {
           </div>
 
 
-          <div className="rounded-[26px] border border-stone-200 p-6">
+          <div className="rounded-2xl border border-stone-200 p-5 sm:rounded-[26px] sm:p-6">
 
-            <h3 className="text-lg font-semibold text-[#173f35]">
+            <h3 className="text-base font-semibold text-[#173f35] sm:text-lg">
               {language === "ru"
                 ? "Оплата при получении"
                 : "Qabul qilganda to‘lov"}
@@ -507,9 +507,9 @@ function HomePage() {
           </div>
 
 
-          <div className="rounded-[26px] border border-stone-200 p-6">
+          <div className="rounded-2xl border border-stone-200 p-5 sm:rounded-[26px] sm:p-6">
 
-            <h3 className="text-lg font-semibold text-[#173f35]">
+            <h3 className="text-base font-semibold text-[#173f35] sm:text-lg">
               {language === "ru"
                 ? "Удобный выбор"
                 : "Qulay tanlov"}
