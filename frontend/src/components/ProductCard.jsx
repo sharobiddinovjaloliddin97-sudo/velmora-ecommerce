@@ -62,7 +62,7 @@ function ProductCard({ product }) {
 
 
   return (
-    <article className="relative overflow-hidden rounded-[28px] bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+    <article className="relative overflow-hidden rounded-2xl bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg sm:rounded-[28px]">
 
       {/* FAVORITE */}
       <button
@@ -86,7 +86,7 @@ function ProductCard({ product }) {
               ? "Добавить в избранное"
               : "Sevimliga qo‘shish"
         }
-        className="absolute right-4 top-4 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white/90 text-xl text-[#173f35] shadow"
+        className="absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-base text-[#173f35] shadow sm:right-4 sm:top-4 sm:h-11 sm:w-11 sm:text-xl"
       >
         {favorite ? "♥" : "♡"}
       </button>
@@ -98,7 +98,7 @@ function ProductCard({ product }) {
       >
 
         {/* IMAGE */}
-        <div className="aspect-[4/5] overflow-hidden bg-[#eee9df]">
+        <div className="relative aspect-[4/3] overflow-hidden rounded-t-2xl bg-[#eee9df] md:aspect-[4/5] sm:rounded-t-[28px]">
 
           {primaryImage ? (
             <img
@@ -118,17 +118,17 @@ function ProductCard({ product }) {
 
 
         {/* INFO */}
-        <div className="p-5">
+        <div className="p-4 sm:p-5">
 
-          <p className="text-sm text-stone-500">
+          <p className="truncate text-xs text-stone-500 sm:text-sm">
             {product.category?.name}
           </p>
 
-          <h3 className="mt-1 text-xl font-semibold text-[#173f35]">
+          <h3 className="mt-1 line-clamp-2 text-base font-semibold text-[#173f35] break-words sm:text-lg">
             {product.name}
           </h3>
 
-          <p className="mt-4 font-semibold text-[#173f35]">
+          <p className="mt-3 truncate text-base font-semibold text-[#173f35] sm:mt-4 sm:text-lg">
 
             {product.min_price
               ? `${Number(

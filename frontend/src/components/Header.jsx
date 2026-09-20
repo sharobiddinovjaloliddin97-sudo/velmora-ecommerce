@@ -228,6 +228,19 @@ function Header() {
   }, []);
 
 
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileMenuOpen]);
+
+
   const navClass = ({
     isActive,
   }) =>
@@ -264,12 +277,12 @@ function Header() {
       {/* DESKTOP / MAIN BAR */}
       {/* ========================= */}
 
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-2 px-3 py-3 sm:gap-4 sm:px-6 sm:py-4">
 
         {/* LOGO */}
         <Link
           to="/"
-          className="shrink-0 text-2xl font-bold text-[#173f35]"
+          className="shrink-0 text-xl font-bold tracking-tight text-[#173f35] sm:text-2xl"
         >
           Velmora
         </Link>
@@ -310,7 +323,7 @@ function Header() {
 
 
         {/* RIGHT SIDE */}
-        <div className="flex items-center gap-2 sm:gap-3">
+        <div className="flex items-center gap-1.5 sm:gap-3">
 
           {/* LANGUAGE - DESKTOP */}
           <div className="hidden rounded-full border border-stone-300 bg-white p-1 sm:flex">
@@ -421,12 +434,12 @@ function Header() {
                     ? "Уведомления"
                     : "Bildirishnomalar"
                 }
-                className="relative flex h-11 w-11 items-center justify-center rounded-full border border-stone-300 bg-white text-xl text-[#173f35] transition hover:bg-stone-100"
+                className="relative flex h-9 w-9 items-center justify-center rounded-full border border-stone-300 bg-white text-base text-[#173f35] transition hover:bg-stone-100 sm:h-11 sm:w-11 sm:text-xl"
               >
                 🔔
 
                 {unreadCount > 0 && (
-                  <span className="absolute -right-1 -top-1 flex min-h-5 min-w-5 items-center justify-center rounded-full bg-red-600 px-1 text-[10px] font-bold text-white">
+                  <span className="absolute -right-1 -top-1 flex min-h-4 min-w-4 items-center justify-center rounded-full bg-red-600 px-1 text-[9px] font-bold text-white sm:min-h-5 sm:min-w-5 sm:text-[10px]">
                     {unreadCount > 99
                       ? "99+"
                       : unreadCount}
@@ -436,7 +449,15 @@ function Header() {
 
 
               {notificationOpen && (
-                <div className="absolute right-0 top-14 z-[70] w-[min(380px,calc(100vw-2rem))] overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-xl">
+                <>
+                  <div
+                    className="fixed inset-0 z-[60] bg-black/20 sm:hidden"
+                    onClick={() =>
+                      setNotificationOpen(false)
+                    }
+                    aria-hidden="true"
+                  />
+                  <div className="fixed inset-x-3 top-16 z-[70] max-h-[80vh] overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-xl sm:absolute sm:inset-auto sm:right-0 sm:top-14 sm:w-[380px]">
 
                   <div className="flex items-center justify-between border-b border-stone-200 px-4 py-3">
 
@@ -551,6 +572,7 @@ function Header() {
                   </div>
 
                 </div>
+                </>
               )}
 
             </div>
@@ -561,7 +583,7 @@ function Header() {
           <Link
             to="/cart"
             aria-label={t("cart")}
-            className="relative flex h-11 items-center justify-center rounded-full bg-[#173f35] px-4 text-sm font-medium text-white transition hover:bg-[#245448]"
+            className="relative flex h-9 items-center justify-center rounded-full bg-[#173f35] px-2.5 text-xs font-medium text-white transition hover:bg-[#245448] sm:h-11 sm:px-4 sm:text-sm"
           >
 
             <span className="hidden sm:inline">
@@ -574,7 +596,7 @@ function Header() {
 
 
             {cartCount > 0 && (
-              <span className="absolute -right-2 -top-2 flex min-h-6 min-w-6 items-center justify-center rounded-full bg-white px-1.5 text-xs font-bold text-[#173f35] shadow">
+              <span className="absolute -right-1.5 -top-1.5 flex min-h-5 min-w-5 items-center justify-center rounded-full bg-white px-1 text-[10px] font-bold text-[#173f35] shadow sm:-right-2 sm:-top-2 sm:min-h-6 sm:min-w-6 sm:px-1.5 sm:text-xs">
 
                 {cartCount > 99
                   ? "99+"
@@ -607,7 +629,7 @@ function Header() {
                   !current
               )
             }
-            className="flex h-11 w-11 items-center justify-center rounded-full border border-stone-300 bg-white text-2xl text-[#173f35] lg:hidden"
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-stone-300 bg-white text-xl text-[#173f35] lg:hidden sm:h-11 sm:w-11 sm:text-2xl"
           >
 
             {mobileMenuOpen
@@ -627,7 +649,7 @@ function Header() {
 
       {mobileMenuOpen && (
 
-        <div className="border-t border-stone-200 bg-[#fffdf8] lg:hidden">
+        <div className="max-h-[calc(100vh-4rem)] overflow-y-auto border-t border-stone-200 bg-[#fffdf8] lg:hidden">
 
           <div className="mx-auto max-w-7xl px-4 py-5 sm:px-6">
 
@@ -751,14 +773,14 @@ function Header() {
 
                     </p>
 
-                    <p className="mt-1 font-semibold text-[#173f35]">
+                    <p className="mt-1 truncate font-semibold text-[#173f35]">
 
                       {user.first_name ||
                         user.email}
 
                     </p>
 
-                    <p className="mt-1 text-sm text-stone-500">
+                    <p className="mt-1 truncate text-sm text-stone-500">
                       {user.email}
                     </p>
 

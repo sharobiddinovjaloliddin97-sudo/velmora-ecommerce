@@ -104,16 +104,16 @@ function RegisterPage() {
   return (
     <div className="bg-[#f8f5ef]">
 
-      <div className="mx-auto flex min-h-[70vh] max-w-7xl items-center justify-center px-6 py-16">
+      <div className="mx-auto flex min-h-[70vh] max-w-7xl items-center justify-center px-4 py-10 sm:px-6 sm:py-16">
 
-        <div className="w-full max-w-md rounded-[30px] bg-white p-8 shadow-sm">
+        <div className="w-full max-w-md rounded-2xl bg-white p-5 shadow-sm sm:rounded-[30px] sm:p-8">
 
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#52796f]">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#52796f] sm:text-sm">
             Velmora
           </p>
 
 
-          <h1 className="mt-3 text-3xl font-semibold text-[#173f35]">
+          <h1 className="mt-2 text-2xl font-semibold text-[#173f35] sm:mt-3 sm:text-3xl">
             {language === "ru"
               ? "Регистрация"
               : "Ro‘yxatdan o‘tish"}

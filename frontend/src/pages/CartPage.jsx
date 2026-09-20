@@ -204,13 +204,13 @@ function CartPage() {
   return (
     <div className="min-h-screen bg-[#f8f5ef]">
 
-      <div className="mx-auto max-w-7xl px-6 py-12">
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12">
 
-        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#52796f]">
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#52796f] sm:text-sm">
           Velmora
         </p>
 
-        <h1 className="mt-3 text-4xl font-semibold text-[#173f35]">
+        <h1 className="mt-2 text-2xl font-semibold text-[#173f35] sm:mt-3 sm:text-4xl">
 
           {language === "ru"
             ? "Корзина"
@@ -226,13 +226,13 @@ function CartPage() {
         )}
 
 
-        <div className="mt-10 grid gap-8 lg:grid-cols-[1fr_360px]">
+        <div className="mt-8 grid gap-6 sm:mt-10 sm:gap-8 lg:grid-cols-[1fr_360px]">
 
           {/* ========================= */}
           {/* ITEMS */}
           {/* ========================= */}
 
-          <div className="space-y-5">
+          <div className="space-y-4 sm:space-y-5">
 
             {cart.map(
               (item) => (
@@ -241,13 +241,13 @@ function CartPage() {
                   key={
                     item.variant_id
                   }
-                  className="grid gap-5 rounded-[28px] bg-white p-5 shadow-sm sm:grid-cols-[140px_1fr]"
+                  className="grid grid-cols-[84px_1fr] gap-3.5 rounded-2xl bg-white p-3.5 shadow-sm sm:grid-cols-[140px_1fr] sm:gap-5 sm:rounded-[28px] sm:p-5"
                 >
 
                   {/* IMAGE */}
                   <Link
                     to={`/products/${item.product_slug}`}
-                    className="aspect-square overflow-hidden rounded-2xl bg-[#eee9df]"
+                    className="aspect-square overflow-hidden rounded-xl bg-[#eee9df] sm:rounded-2xl"
                   >
 
                     {item.image ? (
@@ -264,7 +264,7 @@ function CartPage() {
 
                     ) : (
 
-                      <div className="flex h-full items-center justify-center px-3 text-center text-xs text-stone-400">
+                      <div className="flex h-full items-center justify-center px-2 text-center text-[10px] text-stone-400 sm:px-3 sm:text-xs">
 
                         {language === "ru"
                           ? "Нет изображения"
@@ -282,13 +282,13 @@ function CartPage() {
 
                     <div>
 
-                      <div className="flex items-start justify-between gap-5">
+                      <div className="flex items-start justify-between gap-3 sm:gap-5">
 
-                        <div>
+                        <div className="min-w-0 flex-1">
 
                           <Link
                             to={`/products/${item.product_slug}`}
-                            className="text-xl font-semibold text-[#173f35] hover:underline"
+                            className="line-clamp-2 text-base font-semibold text-[#173f35] break-words hover:underline sm:text-xl"
                           >
                             {
                               item.product_name
@@ -296,7 +296,7 @@ function CartPage() {
                           </Link>
 
 
-                          <p className="mt-2 text-sm text-stone-500">
+                          <p className="mt-1 text-xs text-stone-500 sm:mt-2 sm:text-sm">
 
                             {item.color}
                             {" · "}
@@ -305,7 +305,7 @@ function CartPage() {
                           </p>
 
 
-                          <p className="mt-1 text-xs text-stone-400">
+                          <p className="mt-1 text-[11px] text-stone-400 sm:text-xs">
                             SKU:{" "}
                             {
                               item.sku
@@ -322,7 +322,7 @@ function CartPage() {
                               item.variant_id
                             )
                           }
-                          className="text-sm font-medium text-red-600 hover:underline"
+                          className="shrink-0 text-xs font-medium text-red-600 hover:underline sm:text-sm"
                         >
 
                           {language === "ru"
@@ -334,7 +334,7 @@ function CartPage() {
                       </div>
 
 
-                      <p className="mt-5 font-semibold text-[#173f35]">
+                      <p className="mt-3 text-base font-semibold text-[#173f35] sm:mt-4 sm:text-lg">
 
                         {Number(
                           item.price
@@ -349,7 +349,7 @@ function CartPage() {
 
 
                     {/* QUANTITY */}
-                    <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
+                    <div className="mt-4 flex flex-wrap items-center justify-between gap-3 sm:mt-6 sm:gap-4">
 
                       <div className="flex items-center rounded-full border border-stone-300">
 
@@ -366,13 +366,13 @@ function CartPage() {
                                 1
                             )
                           }
-                          className="h-10 w-10 text-xl disabled:opacity-30"
+                          className="h-8 w-8 text-lg disabled:opacity-30 sm:h-10 sm:w-10 sm:text-xl"
                         >
                           −
                         </button>
 
 
-                        <span className="min-w-10 text-center font-medium">
+                        <span className="min-w-8 text-center text-sm font-medium sm:min-w-10 sm:text-base">
                           {
                             item.quantity
                           }
@@ -392,7 +392,7 @@ function CartPage() {
                                 1
                             )
                           }
-                          className="h-10 w-10 text-xl disabled:opacity-30"
+                          className="h-8 w-8 text-lg disabled:opacity-30 sm:h-10 sm:w-10 sm:text-xl"
                         >
                           +
                         </button>
@@ -402,7 +402,7 @@ function CartPage() {
 
                       <div className="text-right">
 
-                        <p className="text-xs text-stone-500">
+                        <p className="text-[11px] text-stone-500 sm:text-xs">
 
                           {language === "ru"
                             ? "Итого"
@@ -410,7 +410,7 @@ function CartPage() {
 
                         </p>
 
-                        <p className="font-semibold text-[#173f35]">
+                        <p className="text-sm font-semibold text-[#173f35] sm:text-base">
 
                           {(
                             Number(
@@ -442,7 +442,7 @@ function CartPage() {
           {/* SUMMARY */}
           {/* ========================= */}
 
-          <aside className="h-fit rounded-[30px] bg-white p-7 shadow-sm">
+          <aside className="h-fit rounded-2xl bg-white p-5 shadow-sm sm:rounded-[30px] sm:p-7">
 
             <h2 className="text-2xl font-semibold text-[#173f35]">
 

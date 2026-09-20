@@ -21,6 +21,7 @@ function CatalogPage() {
   const [color, setColor] = useState("");
   const [size, setSize] = useState("");
   const [ordering, setOrdering] = useState("-created_at");
+  const [filtersOpen, setFiltersOpen] = useState(false);
 
   const [page, setPage] = useState(1);
 
@@ -195,21 +196,21 @@ function CatalogPage() {
   return (
     <div className="min-h-screen bg-[#f8f5ef]">
 
-      <div className="mx-auto max-w-7xl px-6 py-12">
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12">
 
         {/* HEADER */}
         <div className="max-w-2xl">
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#52796f]">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#52796f] sm:text-sm">
             Velmora
           </p>
 
-          <h1 className="mt-3 text-4xl font-semibold text-[#173f35]">
+          <h1 className="mt-2 text-2xl font-semibold text-[#173f35] sm:mt-3 sm:text-4xl">
             {language === "ru"
               ? "Каталог"
               : "Katalog"}
           </h1>
 
-          <p className="mt-3 leading-7 text-stone-600">
+          <p className="mt-2 text-sm leading-6 text-stone-600 sm:mt-3 sm:text-base sm:leading-7">
             {language === "ru"
               ? "Выберите подходящий товар из коллекции Velmora."
               : "Velmora kolleksiyasidan o‘zingizga mos mahsulotni tanlang."}
@@ -217,37 +218,45 @@ function CatalogPage() {
         </div>
 
 
-        <div className="mt-10 grid gap-8 lg:grid-cols-[260px_1fr]">
+        <div className="mt-8 grid gap-6 sm:mt-10 sm:gap-8 lg:grid-cols-[260px_1fr]">
 
           {/* ========================= */}
           {/* FILTERS */}
           {/* ========================= */}
 
-          <aside className="h-fit rounded-[28px] bg-white p-6 shadow-sm">
+          <aside className="h-fit rounded-2xl bg-white p-5 shadow-sm sm:rounded-[28px] sm:p-6">
 
-            <div className="flex items-center justify-between gap-4">
-
-              <h2 className="text-xl font-semibold text-[#173f35]">
-                {language === "ru"
-                  ? "Фильтры"
-                  : "Filterlar"}
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-semibold text-[#173f35] sm:text-xl">
+                {language === "ru" ? "Фильтры" : "Filterlar"}
               </h2>
 
               <button
                 type="button"
-                onClick={resetFilters}
-                className="text-xs font-medium text-[#52796f] hover:underline"
+                onClick={() => setFiltersOpen((prev) => !prev)}
+                className="md:hidden rounded-full border border-stone-300 bg-white px-3.5 py-1.5 text-xs font-semibold text-[#173f35] shadow-sm transition hover:bg-stone-50"
               >
-                {language === "ru"
-                  ? "Сбросить"
-                  : "Tozalash"}
+                {filtersOpen
+                  ? language === "ru"
+                    ? "Закрыть"
+                    : "Yopish"
+                  : language === "ru"
+                    ? "Открыть"
+                    : "Ochish"}
               </button>
-
             </div>
 
 
-            {/* SEARCH */}
-            <div className="mt-6">
+            <div
+              className={`
+                mt-6 space-y-5
+                ${filtersOpen ? "block" : "hidden"}
+                md:block
+              `}
+            >
+
+              {/* SEARCH */}
+              <div>
 
               <label className="mb-2 block text-sm font-medium text-stone-700">
                 {language === "ru"
@@ -429,6 +438,8 @@ function CatalogPage() {
                 className="w-full rounded-xl border border-stone-300 px-4 py-3 text-sm outline-none focus:border-[#173f35]"
               />
 
+              </div>
+
             </div>
 
           </aside>
@@ -441,9 +452,9 @@ function CatalogPage() {
           <section>
 
             {/* TOP BAR */}
-            <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className="flex flex-wrap items-center justify-between gap-3">
 
-              <p className="text-sm text-stone-500">
+              <p className="text-xs text-stone-500 sm:text-sm">
                 {language === "ru"
                   ? `Найдено товаров: ${count}`
                   : `Topilgan mahsulotlar: ${count}`}
@@ -459,7 +470,7 @@ function CatalogPage() {
 
                   setPage(1);
                 }}
-                className="rounded-xl border border-stone-300 bg-white px-4 py-2.5 text-sm outline-none focus:border-[#173f35]"
+                className="w-full rounded-xl border border-stone-300 bg-white px-4 py-2.5 text-sm outline-none focus:border-[#173f35] sm:w-auto"
               >
                 <option value="-created_at">
                   {language === "ru"
@@ -546,7 +557,7 @@ function CatalogPage() {
             {!loading &&
               !error &&
               products.length > 0 && (
-                <div className="mt-6 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+                <div className="mt-6 grid gap-4 grid-cols-1 sm:grid-cols-2 sm:gap-6 xl:grid-cols-3">
 
                   {products.map(
                     (product) => (
@@ -567,7 +578,7 @@ function CatalogPage() {
               (previousPage ||
                 nextPage) && (
 
-                <div className="mt-10 flex items-center justify-center gap-4">
+                <div className="mt-8 flex flex-wrap items-center justify-center gap-2 sm:mt-10 sm:gap-4">
 
                   <button
                     type="button"
@@ -582,7 +593,7 @@ function CatalogPage() {
                         )
                       )
                     }
-                    className="rounded-full border border-[#173f35] px-5 py-2.5 text-sm font-medium text-[#173f35] disabled:cursor-not-allowed disabled:opacity-30"
+                    className="rounded-full border border-[#173f35] px-4 py-2 text-xs font-medium text-[#173f35] disabled:cursor-not-allowed disabled:opacity-30 sm:px-5 sm:py-2.5 sm:text-sm"
                   >
                     ←{" "}
                     {language === "ru"
@@ -591,7 +602,7 @@ function CatalogPage() {
                   </button>
 
 
-                  <span className="text-sm font-medium text-stone-600">
+                  <span className="text-xs font-medium text-stone-600 sm:text-sm">
                     {language === "ru"
                       ? `Страница ${page}`
                       : `${page}-sahifa`}
@@ -609,7 +620,7 @@ function CatalogPage() {
                           current + 1
                       )
                     }
-                    className="rounded-full bg-[#173f35] px-5 py-2.5 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-30"
+                    className="rounded-full bg-[#173f35] px-4 py-2 text-xs font-medium text-white disabled:cursor-not-allowed disabled:opacity-30 sm:px-5 sm:py-2.5 sm:text-sm"
                   >
                     {language === "ru"
                       ? "Далее"

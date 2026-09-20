@@ -41,16 +41,16 @@ function OrderSuccessPage() {
   return (
     <div className="bg-[#f8f5ef]">
 
-      <div className="mx-auto flex min-h-[70vh] max-w-3xl items-center justify-center px-6 py-16">
+      <div className="mx-auto flex min-h-[70vh] max-w-3xl items-center justify-center px-4 py-10 sm:px-6 sm:py-16">
 
-        <div className="w-full rounded-[32px] bg-white p-10 text-center shadow-sm">
+        <div className="w-full rounded-2xl bg-white p-5 text-center shadow-sm sm:rounded-[32px] sm:p-10">
 
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-100 text-2xl text-green-700">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-green-100 text-xl text-green-700 sm:h-16 sm:w-16 sm:text-2xl">
             ✓
           </div>
 
 
-          <h1 className="mt-6 text-3xl font-semibold text-[#173f35]">
+          <h1 className="mt-4 text-2xl font-semibold text-[#173f35] sm:mt-6 sm:text-3xl">
 
             {language === "ru"
               ? "Заказ принят"
@@ -59,7 +59,7 @@ function OrderSuccessPage() {
           </h1>
 
 
-          <p className="mt-3 text-stone-600">
+          <p className="mt-2 text-sm text-stone-600 sm:mt-3 sm:text-base">
 
             {language === "ru"
               ? "Ваш заказ успешно создан."
@@ -68,7 +68,7 @@ function OrderSuccessPage() {
           </p>
 
 
-          <div className="mt-8 rounded-2xl bg-[#f8f5ef] p-6 text-left">
+          <div className="mt-6 rounded-2xl bg-[#f8f5ef] p-4 text-left sm:mt-8 sm:p-6">
 
             {/* ORDER NUMBER */}
             <div className="flex justify-between gap-4">
@@ -193,11 +193,11 @@ function OrderSuccessPage() {
           </p>
 
 
-          <div className="mt-8 flex flex-wrap justify-center gap-4">
+          <div className="mt-6 flex flex-wrap justify-center gap-3 sm:mt-8 sm:gap-4">
 
             <Link
               to="/account"
-              className="rounded-full bg-[#173f35] px-6 py-3 font-medium text-white"
+              className="w-full rounded-full bg-[#173f35] px-6 py-3 text-center font-medium text-white transition hover:bg-[#245448] sm:w-auto"
             >
               {language === "ru"
                 ? "Мои заказы"
@@ -207,7 +207,7 @@ function OrderSuccessPage() {
 
             <Link
               to="/catalog"
-              className="rounded-full border border-[#173f35] px-6 py-3 font-medium text-[#173f35]"
+              className="w-full rounded-full border border-[#173f35] px-6 py-3 text-center font-medium text-[#173f35] transition hover:bg-white sm:w-auto"
             >
               {language === "ru"
                 ? "Продолжить покупки"

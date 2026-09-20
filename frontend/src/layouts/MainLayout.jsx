@@ -5,7 +5,7 @@ import Header from "../components/Header";
 
 function MainLayout() {
   return (
-    <div className="flex min-h-screen flex-col bg-[#f8f5ef]">
+    <div className="flex min-h-screen w-full flex-col overflow-x-hidden bg-[#f8f5ef]">
       <Header />
 
       <main className="flex-1">

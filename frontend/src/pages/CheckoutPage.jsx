@@ -410,9 +410,9 @@ function CheckoutPage() {
     return (
       <div className="bg-[#f8f5ef]">
 
-        <div className="mx-auto flex min-h-[65vh] max-w-7xl flex-col items-center justify-center px-6 text-center">
+        <div className="mx-auto flex min-h-[65vh] max-w-7xl flex-col items-center justify-center px-4 py-12 text-center sm:px-6 sm:py-16">
 
-          <h1 className="text-4xl font-semibold text-[#173f35]">
+          <h1 className="text-2xl font-semibold text-[#173f35] sm:text-4xl">
 
             {language === "ru"
               ? "Ваша корзина пуста"
@@ -451,14 +451,14 @@ function CheckoutPage() {
   return (
     <div className="min-h-screen bg-[#f8f5ef]">
 
-      <div className="mx-auto max-w-7xl px-6 py-12">
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12">
 
-        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#52796f]">
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#52796f] sm:text-sm">
           Velmora
         </p>
 
 
-        <h1 className="mt-3 text-4xl font-semibold text-[#173f35]">
+        <h1 className="mt-2 text-2xl font-semibold text-[#173f35] sm:mt-3 sm:text-4xl">
 
           {language === "ru"
             ? "Оформление заказа"
@@ -467,7 +467,7 @@ function CheckoutPage() {
         </h1>
 
 
-        <p className="mt-3 max-w-2xl leading-7 text-stone-600">
+        <p className="mt-2 max-w-2xl text-sm leading-6 text-stone-600 sm:mt-3 sm:text-base sm:leading-7">
 
           {language === "ru"
             ? "Заполните данные для доставки. Доставка осуществляется только по городу Ташкент."
@@ -476,7 +476,7 @@ function CheckoutPage() {
         </p>
 
 
-        <div className="mt-10 grid gap-8 lg:grid-cols-[1fr_380px]">
+        <div className="mt-8 grid gap-6 sm:mt-10 sm:gap-8 lg:grid-cols-[1fr_380px]">
 
           {/* ========================= */}
           {/* CHECKOUT FORM */}
@@ -486,10 +486,10 @@ function CheckoutPage() {
             onSubmit={
               handleSubmit
             }
-            className="rounded-[30px] bg-white p-7 shadow-sm"
+            className="rounded-2xl bg-white p-5 shadow-sm sm:rounded-[30px] sm:p-7"
           >
 
-            <h2 className="text-2xl font-semibold text-[#173f35]">
+            <h2 className="text-xl font-semibold text-[#173f35] sm:text-2xl">
 
               {language === "ru"
                 ? "Данные доставки"
@@ -825,7 +825,7 @@ function CheckoutPage() {
           {/* ORDER SUMMARY */}
           {/* ========================= */}
 
-          <aside className="h-fit rounded-[30px] bg-white p-7 shadow-sm">
+          <aside className="h-fit rounded-2xl bg-white p-5 shadow-sm sm:rounded-[30px] sm:p-7">
 
             <h2 className="text-xl font-semibold text-[#173f35]">
 
@@ -850,7 +850,7 @@ function CheckoutPage() {
                     className="border-b border-stone-100 pb-4"
                   >
 
-                    <p className="font-medium text-[#173f35]">
+                    <p className="font-medium text-[#173f35] break-words">
                       {
                         item.product_name
                       }
