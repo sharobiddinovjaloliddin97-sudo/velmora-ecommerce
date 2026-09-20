@@ -357,6 +357,11 @@ BREVO_SENDER_NAME = os.getenv(
     "Velmora",
 )
 
+CONTACT_NOTIFICATION_EMAIL = os.getenv(
+    "CONTACT_NOTIFICATION_EMAIL",
+    BREVO_SENDER_EMAIL,
+)
+
 
 LOGGING = {
     "version": 1,
