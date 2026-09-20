@@ -1,6 +1,9 @@
 from rest_framework import serializers
 
-from .models import ContactMessage
+from .models import (
+    ContactMessage,
+    Notification,
+)
 
 
 class ContactMessageSerializer(
@@ -46,3 +49,23 @@ class ContactMessageSerializer(
             )
 
         return attrs
+
+
+class NotificationSerializer(
+    serializers.ModelSerializer
+):
+    class Meta:
+        model = Notification
+
+        fields = (
+            "id",
+            "notification_type",
+            "title_uz",
+            "title_ru",
+            "message",
+            "link",
+            "is_read",
+            "created_at",
+        )
+
+        read_only_fields = fields

@@ -1,7 +1,10 @@
 import {
+  useCallback,
   useEffect,
   useState,
 } from "react";
+
+import api from "../api/client";
 
 import {
   Link,
@@ -58,6 +61,147 @@ function Header() {
     setCartCount,
   ] = useState(calculateCartCount);
 
+  const [
+    notifications,
+    setNotifications,
+  ] = useState([]);
+
+  const [
+    notificationOpen,
+    setNotificationOpen,
+  ] = useState(false);
+
+
+  const unreadCount =
+    notifications.filter(
+      (notification) =>
+        !notification.is_read
+    ).length;
+
+
+  const loadNotifications =
+    useCallback(async () => {
+      if (!user) {
+        return;
+      }
+
+      try {
+        const response =
+          await api.get(
+            "/notifications/"
+          );
+
+        const data =
+          Array.isArray(response.data)
+            ? response.data
+            : response.data.results || [];
+
+        setNotifications(data);
+
+      } catch (error) {
+        console.error(
+          "Notification load error:",
+          error
+        );
+      }
+    }, [user]);
+
+
+  useEffect(() => {
+    if (!user) {
+      return;
+    }
+
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    loadNotifications();
+
+    const interval = setInterval(
+      loadNotifications,
+      30000
+    );
+
+    window.addEventListener(
+      "focus",
+      loadNotifications
+    );
+
+    return () => {
+      clearInterval(interval);
+
+      window.removeEventListener(
+        "focus",
+        loadNotifications
+      );
+    };
+  }, [
+    user,
+    loadNotifications,
+  ]);
+
+
+  const handleNotificationClick =
+    async (notification) => {
+
+      if (!notification.is_read) {
+        try {
+          await api.post(
+            `/notifications/${notification.id}/read/`
+          );
+
+          setNotifications(
+            (previous) =>
+              previous.map((item) =>
+                item.id === notification.id
+                  ? {
+                      ...item,
+                      is_read: true,
+                    }
+                  : item
+              )
+          );
+
+        } catch (error) {
+          console.error(
+            "Notification read error:",
+            error
+          );
+        }
+      }
+
+      setNotificationOpen(false);
+
+      if (notification.link) {
+        navigate(
+          notification.link
+        );
+      }
+    };
+
+
+  const handleMarkAllRead =
+    async () => {
+
+      try {
+        await api.post(
+          "/notifications/read-all/"
+        );
+
+        setNotifications(
+          (previous) =>
+            previous.map((item) => ({
+              ...item,
+              is_read: true,
+            }))
+        );
+
+      } catch (error) {
+        console.error(
+          "Mark all read error:",
+          error
+        );
+      }
+    };
+
 
   // =========================
   // CART COUNT
@@ -105,6 +249,8 @@ function Header() {
 
       await logout();
 
+      setNotifications([]);
+      setNotificationOpen(false);
       setMobileMenuOpen(false);
 
       navigate("/");
@@ -257,6 +403,158 @@ function Header() {
             )}
 
           </div>
+
+
+          {/* NOTIFICATIONS */}
+          {user && (
+            <div className="relative">
+
+              <button
+                type="button"
+                onClick={() =>
+                  setNotificationOpen(
+                    (current) => !current
+                  )
+                }
+                aria-label={
+                  language === "ru"
+                    ? "Уведомления"
+                    : "Bildirishnomalar"
+                }
+                className="relative flex h-11 w-11 items-center justify-center rounded-full border border-stone-300 bg-white text-xl text-[#173f35] transition hover:bg-stone-100"
+              >
+                🔔
+
+                {unreadCount > 0 && (
+                  <span className="absolute -right-1 -top-1 flex min-h-5 min-w-5 items-center justify-center rounded-full bg-red-600 px-1 text-[10px] font-bold text-white">
+                    {unreadCount > 99
+                      ? "99+"
+                      : unreadCount}
+                  </span>
+                )}
+              </button>
+
+
+              {notificationOpen && (
+                <div className="absolute right-0 top-14 z-[70] w-[min(380px,calc(100vw-2rem))] overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-xl">
+
+                  <div className="flex items-center justify-between border-b border-stone-200 px-4 py-3">
+
+                    <h3 className="font-semibold text-[#173f35]">
+                      {language === "ru"
+                        ? "Уведомления"
+                        : "Bildirishnomalar"}
+                    </h3>
+
+
+                    {unreadCount > 0 && (
+                      <button
+                        type="button"
+                        onClick={
+                          handleMarkAllRead
+                        }
+                        className="text-xs font-medium text-[#52796f] hover:underline"
+                      >
+                        {language === "ru"
+                          ? "Прочитать все"
+                          : "Barchasini o‘qish"}
+                      </button>
+                    )}
+
+                  </div>
+
+
+                  <div className="max-h-96 overflow-y-auto">
+
+                    {notifications.length === 0 ? (
+
+                      <div className="px-5 py-8 text-center text-sm text-stone-500">
+                        {language === "ru"
+                          ? "Уведомлений пока нет."
+                          : "Hozircha bildirishnoma yo‘q."}
+                      </div>
+
+                    ) : (
+
+                      notifications.map(
+                        (notification) => (
+
+                          <button
+                            key={
+                              notification.id
+                            }
+                            type="button"
+                            onClick={() =>
+                              handleNotificationClick(
+                                notification
+                              )
+                            }
+                            className={`block w-full border-b border-stone-100 px-4 py-4 text-left transition last:border-b-0 hover:bg-stone-50 ${
+                              notification.is_read
+                                ? "bg-white"
+                                : "bg-[#f1f7f4]"
+                            }`}
+                          >
+
+                            <div className="flex gap-3">
+
+                              <span className="mt-1 text-lg">
+                                🔔
+                              </span>
+
+
+                              <div className="min-w-0 flex-1">
+
+                                <div className="flex items-start justify-between gap-3">
+
+                                  <p className="font-semibold text-[#173f35]">
+                                    {language === "ru"
+                                      ? notification.title_ru
+                                      : notification.title_uz}
+                                  </p>
+
+                                  {!notification.is_read && (
+                                    <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-red-600" />
+                                  )}
+
+                                </div>
+
+
+                                <p className="mt-1 line-clamp-3 text-sm leading-5 text-stone-600">
+                                  {
+                                    notification.message
+                                  }
+                                </p>
+
+
+                                <p className="mt-2 text-xs text-stone-400">
+                                  {new Date(
+                                    notification.created_at
+                                  ).toLocaleString(
+                                    language === "ru"
+                                      ? "ru-RU"
+                                      : "uz-UZ"
+                                  )}
+                                </p>
+
+                              </div>
+
+                            </div>
+
+                          </button>
+
+                        )
+                      )
+
+                    )}
+
+                  </div>
+
+                </div>
+              )}
+
+            </div>
+          )}
 
 
           {/* CART */}
