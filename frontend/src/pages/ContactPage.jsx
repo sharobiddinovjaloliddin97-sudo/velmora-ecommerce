@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import api from "../api/client";
 import { useLanguage } from "../context/LanguageContext";
 
 
@@ -9,33 +10,93 @@ function ContactPage() {
   const [form, setForm] = useState({
     name: "",
     email: "",
+    phone: "",
     message: "",
   });
 
   const [success, setSuccess] = useState("");
+  const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
 
   const handleChange = (event) => {
-    setForm({
-      ...form,
-      [event.target.name]: event.target.value,
-    });
+    const {
+      name,
+      value,
+    } = event.target;
+
+    setForm((previous) => ({
+      ...previous,
+      [name]: value,
+    }));
   };
 
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    /*
-      Hozircha backendda contact endpoint yo‘q.
-      Shuning uchun real serverga yubormaymiz.
-    */
+    setSuccess("");
+    setError("");
+    setSubmitting(true);
 
-    setSuccess(
-      language === "ru"
-        ? "Форма подготовлена. Отправку подключим после добавления контактного API."
-        : "Forma tayyor. Contact API qo‘shilgandan keyin yuborishni ulaymiz."
-    );
+    try {
+      await api.post(
+        "/contact/",
+        {
+          name: form.name.trim(),
+          email: form.email.trim(),
+          phone: form.phone.trim(),
+          message: form.message.trim(),
+        }
+      );
+
+      setSuccess(
+        language === "ru"
+          ? "Сообщение успешно отправлено. Мы свяжемся с вами."
+          : "Xabaringiz muvaffaqiyatli yuborildi. Siz bilan bog‘lanamiz."
+      );
+
+      setForm({
+        name: "",
+        email: "",
+        phone: "",
+        message: "",
+      });
+
+    } catch (err) {
+      console.error(
+        "Contact form error:",
+        err.response?.data || err
+      );
+
+      const backendData =
+        err.response?.data;
+
+      if (
+        backendData?.contact
+      ) {
+        const contactError =
+          Array.isArray(
+            backendData.contact
+          )
+            ? backendData.contact[0]
+            : backendData.contact;
+
+        setError(
+          contactError
+        );
+
+      } else {
+        setError(
+          language === "ru"
+            ? "Не удалось отправить сообщение. Попробуйте ещё раз."
+            : "Xabarni yuborib bo‘lmadi. Qayta urinib ko‘ring."
+        );
+      }
+
+    } finally {
+      setSubmitting(false);
+    }
   };
 
 
@@ -75,58 +136,108 @@ function ContactPage() {
 
             <div className="space-y-5">
 
+              {/* NAME */}
               <div>
 
-                <label className="mb-2 block text-sm font-medium text-stone-700">
+                <label
+                  htmlFor="contact-name"
+                  className="mb-2 block text-sm font-medium text-stone-700"
+                >
                   {language === "ru"
                     ? "Имя"
                     : "Ism"}
                 </label>
 
                 <input
+                  id="contact-name"
                   name="name"
+                  type="text"
                   required
                   value={form.name}
                   onChange={handleChange}
-                  className="w-full rounded-xl border border-stone-300 px-4 py-3 outline-none focus:border-[#173f35]"
+                  autoComplete="name"
+                  className="w-full rounded-xl border border-stone-300 px-4 py-3 outline-none transition focus:border-[#173f35]"
                 />
 
               </div>
 
 
+              {/* EMAIL */}
               <div>
 
-                <label className="mb-2 block text-sm font-medium text-stone-700">
+                <label
+                  htmlFor="contact-email"
+                  className="mb-2 block text-sm font-medium text-stone-700"
+                >
                   Email
                 </label>
 
                 <input
+                  id="contact-email"
                   name="email"
                   type="email"
-                  required
                   value={form.email}
                   onChange={handleChange}
-                  className="w-full rounded-xl border border-stone-300 px-4 py-3 outline-none focus:border-[#173f35]"
+                  autoComplete="email"
+                  placeholder="example@gmail.com"
+                  className="w-full rounded-xl border border-stone-300 px-4 py-3 outline-none transition focus:border-[#173f35]"
                 />
 
               </div>
 
 
+              {/* PHONE */}
               <div>
 
-                <label className="mb-2 block text-sm font-medium text-stone-700">
+                <label
+                  htmlFor="contact-phone"
+                  className="mb-2 block text-sm font-medium text-stone-700"
+                >
+                  {language === "ru"
+                    ? "Телефон"
+                    : "Telefon"}
+                </label>
+
+                <input
+                  id="contact-phone"
+                  name="phone"
+                  type="tel"
+                  value={form.phone}
+                  onChange={handleChange}
+                  autoComplete="tel"
+                  placeholder="+998 90 123 45 67"
+                  className="w-full rounded-xl border border-stone-300 px-4 py-3 outline-none transition focus:border-[#173f35]"
+                />
+
+                <p className="mt-2 text-xs text-stone-500">
+                  {language === "ru"
+                    ? "Укажите хотя бы email или номер телефона."
+                    : "Email yoki telefon raqamidan kamida bittasini kiriting."}
+                </p>
+
+              </div>
+
+
+              {/* MESSAGE */}
+              <div>
+
+                <label
+                  htmlFor="contact-message"
+                  className="mb-2 block text-sm font-medium text-stone-700"
+                >
                   {language === "ru"
                     ? "Сообщение"
                     : "Xabar"}
                 </label>
 
                 <textarea
+                  id="contact-message"
                   name="message"
                   required
                   rows="6"
                   value={form.message}
                   onChange={handleChange}
-                  className="w-full rounded-xl border border-stone-300 px-4 py-3 outline-none focus:border-[#173f35]"
+                  className="w-full resize-none rounded-xl border border-stone-300 px-4 py-3 outline-none transition focus:border-[#173f35]"
                 />
 
               </div>
@@ -134,6 +245,7 @@ function ContactPage() {
             </div>
 
 
+            {/* SUCCESS */}
             {success && (
               <div className="mt-5 rounded-xl bg-green-50 p-4 text-sm leading-6 text-green-700">
                 {success}
@@ -141,13 +253,27 @@ function ContactPage() {
             )}
 
 
+            {/* ERROR */}
+            {error && (
+              <div className="mt-5 rounded-xl bg-red-50 p-4 text-sm leading-6 text-red-700">
+                {error}
+              </div>
+            )}
+
+
+            {/* SUBMIT */}
             <button
               type="submit"
-              className="mt-6 rounded-full bg-[#173f35] px-7 py-3.5 font-medium text-white transition hover:bg-[#245448]"
+              disabled={submitting}
+              className="mt-6 rounded-full bg-[#173f35] px-7 py-3.5 font-medium text-white transition hover:bg-[#245448] disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {language === "ru"
-                ? "Отправить"
-                : "Yuborish"}
+              {submitting
+                ? language === "ru"
+                  ? "Отправка..."
+                  : "Yuborilmoqda..."
+                : language === "ru"
+                  ? "Отправить"
+                  : "Yuborish"}
             </button>
 
           </form>
