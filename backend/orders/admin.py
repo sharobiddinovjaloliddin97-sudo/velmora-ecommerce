@@ -1,3 +1,4 @@
+from django import forms
 from django.contrib import admin
 from django.core.exceptions import ValidationError
 
@@ -7,9 +8,75 @@ from .models import (
     OrderStatusHistory,
 )
 from .services import (
+    ALLOWED_STATUS_TRANSITIONS,
     change_order_status,
     mark_order_paid,
 )
+
+
+class OrderAdminForm(forms.ModelForm):
+    class Meta:
+        model = Order
+        fields = "__all__"
+
+    def clean_status(self):
+        requested_status = self.cleaned_data.get(
+            "status"
+        )
+
+        if not self.instance.pk:
+            return requested_status
+
+        old_status = (
+            Order.objects
+            .only("status")
+            .get(pk=self.instance.pk)
+            .status
+        )
+
+        if requested_status == old_status:
+            return requested_status
+
+        allowed = ALLOWED_STATUS_TRANSITIONS.get(
+            old_status,
+            set(),
+        )
+
+        if requested_status not in allowed:
+            raise forms.ValidationError(
+                f"{old_status} holatidan "
+                f"{requested_status} holatiga "
+                "o‘tish mumkin emas."
+            )
+
+        return requested_status
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        requested_status = cleaned_data.get(
+            "status"
+        )
+
+        cancellation_reason = (
+            cleaned_data.get(
+                "cancellation_reason",
+                "",
+            )
+            or ""
+        )
+
+        if (
+            requested_status
+            == Order.Status.CANCELLED
+            and not cancellation_reason.strip()
+        ):
+            self.add_error(
+                "cancellation_reason",
+                "Bekor qilish sababi majburiy.",
+            )
+
+        return cleaned_data
 
 
 class OrderItemInline(admin.TabularInline):
@@ -51,6 +118,7 @@ class OrderStatusHistoryInline(admin.TabularInline):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
+    form = OrderAdminForm
     list_display = (
         "order_number",
         "recipient_name",
