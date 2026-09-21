@@ -1,214 +1,318 @@
 import { Link } from "react-router-dom";
-
+import {
+  Sparkles,
+  CheckCircle2,
+  Truck,
+  Phone,
+  Send,
+  ArrowRight,
+  ShieldCheck,
+  Layers,
+  Sun,
+  Snowflake,
+  BedDouble,
+  Smile,
+} from "lucide-react";
 import { useLanguage } from "../context/LanguageContext";
-
 
 function AboutPage() {
   const { language } = useLanguage();
 
+  const productsList = [
+    {
+      icon: BedDouble,
+      title:
+        language === "ru"
+          ? "Комплекты постельного белья"
+          : "Choyshab to‘plamlari",
+      desc:
+        language === "ru"
+          ? "Односпальные и двуспальные комплекты из высококачественных натуральных тканей"
+          : "Bir kishilik va ikki kishilik tabiiy sifatli matolardan tikilgan to‘plamlar",
+      badge: language === "ru" ? "1 va 2 kishilik" : "1 va 2 kishilik",
+    },
+    {
+      icon: Sun,
+      title:
+        language === "ru"
+          ? "Летние комплекты одеял"
+          : "Yozgi ko‘rpa to‘plamlari",
+      desc:
+        language === "ru"
+          ? "Легкие, дышащие и приятные к телу одеяла для комфортного сна в теплое время года"
+          : "Yoz faslida qulay orom olish uchun engil, havo o‘tkazuvchan va shinam ko‘rpalar",
+      badge: language === "ru" ? "Летняя серия" : "Yozgi mavsum",
+    },
+    {
+      icon: Snowflake,
+      title:
+        language === "ru"
+          ? "Зимние комплекты одеял"
+          : "Qishgi ko‘rpa to‘plamlari",
+      desc:
+        language === "ru"
+          ? "Мягкие, теплые и долговечные комплекты, дарящие уют и тепло в холодные ночи"
+          : "Sovuq kunlarda iliq harorat va quchoq ochuvchi shinamlik beruvchi issiq to‘plamlar",
+      badge: language === "ru" ? "Зимняя серия" : "Qishgi mavsum",
+    },
+    {
+      icon: Layers,
+      title:
+        language === "ru"
+          ? "Матрасы одно- и двуспальные"
+          : "Bir va ikki kishilik matraslar",
+      desc:
+        language === "ru"
+          ? "Ортопедическая поддержка позвоночника, надежные наполнители и долгий срок службы"
+          : "Qulay qomat tayanchi, yuqori sifatli to‘ldiruvchilar va uzoq yillik xizmat muddati",
+      badge: language === "ru" ? "Анатомические" : "Ortopedik",
+    },
+    {
+      icon: Smile,
+      title:
+        language === "ru"
+          ? "Наволочки для подушек"
+          : "Yostiq jildlari (50×70 va 70×70)",
+      desc:
+        language === "ru"
+          ? "Стандартные размеры 50×70 и 70×70 см из прочной ткани, сохраняющей форму после стирок"
+          : "50×70 va 70×70 o‘lchamdagi yuvishga chidamli va shaklini yo‘qotmaydigan jildlar",
+      badge: "50×70 • 70×70",
+    },
+  ];
+
   return (
-    <div className="bg-[#f8f5ef]">
-
-      {/* HERO */}
-      <section className="bg-[#eee7da]">
-        <div className="mx-auto grid max-w-7xl gap-8 px-4 py-10 sm:px-6 sm:py-16 md:py-20 lg:grid-cols-2 lg:items-center">
-
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#52796f] sm:text-sm">
-              Velmora
-            </p>
-
-            <h1 className="mt-3 text-3xl font-semibold leading-tight text-[#173f35] break-words sm:mt-4 sm:text-5xl">
-              {language === "ru"
-                ? "Уют начинается с деталей"
-                : "Shinamlik detallardan boshlanadi"}
-            </h1>
-
-            <p className="mt-4 max-w-xl text-base leading-7 text-stone-600 sm:mt-6 sm:text-lg sm:leading-8">
-              {language === "ru"
-                ? "Velmora предлагает практичный и эстетичный домашний текстиль для комфортной атмосферы в вашем доме."
-                : "Velmora uyingizda qulay va shinam muhit yaratish uchun amaliy hamda estetik uy tekstili mahsulotlarini taklif qiladi."}
-            </p>
-          </div>
-
-
-          <div className="min-h-[260px] rounded-3xl bg-gradient-to-br from-[#d6ccbc] via-[#f5efe5] to-[#a7b6aa] p-5 sm:min-h-[420px] sm:rounded-[40px] sm:p-8">
-
-            <div className="flex h-full items-end">
-
-              <div className="w-full max-w-sm rounded-2xl bg-white/85 p-4 shadow-sm backdrop-blur sm:rounded-[28px] sm:p-6">
-
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#52796f] sm:text-sm">
-                  Velmora Home
-                </p>
-
-                <p className="mt-2 text-xl font-semibold leading-snug text-[#173f35] sm:mt-3 sm:text-2xl">
-                  {language === "ru"
-                    ? "Красота и комфорт для вашего дома"
-                    : "Uyingiz uchun go‘zallik va qulaylik"}
-                </p>
-
+    <div className="bg-[#faf7f2] min-h-screen text-[#2d241e]">
+      {/* HERO SECTION */}
+      <section className="relative overflow-hidden pt-12 pb-16 sm:pt-20 sm:pb-24 border-b border-[#ebdcca]">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="grid lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+            {/* Left Column: Story */}
+            <div className="lg:col-span-7">
+              {/* Brand Tag */}
+              <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-[#f4efe6] border border-[#dfd2c0] text-[#8a735e] text-sm font-semibold tracking-wider uppercase mb-6">
+                <Sparkles className="w-4 h-4 text-[#8a735e]" />
+                <span>Velmora Home Textile</span>
               </div>
 
+              <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-bold text-[#3b2d24] leading-[1.2] tracking-tight">
+                {language === "ru" ? (
+                  <>
+                    Уют и качество в{" "}
+                    <span className="italic font-normal text-[#8a735e]">каждый дом</span>
+                  </>
+                ) : (
+                  <>
+                    Har bir xonadonga{" "}
+                    <span className="italic font-normal text-[#8a735e]">shinamlik va sifat</span>
+                  </>
+                )}
+              </h1>
+
+              {/* Main text as specified by user */}
+              <div className="mt-6 space-y-4 text-[#4a3b32] text-base sm:text-lg lg:text-xl leading-relaxed font-normal">
+                <p>
+                  {language === "ru"
+                    ? "Velmora — мы производим для наших клиентов комплекты постельного белья, летние и зимние одеяла, матрасы, а также наволочки из натуральных и качественных тканей."
+                    : "Velmora — Biz mijozlarimiz uchun tabiiy va sifatli matolardan tayyorlangan choyshab to‘plamlari, yozgi va qishgi ko‘rpa to‘plamlari, matraslar hamda yostiq jildlarini ishlab chiqaramiz."}
+                </p>
+                <p>
+                  {language === "ru"
+                    ? "Каждое наше изделие отличается исключительной прочностью, комфортом и долгим сроком службы. Velmora ставит своей целью принести настоящий уют и безупречное качество в каждый дом."
+                    : "Har bir mahsulotimiz mustahkamligi, qulayligi va uzoq muddat xizmat qilishi bilan ajralib turadi. Velmora har bir xonadonga shinamlik va sifat olib kirishni o‘z oldiga maqsad qilgan."}
+                </p>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="mt-8 flex flex-wrap items-center gap-4">
+                <Link
+                  to="/catalog"
+                  className="inline-flex items-center gap-2.5 px-8 py-4 rounded-full bg-[#3b2d24] text-white font-medium text-base transition-all duration-300 shadow-md hover:bg-[#271f19] hover:shadow-lg"
+                >
+                  <span>{language === "ru" ? "Смотреть каталог" : "Mahsulotlar katalogi"}</span>
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+
+                <a
+                  href="https://t.me/velmoramahsulotlari"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2.5 px-7 py-4 rounded-full border border-[#d6c6b3] bg-white text-[#3b2d24] font-medium text-base transition hover:bg-[#f4efe6]"
+                >
+                  <Send className="w-4 h-4 text-[#8a735e]" />
+                  <span>Telegram: @velmoramahsulotlari</span>
+                </a>
+              </div>
             </div>
 
-          </div>
+            {/* Right Column: Luxury Card with Real Logo */}
+            <div className="lg:col-span-5">
+              <div className="relative mx-auto max-w-md lg:max-w-none">
+                <div className="rounded-3xl bg-white p-8 sm:p-10 text-center shadow-[0_15px_45px_-15px_rgba(59,45,36,0.1)] border border-[#ebdcca]">
+                  {/* Real Logo */}
+                  <div className="mx-auto w-32 h-32 sm:w-40 sm:h-40 rounded-2xl overflow-hidden bg-[#faf7f2] p-2 flex items-center justify-center border border-[#dfd2c0]/60 shadow-inner mb-6">
+                    <img
+                      src="/logo.png"
+                      alt="Velmora Logo"
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
 
+                  <p className="text-xs font-bold uppercase tracking-[0.25em] text-[#8a735e]">
+                    VELMORA ATELIER
+                  </p>
+
+                  <h3 className="mt-2 font-serif text-2xl sm:text-3xl font-bold text-[#3b2d24]">
+                    {language === "ru" ? "Собственное производство" : "O‘zimiz ishlab chiqaramiz"}
+                  </h3>
+
+                  <p className="mt-3 text-sm sm:text-base text-[#6b584a] leading-relaxed">
+                    {language === "ru"
+                      ? "100% натуральные экологически чистые ткани, строгий контроль качества и забота о вашем глубоком сне."
+                      : "100% tabiiy va ekologik toza matolar, qat’iy sifat nazorati hamda sog‘lom uyqungiz garovi."}
+                  </p>
+
+                  <div className="mt-6 pt-6 border-t border-[#ebdcca] flex items-center justify-center gap-6 text-xs sm:text-sm text-[#8a735e] font-semibold">
+                    <div className="flex items-center gap-1.5">
+                      <ShieldCheck className="w-4 h-4 text-[#8a735e]" />
+                      <span>{language === "ru" ? "100% Гарантия" : "100% Kafolat"}</span>
+                    </div>
+                    <span>•</span>
+                    <div className="flex items-center gap-1.5">
+                      <Truck className="w-4 h-4 text-[#8a735e]" />
+                      <span>{language === "ru" ? "Бесплатная доставка" : "Bepul yetkazish"}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
-
-      {/* VALUES */}
-      <section className="bg-[#fffdf8]">
-
-        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-20">
-
-          <div className="max-w-2xl">
-
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#52796f] sm:text-sm">
-              {language === "ru"
-                ? "Наш подход"
-                : "Bizning yondashuvimiz"}
+      {/* MAHSULOTLARIMIZ (PRODUCTS GRID) */}
+      <section className="py-16 sm:py-24 bg-[#f4efe6]/50">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="max-w-2xl text-center mx-auto mb-12 sm:mb-16">
+            <p className="text-xs sm:text-sm font-bold uppercase tracking-[0.25em] text-[#8a735e]">
+              {language === "ru" ? "НАШ АССОРТИМЕНТ" : "MAHSULOTLARIMIZ"}
             </p>
-
-            <h2 className="mt-2 text-2xl font-semibold text-[#173f35] sm:mt-3 sm:text-4xl">
+            <h2 className="mt-2 font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-[#3b2d24]">
               {language === "ru"
-                ? "Просто, удобно и красиво"
-                : "Sodda, qulay va chiroyli"}
+                ? "Всё для идеального отдыха и уюта"
+                : "Uyingiz uchun sifatli va qulay to‘plamlar"}
             </h2>
-
+            <p className="mt-3 text-base sm:text-lg text-[#6b584a]">
+              {language === "ru"
+                ? "Мы создаем продукцию, которая дарит мягкость, комфорт и долгие годы безупречной службы"
+                : "Biz uzoq yillar xizmat qiladigan, tanaga yoqimli va xonadonga ko‘rk bag‘ishlovchi mahsulotlarni taqdim etamiz"}
+            </p>
           </div>
 
+          <div className="grid gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {productsList.map((item, idx) => {
+              const Icon = item.icon;
+              return (
+                <div
+                  key={idx}
+                  className="bg-white rounded-3xl p-7 sm:p-8 border border-[#ebdcca] shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between"
+                >
+                  <div>
+                    <div className="flex items-center justify-between mb-5">
+                      <div className="w-14 h-14 rounded-2xl bg-[#faf7f2] text-[#8a735e] border border-[#dfd2c0]/60 flex items-center justify-center">
+                        <Icon className="w-7 h-7" />
+                      </div>
+                      <span className="text-xs font-semibold px-3 py-1 rounded-full bg-[#f4efe6] text-[#8a735e] border border-[#dfd2c0]/60">
+                        {item.badge}
+                      </span>
+                    </div>
 
-          <div className="mt-8 grid gap-4 sm:gap-6 grid-cols-1 md:grid-cols-3">
+                    <h3 className="font-serif text-xl sm:text-2xl font-bold text-[#3b2d24]">
+                      {item.title}
+                    </h3>
 
-            <div className="rounded-2xl border border-stone-200 bg-white p-5 sm:rounded-[28px] sm:p-7">
+                    <p className="mt-3 text-sm sm:text-base text-[#6b584a] leading-relaxed">
+                      {item.desc}
+                    </p>
+                  </div>
 
-              <h3 className="text-lg font-semibold text-[#173f35] sm:text-xl">
-                {language === "ru"
-                  ? "Комфорт"
-                  : "Qulaylik"}
-              </h3>
+                  <div className="mt-6 pt-5 border-t border-stone-100 flex items-center gap-2 text-xs sm:text-sm font-semibold text-[#8a735e]">
+                    <CheckCircle2 className="w-4 h-4 text-[#8a735e]" />
+                    <span>{language === "ru" ? "Премиум качество" : "Oliy toifali sifat"}</span>
+                  </div>
+                </div>
+              );
+            })}
 
-              <p className="mt-2 text-sm leading-6 text-stone-600 sm:mt-3 sm:text-base sm:leading-7">
-                {language === "ru"
-                  ? "Товары для повседневного комфортного использования."
-                  : "Kundalik hayotda qulay foydalanishga mos mahsulotlar."}
-              </p>
+            {/* Special Delivery Only Card */}
+            <div className="bg-[#3b2d24] text-white rounded-3xl p-7 sm:p-8 shadow-xl flex flex-col justify-between">
+              <div>
+                <div className="w-14 h-14 rounded-2xl bg-white/10 text-[#c1a27c] flex items-center justify-center mb-5">
+                  <Truck className="w-7 h-7" />
+                </div>
+                <h3 className="font-serif text-xl sm:text-2xl font-bold text-white">
+                  {language === "ru"
+                    ? "Только доставка по городу"
+                    : "Faqat yetkazib berish xizmati"}
+                </h3>
+                <p className="mt-3 text-sm sm:text-base text-stone-200 leading-relaxed font-light">
+                  {language === "ru"
+                    ? "Мы работаем исключительно в формате онлайн-заказа с быстрой курьерской доставкой. Стоимость доставки по Ташкенту — 0 сум!"
+                    : "Biz do‘konga borish ovoragarchiligisiz, to‘g‘ridan-to‘g‘ri uyingizgacha bepul yetkazib beramiz. Toshkent bo‘ylab yetkazish narxi — 0 so‘m!"}
+                </p>
+              </div>
 
+              <div className="mt-6 pt-5 border-t border-white/10 flex items-center justify-between text-xs sm:text-sm text-[#c1a27c] font-semibold">
+                <span>{language === "ru" ? "Оплата при получении" : "Ko‘rib, naqd to‘lov qilish"}</span>
+                <span>0 UZS</span>
+              </div>
             </div>
-
-
-            <div className="rounded-2xl border border-stone-200 bg-white p-5 sm:rounded-[28px] sm:p-7">
-
-              <h3 className="text-lg font-semibold text-[#173f35] sm:text-xl">
-                {language === "ru"
-                  ? "Эстетика"
-                  : "Estetika"}
-              </h3>
-
-              <p className="mt-2 text-sm leading-6 text-stone-600 sm:mt-3 sm:text-base sm:leading-7">
-                {language === "ru"
-                  ? "Спокойный дизайн, который легко вписывается в интерьер."
-                  : "Interyerga oson mos tushadigan sokin va chiroyli dizayn."}
-              </p>
-
-            </div>
-
-
-            <div className="rounded-2xl border border-stone-200 bg-white p-5 sm:rounded-[28px] sm:p-7">
-
-              <h3 className="text-lg font-semibold text-[#173f35] sm:text-xl">
-                {language === "ru"
-                  ? "Удобная покупка"
-                  : "Qulay xarid"}
-              </h3>
-
-              <p className="mt-2 text-sm leading-6 text-stone-600 sm:mt-3 sm:text-base sm:leading-7">
-                {language === "ru"
-                  ? "Простой выбор товара, оформление заказа и доставка."
-                  : "Mahsulot tanlash, buyurtma berish va yetkazib berish jarayoni sodda."}
-              </p>
-
-            </div>
-
           </div>
-
         </div>
-
       </section>
 
+      {/* DIRECT CONTACT & TELEGRAM BANNER */}
+      <section className="py-16 sm:py-20 bg-white border-t border-[#ebdcca]">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 text-center">
+          <p className="text-xs sm:text-sm font-bold uppercase tracking-[0.25em] text-[#8a735e]">
+            {language === "ru" ? "СВЯЖИТЕСЬ С НАМИ" : "BIZ BILAN BOG‘LANING"}
+          </p>
 
-      {/* DELIVERY */}
-      <section className="bg-[#173f35] text-white">
-
-        <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:px-6 sm:py-20 lg:grid-cols-2">
-
-          <div>
-
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#b8c9c0] sm:text-sm">
-              {language === "ru"
-                ? "Доставка"
-                : "Yetkazib berish"}
-            </p>
-
-            <h2 className="mt-3 text-2xl font-semibold leading-tight sm:mt-4 sm:text-4xl">
-              {language === "ru"
-                ? "Бесплатная доставка по Ташкенту"
-                : "Toshkent bo‘ylab bepul yetkazib berish"}
-            </h2>
-
-          </div>
-
-
-          <div>
-
-            <p className="leading-8 text-[#dce5e0]">
-              {language === "ru"
-                ? "На текущем этапе Velmora осуществляет доставку только в пределах города Ташкент. Стоимость доставки — 0 сум."
-                : "Hozirgi bosqichda Velmora buyurtmalarni faqat Toshkent shahri hududida yetkazib beradi. Yetkazib berish narxi — 0 so‘m."}
-            </p>
-
-            <p className="mt-4 leading-8 text-[#dce5e0]">
-              {language === "ru"
-                ? "Оплата производится наличными при получении товара."
-                : "To‘lov mahsulotni qabul qilganda naqd amalga oshiriladi."}
-            </p>
-
-          </div>
-
-        </div>
-
-      </section>
-
-
-      {/* CTA */}
-      <section className="bg-[#fffdf8]">
-
-        <div className="mx-auto max-w-7xl px-4 py-12 text-center sm:px-6 sm:py-20">
-
-          <h2 className="text-2xl font-semibold text-[#173f35] sm:text-4xl">
+          <h2 className="mt-2 font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-[#3b2d24]">
             {language === "ru"
-              ? "Найдите товар для своего дома"
-              : "Uyingiz uchun mos mahsulotni toping"}
+              ? "Остались вопросы или хотите сделать заказ?"
+              : "Savollaringiz bormi yoki buyurtma bermoqchimisiz?"}
           </h2>
 
-          <Link
-            to="/catalog"
-            className="mt-6 inline-block w-full rounded-full bg-[#173f35] px-8 py-4 font-medium text-white transition hover:bg-[#245448] sm:mt-8 sm:w-auto"
-          >
+          <p className="mt-3 text-base sm:text-lg text-[#6b584a] max-w-xl mx-auto">
             {language === "ru"
-              ? "Перейти в каталог"
-              : "Katalogga o‘tish"}
-          </Link>
+              ? "Напишите нам в Telegram или позвоните по телефону. Мы с радостью подберём идеальный комплект для вашей спальни."
+              : "Telegram orqali yozing yoki qo‘ng‘iroq qiling. Xodimlaringiz sizga mos o‘lcham va matoni tanlashda ko‘maklashadi."}
+          </p>
 
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-4 sm:gap-6">
+            <a
+              href="https://t.me/velmoramahsulotlari"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-[#0088cc] text-white font-semibold text-base transition-all duration-300 shadow-md hover:bg-[#0077b5] hover:shadow-lg"
+            >
+              <Send className="w-5 h-5" />
+              <span>t.me/velmoramahsulotlari</span>
+            </a>
+
+            <a
+              href="tel:+998930791734"
+              className="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-[#3b2d24] text-white font-semibold text-base transition-all duration-300 shadow-md hover:bg-[#271f19] hover:shadow-lg"
+            >
+              <Phone className="w-5 h-5 text-[#c1a27c]" />
+              <span>+998 93 079 17 34</span>
+            </a>
+          </div>
         </div>
-
       </section>
-
     </div>
   );
 }
-
 
 export default AboutPage;

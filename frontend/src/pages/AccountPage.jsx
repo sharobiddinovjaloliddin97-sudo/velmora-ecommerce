@@ -5,164 +5,99 @@ import {
 
 import {
   Link,
+  useNavigate,
 } from "react-router-dom";
 
+import {
+  Check,
+  ChevronRight,
+  Clock,
+  Heart,
+  KeyRound,
+  LogOut,
+  Package,
+  Trash2,
+  User,
+} from "lucide-react";
+
 import api from "../api/client";
-
 import PasswordInput from "../components/PasswordInput";
-
-import {
-  useAuth,
-} from "../context/AuthContext";
-
-import {
-  useFavorites,
-} from "../context/FavoritesContext";
-
-import {
-  useLanguage,
-} from "../context/LanguageContext";
-
-import {
-  getOrderStatusLabel,
-} from "../utils/orderLabels";
+import { useAuth } from "../context/AuthContext";
+import { useFavorites } from "../context/FavoritesContext";
+import { useLanguage } from "../context/LanguageContext";
+import { getOrderStatusLabel } from "../utils/orderLabels";
 
 
 function AccountPage() {
-  const {
-    user,
-    setUser,
-  } = useAuth();
+  const navigate = useNavigate();
+  const { user, setUser, logout } = useAuth();
+  const { language } = useLanguage();
+  const { removeFavorite } = useFavorites();
 
-  const {
-    language,
-  } = useLanguage();
+  const [activeTab, setActiveTab] = useState("orders"); // 'orders' | 'favorites' | 'profile' | 'security'
 
-  const {
-    removeFavorite,
-  } = useFavorites();
+  const [profile, setProfile] = useState({
+    first_name: "",
+    last_name: "",
+    email: "",
+  });
 
-  const [profile, setProfile] =
-    useState({
-      first_name: "",
-      last_name: "",
-      email: "",
-    });
+  const [orders, setOrders] = useState([]);
+  const [favorites, setFavorites] = useState([]);
 
-
-  const [orders, setOrders] =
-    useState([]);
-
-  const [favorites, setFavorites] =
-    useState([]);
-
-
-  const [loading, setLoading] =
-    useState(true);
-
-  const [saving, setSaving] =
-    useState(false);
-
-  const [message, setMessage] =
-    useState("");
-
-  const [error, setError] =
-    useState("");
-
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
 
   // CHANGE PASSWORD
-  const [
-    passwordForm,
-    setPasswordForm,
-  ] = useState({
+  const [passwordForm, setPasswordForm] = useState({
     old_password: "",
     new_password: "",
     new_password_confirm: "",
   });
 
-  const [
-    changingPassword,
-    setChangingPassword,
-  ] = useState(false);
-
-  const [
-    passwordMessage,
-    setPasswordMessage,
-  ] = useState("");
-
-  const [
-    passwordError,
-    setPasswordError,
-  ] = useState("");
-
+  const [changingPassword, setChangingPassword] = useState(false);
+  const [passwordMessage, setPasswordMessage] = useState("");
+  const [passwordError, setPasswordError] = useState("");
 
   // =========================
   // LOAD ACCOUNT DATA
   // =========================
-
   useEffect(() => {
     let cancelled = false;
 
-    Promise.all([
-      api.get(
-        "/auth/profile/"
-      ),
-
-      api.get(
-        "/orders/"
-      ),
-
-      api.get(
-        "/favorites/",
-        {
-          params: {
-            lang: language,
-          },
-        }
-      ),
+    Promise.allSettled([
+      api.get("/auth/profile/"),
+      api.get("/orders/"),
+      api.get("/favorites/", {
+        params: { lang: language },
+      }),
     ])
-      .then(
-        ([
-          profileResponse,
-          ordersResponse,
-          favoritesResponse,
-        ]) => {
-          if (cancelled) {
-            return;
-          }
+      .then(([profileRes, ordersRes, favoritesRes]) => {
+        if (cancelled) return;
 
-          setProfile(
-            profileResponse.data
-          );
-
-          setOrders(
-            ordersResponse.data.results ??
-              ordersResponse.data
-          );
-
-          setFavorites(
-            favoritesResponse.data.results ??
-              favoritesResponse.data
-          );
-
-          setError("");
+        if (profileRes.status === "fulfilled") {
+          setProfile(profileRes.value.data);
         }
-      )
+
+        if (ordersRes.status === "fulfilled") {
+          const ordData =
+            ordersRes.value.data.results ?? ordersRes.value.data;
+          setOrders(Array.isArray(ordData) ? ordData : []);
+        }
+
+        if (favoritesRes.status === "fulfilled") {
+          const favData =
+            favoritesRes.value.data.results ?? favoritesRes.value.data;
+          setFavorites(Array.isArray(favData) ? favData : []);
+        }
+
+        setError("");
+      })
       .catch((err) => {
-        if (cancelled) {
-          return;
-        }
-
-        console.error(
-          "Account load error:",
-          err.response?.data || err
-        );
-
-        setError(
-          language === "ru"
-            ? "Не удалось загрузить данные кабинета."
-            : "Kabinet ma’lumotlarini yuklashda xatolik yuz berdi."
-        );
+        if (cancelled) return;
+        console.error("Account load error:", err);
       })
       .finally(() => {
         if (!cancelled) {
@@ -170,809 +105,653 @@ function AccountPage() {
         }
       });
 
-
     return () => {
       cancelled = true;
     };
   }, [language]);
 
+  const handleProfileChange = (event) => {
+    setProfile({
+      ...profile,
+      [event.target.name]: event.target.value,
+    });
+  };
 
-  // =========================
-  // PROFILE
-  // =========================
+  const saveProfile = async (event) => {
+    event.preventDefault();
+    setSaving(true);
+    setError("");
+    setMessage("");
 
-  const handleProfileChange =
-    (event) => {
-
-      setProfile({
-        ...profile,
-
-        [event.target.name]:
-          event.target.value,
+    try {
+      const response = await api.patch("/auth/profile/", {
+        first_name: profile.first_name,
+        last_name: profile.last_name,
+        email: profile.email,
       });
-    };
 
+      setProfile(response.data);
+      setUser(response.data);
+      setMessage(
+        language === "ru"
+          ? "Профиль успешно сохранён."
+          : "Profil ma’lumotlari muvaffaqiyatli saqlandi."
+      );
+    } catch (err) {
+      console.error("Profile save error:", err);
+      const data = err.response?.data;
+      setError(
+        data?.email?.[0] ||
+          (language === "ru"
+            ? "Не удалось сохранить профиль."
+            : "Profilni saqlashda xatolik yuz berdi.")
+      );
+    } finally {
+      setSaving(false);
+    }
+  };
 
-  const saveProfile =
-    async (event) => {
+  const handlePasswordChange = (event) => {
+    setPasswordForm({
+      ...passwordForm,
+      [event.target.name]: event.target.value,
+    });
+  };
 
-      event.preventDefault();
+  const changePassword = async (event) => {
+    event.preventDefault();
+    setPasswordError("");
+    setPasswordMessage("");
 
-      setSaving(true);
-      setError("");
-      setMessage("");
+    if (passwordForm.new_password !== passwordForm.new_password_confirm) {
+      setPasswordError(
+        language === "ru"
+          ? "Новые пароли не совпадают."
+          : "Yangi parollar bir xil emas."
+      );
+      return;
+    }
 
-      try {
-        const response = await api.patch(
-          "/auth/profile/",
-          {
-            first_name: profile.first_name,
-            last_name: profile.last_name,
-            email: profile.email,
-          }
-        );
+    setChangingPassword(true);
 
-
-        setProfile(
-          response.data
-        );
-
-        setUser(
-          response.data
-        );
-
-
-        setMessage(
-          language === "ru"
-            ? "Профиль успешно сохранён."
-            : "Profil muvaffaqiyatli saqlandi."
-        );
-
-      } catch (err) {
-        console.error(
-          "Profile save error:",
-          err.response?.data ||
-            err
-        );
-
-        const data =
-          err.response?.data;
-
-
-        setError(
-          data?.email?.[0] ||
-          (
-            language === "ru"
-              ? "Не удалось сохранить профиль."
-              : "Profilni saqlashda xatolik yuz berdi."
-          )
-        );
-
-      } finally {
-        setSaving(false);
-      }
-    };
-
-
-  // =========================
-  // CHANGE PASSWORD
-  // =========================
-
-  const handlePasswordChange =
-    (event) => {
+    try {
+      const response = await api.post("/auth/change-password/", passwordForm);
+      setPasswordMessage(
+        response.data?.detail ||
+          (language === "ru"
+            ? "Пароль успешно изменён."
+            : "Parol muvaffaqiyatli o‘zgartirildi.")
+      );
 
       setPasswordForm({
-        ...passwordForm,
-
-        [event.target.name]:
-          event.target.value,
+        old_password: "",
+        new_password: "",
+        new_password_confirm: "",
       });
-    };
-
-
-  const changePassword =
-    async (event) => {
-
-      event.preventDefault();
-
-      setPasswordError("");
-      setPasswordMessage("");
-
-
-      if (
-        passwordForm.new_password !==
-        passwordForm.new_password_confirm
-      ) {
+    } catch (err) {
+      console.error("Change password error:", err);
+      const data = err.response?.data;
+      if (data?.old_password?.[0]) {
+        setPasswordError(data.old_password[0]);
+      } else if (data?.new_password?.[0]) {
+        setPasswordError(data.new_password[0]);
+      } else if (data?.new_password_confirm?.[0]) {
+        setPasswordError(data.new_password_confirm[0]);
+      } else {
         setPasswordError(
           language === "ru"
-            ? "Новые пароли не совпадают."
-            : "Yangi parollar bir xil emas."
-        );
-
-        return;
-      }
-
-
-      setChangingPassword(true);
-
-
-      try {
-        const response = await api.post(
-          "/auth/change-password/",
-          passwordForm
-        );
-
-
-        setPasswordMessage(
-          response.data?.detail ||
-          (
-            language === "ru"
-              ? "Пароль успешно изменён."
-              : "Parol muvaffaqiyatli o‘zgartirildi."
-          )
-        );
-
-
-        setPasswordForm({
-          old_password: "",
-          new_password: "",
-          new_password_confirm: "",
-        });
-
-      } catch (err) {
-        console.error(
-          "Change password error:",
-          err.response?.data ||
-            err
-        );
-
-
-        const data =
-          err.response?.data;
-
-
-        if (
-          data?.old_password?.[0]
-        ) {
-          setPasswordError(
-            data.old_password[0]
-          );
-
-        } else if (
-          data?.new_password?.[0]
-        ) {
-          setPasswordError(
-            data.new_password[0]
-          );
-
-        } else if (
-          data?.new_password_confirm?.[0]
-        ) {
-          setPasswordError(
-            data.new_password_confirm[0]
-          );
-
-        } else if (
-          data?.non_field_errors?.[0]
-        ) {
-          setPasswordError(
-            data.non_field_errors[0]
-          );
-
-        } else {
-          setPasswordError(
-            language === "ru"
-              ? "Не удалось изменить пароль."
-              : "Parolni o‘zgartirishda xatolik yuz berdi."
-          );
-        }
-
-      } finally {
-        setChangingPassword(false);
-      }
-    };
-
-
-  // =========================
-  // FAVORITES
-  // =========================
-
-  const handleRemoveFavorite =
-    async (productId) => {
-
-      try {
-        await removeFavorite(productId);
-
-        setFavorites(
-          (prev) =>
-            prev.filter(
-              (favorite) =>
-                favorite.product.id !==
-                productId
-            )
-        );
-
-      } catch (err) {
-        console.error(
-          "Remove favorite error:",
-          err
-        );
-
-        setError(
-          language === "ru"
-            ? "Не удалось удалить товар из избранного."
-            : "Sevimli mahsulotni o‘chirishda xatolik yuz berdi."
+            ? "Не удалось изменить пароль."
+            : "Parolni o‘zgartirishda xatolik yuz berdi."
         );
       }
-    };
+    } finally {
+      setChangingPassword(false);
+    }
+  };
 
+  const handleRemoveFavorite = async (productId) => {
+    try {
+      await removeFavorite(productId);
+      setFavorites((prev) =>
+        prev.filter((item) => item.product.id !== productId)
+      );
+    } catch (err) {
+      console.error("Remove favorite error:", err);
+    }
+  };
 
-  // =========================
-  // LOADING
-  // =========================
+  const handleLogout = async () => {
+    await logout();
+    navigate("/");
+  };
+
+  const getStatusBadgeClass = (status) => {
+    switch (status) {
+      case "NEW":
+        return "bg-sky-50 text-sky-700 border-sky-200";
+      case "CONFIRMED":
+        return "bg-amber-50 text-amber-700 border-amber-200";
+      case "SHIPPING":
+        return "bg-purple-50 text-purple-700 border-purple-200";
+      case "DELIVERED":
+        return "bg-emerald-50 text-emerald-700 border-emerald-200";
+      case "CANCELLED":
+        return "bg-rose-50 text-rose-700 border-rose-200";
+      default:
+        return "bg-stone-50 text-stone-700 border-stone-200";
+    }
+  };
 
   if (loading) {
     return (
-      <div className="flex min-h-[60vh] items-center justify-center">
-
-        <p className="text-stone-500">
-          {language === "ru"
-            ? "Загрузка..."
-            : "Yuklanmoqda..."}
+      <div className="flex min-h-[65vh] items-center justify-center bg-[#faf8f5]">
+        <p className="text-sm font-medium text-stone-500">
+          {language === "ru" ? "Загрузка кабинета..." : "Kabinet yuklanmoqda..."}
         </p>
-
       </div>
     );
   }
 
+  const userInitial = profile.first_name
+    ? profile.first_name[0].toUpperCase()
+    : user?.email
+      ? user.email[0].toUpperCase()
+      : "V";
 
   return (
-    <div className="min-h-screen bg-[#f8f5ef] pt-4 sm:pt-6 md:pt-0">
-
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12">
-
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#52796f] sm:text-sm">
-          Velmora
-        </p>
-
-
-        <h1 className="mt-2 text-2xl font-semibold text-[#173f35] sm:mt-3 sm:text-4xl">
-
-          {language === "ru"
-            ? "Личный кабинет"
-            : "Shaxsiy kabinet"}
-
-        </h1>
-
-
-        <p className="mt-2 text-stone-600">
-
-          {language === "ru"
-            ? "Здравствуйте"
-            : "Salom"}
-          ,{" "}
-
-          {user?.first_name}
-
-        </p>
-
-
-        {error && (
-          <div className="mt-6 rounded-xl bg-red-50 p-4 text-red-700">
-            {error}
-          </div>
-        )}
-
-
-        {message && (
-          <div className="mt-6 rounded-xl bg-green-50 p-4 text-green-700">
-            {message}
-          </div>
-        )}
-
-
-        {/* ========================= */}
-        {/* PROFILE */}
-        {/* ========================= */}
-
-        <section className="mt-8 rounded-2xl bg-white p-5 shadow-sm sm:mt-10 sm:rounded-[30px] sm:p-7">
-
-          <h2 className="text-xl font-semibold text-[#173f35] sm:text-2xl">
-
-            {language === "ru"
-              ? "Профиль"
-              : "Profil"}
-
-          </h2>
-
-
-          <form
-            onSubmit={
-              saveProfile
-            }
-            className="mt-6 grid gap-5 md:grid-cols-2"
-          >
-
-            <div>
-
-              <label className="mb-2 block text-sm font-medium">
-
-                {language === "ru"
-                  ? "Имя"
-                  : "Ism"}
-
-              </label>
-
-              <input
-                name="first_name"
-                value={
-                  profile.first_name
-                }
-                onChange={
-                  handleProfileChange
-                }
-                className="w-full rounded-xl border border-stone-300 px-4 py-3"
-              />
-
-            </div>
-
-
-            <div>
-
-              <label className="mb-2 block text-sm font-medium">
-
-                {language === "ru"
-                  ? "Фамилия"
-                  : "Familiya"}
-
-              </label>
-
-              <input
-                name="last_name"
-                value={
-                  profile.last_name
-                }
-                onChange={
-                  handleProfileChange
-                }
-                className="w-full rounded-xl border border-stone-300 px-4 py-3"
-              />
-
-            </div>
-
-
-            <div className="md:col-span-2">
-
-              <label className="mb-2 block text-sm font-medium">
-                Email
-              </label>
-
-              <input
-                name="email"
-                type="email"
-                value={
-                  profile.email
-                }
-                onChange={
-                  handleProfileChange
-                }
-                className="w-full rounded-xl border border-stone-300 px-4 py-3"
-              />
-
-            </div>
-
-
-            <div className="md:col-span-2">
-
-              <button
-                type="submit"
-                disabled={
-                  saving
-                }
-                className="w-full rounded-full bg-[#173f35] px-7 py-3 font-medium text-white transition hover:bg-[#245448] disabled:opacity-50 sm:w-auto"
-              >
-
-                {saving
-                  ? language === "ru"
-                    ? "Сохранение..."
-                    : "Saqlanmoqda..."
-                  : language === "ru"
-                    ? "Сохранить профиль"
-                    : "Profilni saqlash"}
-
-              </button>
-
-            </div>
-
-          </form>
-
-        </section>
-
-
-        {/* ========================= */}
-        {/* CHANGE PASSWORD */}
-        {/* ========================= */}
-
-        <section className="mt-6 rounded-2xl bg-white p-5 shadow-sm sm:mt-8 sm:rounded-[30px] sm:p-7">
-
-          <h2 className="text-xl font-semibold text-[#173f35] sm:text-2xl">
-
-            {language === "ru"
-              ? "Изменить пароль"
-              : "Parolni o‘zgartirish"}
-
-          </h2>
-
-
-          <form
-            onSubmit={
-              changePassword
-            }
-            className="mt-6 grid gap-5 md:grid-cols-2"
-          >
-
-            <div className="md:col-span-2">
-
-              <label
-                htmlFor="old_password"
-                className="mb-2 block text-sm font-medium"
-              >
-
-                {language === "ru"
-                  ? "Текущий пароль"
-                  : "Hozirgi parol"}
-
-              </label>
-
-              <PasswordInput
-                id="old_password"
-                name="old_password"
-                required
-                autoComplete="current-password"
-                value={
-                  passwordForm.old_password
-                }
-                onChange={
-                  handlePasswordChange
-                }
-                showLabel={
-                  language === "ru"
-                    ? "Показать пароль"
-                    : "Parolni ko‘rsatish"
-                }
-                hideLabel={
-                  language === "ru"
-                    ? "Скрыть пароль"
-                    : "Parolni yashirish"
-                }
-                className="rounded-xl border border-stone-300 px-4 py-3 outline-none transition focus:border-[#173f35]"
-              />
-
-            </div>
-
-
-            <div>
-
-              <label
-                htmlFor="new_password"
-                className="mb-2 block text-sm font-medium"
-              >
-
-                {language === "ru"
-                  ? "Новый пароль"
-                  : "Yangi parol"}
-
-              </label>
-
-              <PasswordInput
-                id="new_password"
-                name="new_password"
-                required
-                autoComplete="new-password"
-                value={
-                  passwordForm.new_password
-                }
-                onChange={
-                  handlePasswordChange
-                }
-                showLabel={
-                  language === "ru"
-                    ? "Показать пароль"
-                    : "Parolni ko‘rsatish"
-                }
-                hideLabel={
-                  language === "ru"
-                    ? "Скрыть пароль"
-                    : "Parolni yashirish"
-                }
-                className="rounded-xl border border-stone-300 px-4 py-3 outline-none transition focus:border-[#173f35]"
-              />
-
-            </div>
-
-
-            <div>
-
-              <label
-                htmlFor="new_password_confirm"
-                className="mb-2 block text-sm font-medium"
-              >
-
-                {language === "ru"
-                  ? "Подтвердите пароль"
-                  : "Yangi parolni tasdiqlang"}
-
-              </label>
-
-              <PasswordInput
-                id="new_password_confirm"
-                name="new_password_confirm"
-                required
-                autoComplete="new-password"
-                value={
-                  passwordForm.new_password_confirm
-                }
-                onChange={
-                  handlePasswordChange
-                }
-                showLabel={
-                  language === "ru"
-                    ? "Показать пароль"
-                    : "Parolni ko‘rsatish"
-                }
-                hideLabel={
-                  language === "ru"
-                    ? "Скрыть пароль"
-                    : "Parolni yashirish"
-                }
-                className="rounded-xl border border-stone-300 px-4 py-3 outline-none transition focus:border-[#173f35]"
-              />
-
-            </div>
-
-
-            {passwordError && (
-              <div className="rounded-xl bg-red-50 p-4 text-sm text-red-700 md:col-span-2">
-                {passwordError}
+    <div className="min-h-screen bg-[#faf7f2] pb-24">
+      {/* HEADER BANNER */}
+      <section className="border-b border-[#e8ded2] bg-gradient-to-b from-[#f4efe6] to-[#faf7f2] py-8 sm:py-12">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center gap-4">
+              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#3b2d24] font-serif text-2xl font-bold text-[#faf7f2] shadow-md">
+                {userInitial}
               </div>
-            )}
-
-
-            {passwordMessage && (
-              <div className="rounded-xl bg-green-50 p-4 text-sm text-green-700 md:col-span-2">
-                {passwordMessage}
+              <div>
+                <span className="text-xs font-bold tracking-[0.2em] text-[#8a735e] uppercase">
+                  {language === "ru" ? "Личный кабинет" : "Shaxsiy kabinet"}
+                </span>
+                <h1 className="font-serif text-2xl font-bold text-[#3b2d24] sm:text-3xl">
+                  {profile.first_name || user?.email}
+                </h1>
+                <p className="text-sm text-stone-500">{user?.email}</p>
               </div>
-            )}
-
-
-            <div className="md:col-span-2">
-
-              <button
-                type="submit"
-                disabled={
-                  changingPassword
-                }
-                className="w-full rounded-full bg-[#173f35] px-7 py-3 font-medium text-white transition hover:bg-[#245448] disabled:opacity-50 sm:w-auto"
-              >
-
-                {changingPassword
-                  ? language === "ru"
-                    ? "Изменение..."
-                    : "O‘zgartirilmoqda..."
-                  : language === "ru"
-                    ? "Изменить пароль"
-                    : "Parolni o‘zgartirish"}
-
-              </button>
-
             </div>
 
-          </form>
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="inline-flex items-center gap-2 self-start rounded-full border border-[#d6c7b2] bg-white px-5 py-2.5 text-xs font-bold tracking-wider text-stone-700 uppercase transition hover:bg-rose-50 hover:border-rose-300 hover:text-rose-600 sm:self-auto shadow-xs"
+            >
+              <LogOut className="h-4 w-4" />
+              <span>{language === "ru" ? "Выйти из аккаунта" : "Chiqish"}</span>
+            </button>
+          </div>
+        </div>
+      </section>
 
-        </section>
-
-
-        {/* ========================= */}
-        {/* ORDERS */}
-        {/* ========================= */}
-
-        <section className="mt-6 rounded-2xl bg-white p-5 shadow-sm sm:mt-8 sm:rounded-[30px] sm:p-7">
-
-          <h2 className="text-xl font-semibold text-[#173f35] sm:text-2xl">
-
-            {language === "ru"
-              ? "Мои заказы"
-              : "Buyurtmalarim"}
-
-          </h2>
-
-
-          {orders.length === 0 ? (
-
-            <p className="mt-6 text-stone-500">
-
-              {language === "ru"
-                ? "У вас пока нет заказов."
-                : "Hali buyurtmangiz yo‘q."}
-
-            </p>
-
-          ) : (
-
-            <div className="mt-6 space-y-4">
-
-              {orders.map(
-                (order) => (
-
-                  <Link
-                    key={
-                      order.id
-                    }
-                    to={`/account/orders/${order.id}`}
-                    className="block rounded-2xl border border-stone-200 p-5 transition hover:border-[#173f35]"
+      {/* MAIN DASHBOARD */}
+      <div className="mx-auto max-w-7xl px-4 pt-8 sm:px-6 sm:pt-10">
+        <div className="grid gap-8 lg:grid-cols-12 lg:gap-10">
+          {/* ========================= */}
+          {/* SIDEBAR TABS */}
+          {/* ========================= */}
+          <aside className="lg:col-span-3">
+            <nav className="flex flex-row gap-1.5 overflow-x-auto rounded-3xl border border-[#e8ded2] bg-white p-2 shadow-xs sm:p-2.5 lg:flex-col">
+              <button
+                type="button"
+                onClick={() => setActiveTab("orders")}
+                className={`flex shrink-0 items-center justify-between rounded-2xl px-4 py-3 text-sm font-semibold tracking-wide transition ${
+                  activeTab === "orders"
+                    ? "bg-[#3b2d24] text-white shadow-xs"
+                    : "text-stone-700 hover:bg-[#f4efe6] hover:text-[#3b2d24]"
+                }`}
+              >
+                <div className="flex items-center gap-2.5">
+                  <Package className="h-4 w-4" />
+                  <span>{language === "ru" ? "Мои заказы" : "Buyurtmalarim"}</span>
+                </div>
+                {orders.length > 0 && (
+                  <span
+                    className={`ml-2 rounded-full px-2.5 py-0.5 text-xs font-bold ${
+                      activeTab === "orders"
+                        ? "bg-white/20 text-white"
+                        : "bg-[#f4efe6] text-[#3b2d24]"
+                    }`}
                   >
+                    {orders.length}
+                  </span>
+                )}
+              </button>
 
-                    <div className="flex flex-wrap items-center justify-between gap-4">
+              <button
+                type="button"
+                onClick={() => setActiveTab("favorites")}
+                className={`flex shrink-0 items-center justify-between rounded-2xl px-4 py-3 text-sm font-semibold tracking-wide transition ${
+                  activeTab === "favorites"
+                    ? "bg-[#3b2d24] text-white shadow-xs"
+                    : "text-stone-700 hover:bg-[#f4efe6] hover:text-[#3b2d24]"
+                }`}
+              >
+                <div className="flex items-center gap-2.5">
+                  <Heart className="h-4 w-4" />
+                  <span>{language === "ru" ? "Избранное" : "Sevimlilar"}</span>
+                </div>
+                {favorites.length > 0 && (
+                  <span
+                    className={`ml-2 rounded-full px-2.5 py-0.5 text-xs font-bold ${
+                      activeTab === "favorites"
+                        ? "bg-white/20 text-white"
+                        : "bg-[#f4efe6] text-[#3b2d24]"
+                    }`}
+                  >
+                    {favorites.length}
+                  </span>
+                )}
+              </button>
 
-                      <div>
+              <button
+                type="button"
+                onClick={() => setActiveTab("profile")}
+                className={`flex shrink-0 items-center gap-2.5 rounded-2xl px-4 py-3 text-sm font-semibold tracking-wide transition ${
+                  activeTab === "profile"
+                    ? "bg-[#3b2d24] text-white shadow-xs"
+                    : "text-stone-700 hover:bg-[#f4efe6] hover:text-[#3b2d24]"
+                }`}
+              >
+                <User className="h-4 w-4" />
+                <span>{language === "ru" ? "Профиль" : "Profil"}</span>
+              </button>
 
-                        <p className="font-semibold text-[#173f35]">
-                          {
-                            order.order_number
-                          }
-                        </p>
+              <button
+                type="button"
+                onClick={() => setActiveTab("security")}
+                className={`flex shrink-0 items-center gap-2.5 rounded-2xl px-4 py-3 text-sm font-semibold tracking-wide transition ${
+                  activeTab === "security"
+                    ? "bg-[#3b2d24] text-white shadow-xs"
+                    : "text-stone-700 hover:bg-[#f4efe6] hover:text-[#3b2d24]"
+                }`}
+              >
+                <KeyRound className="h-4 w-4" />
+                <span>{language === "ru" ? "Безопасность" : "Xavfsizlik"}</span>
+              </button>
+            </nav>
+          </aside>
 
-                        <p className="mt-1 text-sm text-stone-500">
+          {/* ========================= */}
+          {/* TAB PANELS */}
+          {/* ========================= */}
+          <main className="lg:col-span-9">
+            {/* 1. ORDERS TAB */}
+            {activeTab === "orders" && (
+              <div className="space-y-5">
+                <div className="flex items-center justify-between border-b border-[#e8ded2] pb-4">
+                  <h2 className="font-serif text-xl font-bold text-[#3b2d24]">
+                    {language === "ru" ? "История заказов" : "Buyurtmalar tarixi"}
+                  </h2>
+                  <span className="text-sm text-stone-500">
+                    {orders.length} {language === "ru" ? "заказов" : "ta buyurtma"}
+                  </span>
+                </div>
 
-                          {new Date(
-                            order.created_at
-                          ).toLocaleString(
-                            language === "ru"
-                              ? "ru-RU"
-                              : "uz-UZ"
-                          )}
+                {orders.length === 0 ? (
+                  <div className="rounded-3xl border border-[#e8ded2] bg-white p-12 text-center shadow-xs">
+                    <Package className="mx-auto h-12 w-12 text-stone-300" />
+                    <h3 className="mt-4 font-serif text-lg font-bold text-[#3b2d24]">
+                      {language === "ru" ? "У вас пока нет заказов" : "Hozircha buyurtmalar yo‘q"}
+                    </h3>
+                    <p className="mt-2 text-sm text-stone-500">
+                      {language === "ru"
+                        ? "Когда вы оформите заказ, он появится на этой странице."
+                        : "Siz bergan buyurtmalar ushbu bo‘limda aks etadi."}
+                    </p>
+                    <Link
+                      to="/catalog"
+                      className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#3b2d24] px-7 py-3 text-xs font-bold tracking-wider text-white uppercase shadow-md transition hover:bg-[#534135]"
+                    >
+                      <span>{language === "ru" ? "В каталог" : "Katalogga o‘tish"}</span>
+                      <ChevronRight className="h-4 w-4" />
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {orders.map((order) => (
+                      <Link
+                        key={order.id}
+                        to={`/account/orders/${order.id}`}
+                        className="group block rounded-3xl border border-[#e8ded2] bg-white p-5 shadow-xs transition hover:border-[#8a735e] hover:shadow-md sm:p-6"
+                      >
+                        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                          <div className="space-y-1.5">
+                            <div className="flex items-center gap-3">
+                              <span className="font-mono text-base font-bold text-[#3b2d24]">
+                                {order.order_number}
+                              </span>
+                              <span
+                                className={`rounded-full border px-3 py-0.5 text-xs font-bold ${getStatusBadgeClass(
+                                  order.status
+                                )}`}
+                              >
+                                {getOrderStatusLabel(order.status, language)}
+                              </span>
+                            </div>
 
-                        </p>
+                            <p className="flex items-center gap-1.5 text-sm text-stone-500">
+                              <Clock className="h-4 w-4 text-[#8a735e]" />
+                              <span>
+                                {new Date(order.created_at).toLocaleString(
+                                  language === "ru" ? "ru-RU" : "uz-UZ",
+                                  {
+                                    day: "numeric",
+                                    month: "long",
+                                    year: "numeric",
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                  }
+                                )}
+                              </span>
+                            </p>
+                          </div>
 
-                      </div>
+                          <div className="flex items-center justify-between border-t border-[#e8ded2] pt-3 sm:border-0 sm:pt-0 sm:text-right">
+                            <div>
+                              <p className="text-xs font-semibold text-stone-500 uppercase tracking-wider">
+                                {language === "ru" ? "Сумма" : "Summa"}
+                              </p>
+                              <p className="font-serif text-lg font-bold text-[#3b2d24]">
+                                {Number(order.total_amount).toLocaleString("uz-UZ")} so‘m
+                              </p>
+                            </div>
 
+                            <span className="ml-4 flex h-9 w-9 items-center justify-center rounded-full bg-[#f4efe6] text-[#3b2d24] transition group-hover:bg-[#3b2d24] group-hover:text-white">
+                              <ChevronRight className="h-4 w-4" />
+                            </span>
+                          </div>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
 
-                      <div className="text-right">
+            {/* 2. FAVORITES TAB */}
+            {activeTab === "favorites" && (
+              <div className="space-y-5">
+                <div className="flex items-center justify-between border-b border-[#e8ded2] pb-4">
+                  <h2 className="font-serif text-xl font-bold text-[#3b2d24]">
+                    {language === "ru" ? "Избранные товары" : "Sevimli mahsulotlar"}
+                  </h2>
+                  <span className="text-sm text-stone-500">
+                    {favorites.length} {language === "ru" ? "товаров" : "ta mahsulot"}
+                  </span>
+                </div>
 
-                        <p className="font-medium">
-                          {getOrderStatusLabel(
-                            order.status,
-                            language
-                          )}
-                        </p>
+                {favorites.length === 0 ? (
+                  <div className="rounded-3xl border border-[#e8ded2] bg-white p-12 text-center shadow-xs">
+                    <Heart className="mx-auto h-12 w-12 text-stone-300" />
+                    <h3 className="mt-4 font-serif text-lg font-bold text-[#3b2d24]">
+                      {language === "ru"
+                        ? "В избранном пока пусто"
+                        : "Sevimli mahsulotlar ro‘yxati bo‘sh"}
+                    </h3>
+                    <p className="mt-2 text-sm text-stone-500">
+                      {language === "ru"
+                        ? "Нажмите на сердечко у любого товара, чтобы сохранить его сюда."
+                        : "Mahsulot ustidagi yurakcha tugmasini bosib, uni bu yerga saqlab qo‘yishingiz mumkin."}
+                    </p>
+                    <Link
+                      to="/catalog"
+                      className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#3b2d24] px-7 py-3 text-xs font-bold tracking-wider text-white uppercase shadow-md transition hover:bg-[#534135]"
+                    >
+                      <span>{language === "ru" ? "Смотреть каталог" : "Katalogga o‘tish"}</span>
+                      <ChevronRight className="h-4 w-4" />
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                    {favorites.map((fav) => {
+                      const prod = fav.product;
+                      const primaryImg =
+                        prod.images?.find((img) => img.is_primary)?.image ||
+                        prod.images?.[0]?.image;
 
-                        <p className="mt-1 text-sm text-stone-500">
+                      return (
+                        <div
+                          key={fav.id}
+                          className="group flex flex-col justify-between overflow-hidden rounded-3xl border border-[#e8ded2] bg-white p-4 shadow-xs transition hover:shadow-md hover:border-[#8a735e]"
+                        >
+                          <div>
+                            <Link
+                              to={`/products/${prod.slug}`}
+                              className="block aspect-4/5 w-full overflow-hidden rounded-2xl bg-[#faf7f2]"
+                            >
+                              {primaryImg ? (
+                                <img
+                                  src={primaryImg}
+                                  alt={prod.name}
+                                  className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+                                />
+                              ) : (
+                                <div className="flex h-full items-center justify-center text-sm text-stone-400">
+                                  No photo
+                                </div>
+                              )}
+                            </Link>
 
-                          {Number(
-                            order.total_amount
-                          ).toLocaleString(
-                            "uz-UZ"
-                          )}{" "}
-                          so‘m
+                            <Link
+                              to={`/products/${prod.slug}`}
+                              className="mt-3.5 block font-serif text-base font-bold text-[#3b2d24] hover:text-[#8a735e] transition"
+                            >
+                              {prod.name}
+                            </Link>
 
-                        </p>
+                            <p className="mt-1.5 font-serif text-base font-semibold text-[#8a735e]">
+                              {prod.min_price
+                                ? `${Number(prod.min_price).toLocaleString("uz-UZ")} so‘m`
+                                : "-"}
+                            </p>
+                          </div>
 
-                      </div>
+                          <div className="mt-5 flex items-center justify-between border-t border-[#e8ded2] pt-3.5">
+                            <Link
+                              to={`/products/${prod.slug}`}
+                              className="text-xs font-bold tracking-wider text-[#3b2d24] uppercase hover:text-[#8a735e] transition"
+                            >
+                              {language === "ru" ? "Открыть →" : "Ko‘rish →"}
+                            </Link>
 
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveFavorite(prod.id)}
+                              className="flex items-center gap-1.5 text-xs font-semibold text-rose-600 hover:text-rose-700"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                              <span>{language === "ru" ? "Удалить" : "O‘chirish"}</span>
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* 3. PROFILE TAB */}
+            {activeTab === "profile" && (
+              <div className="rounded-3xl border border-[#e8ded2] bg-white p-6 shadow-xs sm:p-8">
+                <h2 className="font-serif text-xl font-bold text-[#3b2d24]">
+                  {language === "ru" ? "Данные профиля" : "Shaxsiy ma’lumotlar"}
+                </h2>
+
+                {message && (
+                  <div className="mt-4 flex items-center gap-2 rounded-2xl bg-emerald-50 p-4 text-sm font-semibold text-emerald-800 border border-emerald-200">
+                    <Check className="h-4 w-4 text-emerald-600 shrink-0" />
+                    <span>{message}</span>
+                  </div>
+                )}
+
+                {error && (
+                  <div className="mt-4 rounded-2xl bg-rose-50 p-4 text-sm font-semibold text-rose-800 border border-rose-200">
+                    {error}
+                  </div>
+                )}
+
+                <form onSubmit={saveProfile} className="mt-6 space-y-4">
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div>
+                      <label className="text-xs font-bold tracking-wider text-stone-700 uppercase">
+                        {language === "ru" ? "Имя" : "Ism"}
+                      </label>
+                      <input
+                        type="text"
+                        name="first_name"
+                        value={profile.first_name}
+                        onChange={handleProfileChange}
+                        className="mt-2 w-full rounded-xl border border-[#e8ded2] bg-[#faf7f2]/60 p-3.5 text-sm text-[#3b2d24] outline-none focus:border-[#3b2d24] focus:bg-white"
+                      />
                     </div>
 
-                  </Link>
-
-                )
-              )}
-
-            </div>
-
-          )}
-
-        </section>
-
-
-        {/* ========================= */}
-        {/* FAVORITES */}
-        {/* ========================= */}
-
-        <section className="mt-6 rounded-2xl bg-white p-5 shadow-sm sm:mt-8 sm:rounded-[30px] sm:p-7">
-
-          <h2 className="text-xl font-semibold text-[#173f35] sm:text-2xl">
-
-            {language === "ru"
-              ? "Избранное"
-              : "Sevimli mahsulotlar"}
-
-          </h2>
-
-
-          {favorites.length === 0 ? (
-
-            <p className="mt-6 text-stone-500">
-
-              {language === "ru"
-                ? "В избранном пока ничего нет."
-                : "Sevimli mahsulotlar yo‘q."}
-
-            </p>
-
-          ) : (
-
-            <div className="mt-6 grid gap-4 grid-cols-1 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
-
-              {favorites.map(
-                (favorite) => (
-
-                  <div
-                    key={
-                      favorite.id
-                    }
-                    className="rounded-2xl border border-stone-200 p-4"
-                  >
-
-                    <Link
-                      to={`/products/${favorite.product.slug}`}
-                    >
-
-                      <h3 className="line-clamp-2 font-semibold text-[#173f35] break-words">
-                        {
-                          favorite.product.name
-                        }
-                      </h3>
-
-
-                      <p className="mt-2 text-sm text-stone-500">
-
-                        {favorite.product.min_price
-                          ? `${Number(
-                              favorite.product.min_price
-                            ).toLocaleString(
-                              "uz-UZ"
-                            )} so‘m`
-                          : language ===
-                            "ru"
-                            ? "Цена недоступна"
-                            : "Narx mavjud emas"}
-
-                      </p>
-
-                    </Link>
-
-
-                    <button
-                      type="button"
-                      onClick={() =>
-                        handleRemoveFavorite(
-                          favorite.product.id
-                        )
-                      }
-                      className="mt-4 text-sm text-red-600 hover:underline"
-                    >
-
-                      {language === "ru"
-                        ? "Удалить из избранного"
-                        : "Sevimlidan o‘chirish"}
-
-                    </button>
-
+                    <div>
+                      <label className="text-xs font-bold tracking-wider text-stone-700 uppercase">
+                        {language === "ru" ? "Фамилия" : "Familiya"}
+                      </label>
+                      <input
+                        type="text"
+                        name="last_name"
+                        value={profile.last_name}
+                        onChange={handleProfileChange}
+                        className="mt-2 w-full rounded-xl border border-[#e8ded2] bg-[#faf7f2]/60 p-3.5 text-sm text-[#3b2d24] outline-none focus:border-[#3b2d24] focus:bg-white"
+                      />
+                    </div>
                   </div>
 
-                )
-              )}
+                  <div>
+                    <label className="text-xs font-bold tracking-wider text-stone-700 uppercase">
+                      Email
+                    </label>
+                    <input
+                      type="email"
+                      name="email"
+                      value={profile.email}
+                      onChange={handleProfileChange}
+                      className="mt-2 w-full rounded-xl border border-[#e8ded2] bg-[#faf7f2]/60 p-3.5 text-sm text-[#3b2d24] outline-none focus:border-[#3b2d24] focus:bg-white"
+                    />
+                  </div>
 
-            </div>
+                  <div className="pt-3">
+                    <button
+                      type="submit"
+                      disabled={saving}
+                      className="rounded-full bg-[#3b2d24] px-8 py-3.5 text-xs font-bold tracking-wider text-white uppercase shadow-md transition hover:bg-[#534135] disabled:opacity-50"
+                    >
+                      {saving
+                        ? language === "ru"
+                          ? "Сохранение..."
+                          : "Saqlanmoqda..."
+                        : language === "ru"
+                          ? "Сохранить изменения"
+                          : "O‘zgarishlarni saqlash"}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            )}
 
-          )}
+            {/* 4. SECURITY TAB */}
+            {activeTab === "security" && (
+              <div className="rounded-3xl border border-[#e8ded2] bg-white p-6 shadow-xs sm:p-8">
+                <h2 className="font-serif text-xl font-bold text-[#3b2d24]">
+                  {language === "ru" ? "Смена пароля" : "Parolni o‘zgartirish"}
+                </h2>
 
-        </section>
+                {passwordMessage && (
+                  <div className="mt-4 flex items-center gap-2 rounded-2xl bg-emerald-50 p-4 text-sm font-semibold text-emerald-800 border border-emerald-200">
+                    <Check className="h-4 w-4 text-emerald-600 shrink-0" />
+                    <span>{passwordMessage}</span>
+                  </div>
+                )}
 
+                {passwordError && (
+                  <div className="mt-4 rounded-2xl bg-rose-50 p-4 text-sm font-semibold text-rose-800 border border-rose-200">
+                    {passwordError}
+                  </div>
+                )}
+
+                <form onSubmit={changePassword} className="mt-6 space-y-4 max-w-lg">
+                  <div>
+                    <label className="text-xs font-bold tracking-wider text-stone-700 uppercase">
+                      {language === "ru" ? "Текущий пароль" : "Amaldagi parol"}
+                    </label>
+                    <div className="mt-2">
+                      <PasswordInput
+                        id="old_password"
+                        name="old_password"
+                        required
+                        value={passwordForm.old_password}
+                        onChange={handlePasswordChange}
+                        className="w-full rounded-xl border border-[#e8ded2] bg-[#faf7f2]/60 p-3.5 text-sm text-[#3b2d24] outline-none focus:border-[#3b2d24] focus:bg-white"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-bold tracking-wider text-stone-700 uppercase">
+                      {language === "ru" ? "Новый пароль" : "Yangi parol"}
+                    </label>
+                    <div className="mt-2">
+                      <PasswordInput
+                        id="new_password"
+                        name="new_password"
+                        required
+                        value={passwordForm.new_password}
+                        onChange={handlePasswordChange}
+                        className="w-full rounded-xl border border-[#e8ded2] bg-[#faf7f2]/60 p-3.5 text-sm text-[#3b2d24] outline-none focus:border-[#3b2d24] focus:bg-white"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-bold tracking-wider text-stone-700 uppercase">
+                      {language === "ru" ? "Подтвердите новый пароль" : "Yangi parolni tasdiqlang"}
+                    </label>
+                    <div className="mt-2">
+                      <PasswordInput
+                        id="new_password_confirm"
+                        name="new_password_confirm"
+                        required
+                        value={passwordForm.new_password_confirm}
+                        onChange={handlePasswordChange}
+                        className="w-full rounded-xl border border-[#e8ded2] bg-[#faf7f2]/60 p-3.5 text-sm text-[#3b2d24] outline-none focus:border-[#3b2d24] focus:bg-white"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="pt-3">
+                    <button
+                      type="submit"
+                      disabled={changingPassword}
+                      className="rounded-full bg-[#3b2d24] px-8 py-3.5 text-xs font-bold tracking-wider text-white uppercase shadow-md transition hover:bg-[#534135] disabled:opacity-50"
+                    >
+                      {changingPassword
+                        ? language === "ru"
+                          ? "Обновление..."
+                          : "Yangilanmoqda..."
+                        : language === "ru"
+                          ? "Обновить пароль"
+                          : "Parolni yangilash"}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            )}
+          </main>
+        </div>
       </div>
-
     </div>
   );
 }
-
 
 export default AccountPage;

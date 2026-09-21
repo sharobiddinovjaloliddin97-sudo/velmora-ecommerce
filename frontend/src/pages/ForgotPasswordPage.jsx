@@ -1,19 +1,16 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-
+import { Mail, ArrowLeft, ArrowRight, CheckCircle2, AlertCircle } from "lucide-react";
 import api from "../api/client";
 import { useLanguage } from "../context/LanguageContext";
-
 
 function ForgotPasswordPage() {
   const { language } = useLanguage();
 
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
-
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -23,165 +20,137 @@ function ForgotPasswordPage() {
     setLoading(true);
 
     try {
-      await api.post(
-        "/auth/password-reset/",
-        {
-          email,
-        }
-      );
+      await api.post("/auth/password-reset/", { email });
 
       setSuccess(
         language === "ru"
-          ? "Если аккаунт с таким email существует, ссылка для восстановления пароля была отправлена."
-          : "Agar ushbu email bilan hisob mavjud bo‘lsa, parolni tiklash havolasi yuborildi."
+          ? "Если аккаунт с таким email существует, ссылка для восстановления пароля была отправлена на вашу почту."
+          : "Agar ushbu email bilan hisob mavjud bo‘lsa, parolni tiklash havolasi pochtangizga yuborildi."
       );
-
       setEmail("");
-
     } catch (err) {
-      console.error(
-        "Password reset request error:",
-        err.response?.data || err
-      );
-
-      const data =
-        err.response?.data;
+      console.error("Password reset request error:", err.response?.data || err);
+      const data = err.response?.data;
 
       if (data?.email?.[0]) {
-        setError(
-          data.email[0]
-        );
-
-      } else if (
-        data?.detail
-      ) {
-        setError(
-          data.detail
-        );
-
+        setError(data.email[0]);
+      } else if (data?.detail) {
+        setError(data.detail);
       } else {
         setError(
           language === "ru"
-            ? "Не удалось отправить запрос."
-            : "So‘rov yuborishda xatolik yuz berdi."
+            ? "Не удалось отправить запрос. Попробуйте позже."
+            : "So‘rov yuborishda xatolik yuz berdi. Birozdan so‘ng qayta urinib ko‘ring."
         );
       }
-
     } finally {
       setLoading(false);
     }
   };
 
-
   return (
-    <div className="bg-[#f8f5ef]">
+    <div className="min-h-[85vh] bg-[#faf7f2] flex items-center justify-center px-4 py-12 sm:px-6 lg:py-16 relative overflow-hidden text-[#2d241e]">
+      <div className="w-full max-w-md relative z-10">
+        <div className="bg-white rounded-3xl p-7 sm:p-10 shadow-[0_15px_45px_-15px_rgba(59,45,36,0.08)] border border-[#ebdcca]">
+          {/* Header & Logo */}
+          <div className="text-center">
+            <div className="mx-auto w-16 h-16 rounded-2xl overflow-hidden bg-white p-1 border border-[#dfd2c0] shadow-xs flex items-center justify-center mb-3">
+              <img
+                src="/logo.png"
+                alt="Velmora Logo"
+                className="w-full h-full object-contain"
+              />
+            </div>
 
-      <div className="mx-auto flex min-h-[70vh] max-w-7xl items-center justify-center px-4 py-10 sm:px-6 sm:py-16">
+            <p className="text-xs font-bold uppercase tracking-[0.25em] text-[#8a735e]">
+              XAVFSIZLIK
+            </p>
 
-        <div className="w-full max-w-md rounded-2xl bg-white p-5 shadow-sm sm:rounded-[30px] sm:p-8">
+            <h1 className="mt-2 font-serif text-2xl sm:text-3xl font-bold text-[#3b2d24] tracking-tight">
+              {language === "ru" ? "Восстановление пароля" : "Parolni tiklash"}
+            </h1>
 
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#52796f] sm:text-sm">
-            Velmora
-          </p>
+            <p className="mt-2 text-sm sm:text-base text-[#6b584a] max-w-xs mx-auto">
+              {language === "ru"
+                ? "Введите email, указанный при регистрации, и мы отправим ссылку для сброса пароля"
+                : "Ro‘yxatdan o‘tgan emailingizni kiriting, tiklash havolasini yuboramiz"}
+            </p>
+          </div>
 
-          <h1 className="mt-2 text-2xl font-semibold text-[#173f35] sm:mt-3 sm:text-3xl">
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="mt-8 space-y-4">
+            <div>
+              <label
+                htmlFor="email"
+                className="block text-sm font-semibold uppercase tracking-wider text-[#3b2d24] mb-2"
+              >
+                Email
+              </label>
+              <div className="relative">
+                <input
+                  id="email"
+                  type="email"
+                  required
+                  autoComplete="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="example@gmail.com"
+                  className="w-full pl-12 pr-4 py-3.5 text-base bg-[#faf7f2]/60 border border-[#d6c6b3] rounded-xl outline-none transition-all placeholder:text-stone-400 focus:bg-white focus:border-[#3b2d24] focus:ring-2 focus:ring-[#8a735e]/15"
+                />
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#8a735e]" />
+              </div>
+            </div>
 
-            {language === "ru"
-              ? "Восстановление пароля"
-              : "Parolni tiklash"}
-
-          </h1>
-
-          <p className="mt-3 text-sm leading-6 text-stone-600">
-
-            {language === "ru"
-              ? "Введите email, связанный с вашим аккаунтом."
-              : "Hisobingizga bog‘langan email manzilni kiriting."}
-
-          </p>
-
-
-          <form
-            onSubmit={handleSubmit}
-            className="mt-8"
-          >
-
-            <label
-              htmlFor="email"
-              className="mb-2 block text-sm font-medium text-stone-700"
-            >
-              Email
-            </label>
-
-            <input
-              id="email"
-              type="email"
-              required
-              autoComplete="email"
-              value={email}
-              onChange={(event) =>
-                setEmail(
-                  event.target.value
-                )
-              }
-              placeholder="example@gmail.com"
-              className="w-full rounded-xl border border-stone-300 px-4 py-3 outline-none focus:border-[#173f35]"
-            />
-
-
+            {/* Error Message */}
             {error && (
-              <div className="mt-5 rounded-xl bg-red-50 p-4 text-sm text-red-700">
-                {error}
+              <div className="flex items-start gap-3 p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm leading-relaxed animate-fadeIn">
+                <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5 text-red-600" />
+                <span>{error}</span>
               </div>
             )}
 
-
+            {/* Success Message */}
             {success && (
-              <div className="mt-5 rounded-xl bg-green-50 p-4 text-sm leading-6 text-green-700">
-                {success}
+              <div className="flex items-start gap-3 p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm leading-relaxed animate-fadeIn">
+                <CheckCircle2 className="w-5 h-5 flex-shrink-0 mt-0.5 text-emerald-600" />
+                <span>{success}</span>
               </div>
             )}
 
-
+            {/* Submit Button */}
             <button
               type="submit"
               disabled={loading}
-              className="mt-6 w-full rounded-full bg-[#173f35] px-6 py-3.5 font-medium text-white transition hover:bg-[#245448] disabled:opacity-50"
+              className="w-full mt-3 group relative flex items-center justify-center gap-2 py-4 px-6 rounded-xl bg-[#3b2d24] text-white font-semibold text-base transition-all duration-300 shadow-md hover:bg-[#271f19] hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
             >
-
-              {loading
-                ? language === "ru"
-                  ? "Отправка..."
-                  : "Yuborilmoqda..."
-                : language === "ru"
-                  ? "Отправить ссылку"
-                  : "Tiklash havolasini yuborish"}
-
+              {loading ? (
+                <span className="flex items-center gap-2">
+                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  {language === "ru" ? "Отправка..." : "Yuborilmoqda..."}
+                </span>
+              ) : (
+                <>
+                  <span>{language === "ru" ? "Отправить ссылку" : "Tiklash havolasini yuborish"}</span>
+                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                </>
+              )}
             </button>
-
           </form>
 
-
-          <div className="mt-7 text-center">
-
+          {/* Footer Navigation */}
+          <div className="mt-8 pt-6 border-t border-[#ebdcca] text-center">
             <Link
               to="/login"
-              className="text-sm font-medium text-[#173f35] hover:underline"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-[#3b2d24] hover:text-[#8a735e] transition-colors"
             >
-              ←{" "}
-              {language === "ru"
-                ? "Вернуться ко входу"
-                : "Kirish sahifasiga qaytish"}
+              <ArrowLeft className="w-4 h-4" />
+              <span>{language === "ru" ? "Вернуться ко входу" : "Kirish sahifasiga qaytish"}</span>
             </Link>
-
           </div>
-
         </div>
       </div>
-
     </div>
   );
 }
-
 
 export default ForgotPasswordPage;

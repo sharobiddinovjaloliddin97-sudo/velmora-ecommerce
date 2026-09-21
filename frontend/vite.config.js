@@ -7,4 +7,13 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+  server: {
+    proxy: {
+      "/api": {
+        target: "https://velmora-ecommerce-production.up.railway.app",
+        changeOrigin: true,
+        secure: false,
+      },
+    },
+  },
 });

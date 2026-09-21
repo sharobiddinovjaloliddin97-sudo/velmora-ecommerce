@@ -104,6 +104,14 @@ class CheckoutView(APIView):
             idempotency_key=idempotency_key,
         )
 
+        if created:
+            try:
+                from .telegram_service import send_order_to_admin_group
+                send_order_to_admin_group(order)
+            except Exception as e:
+                import logging
+                logging.getLogger(__name__).error(f"Error sending order notification to admin group: {e}")
+
         response_serializer = OrderSerializer(
             order,
             context={"request": request},
@@ -117,3 +125,98 @@ class CheckoutView(APIView):
                 else status.HTTP_200_OK
             ),
         )
+
+
+class CreateTelegramSessionView(APIView):
+    permission_classes = []
+
+    def post(self, request):
+        import os
+        import uuid
+        from decimal import Decimal
+        from catalog.models import ProductVariant
+        from .models import TelegramCheckoutSession
+
+        items = request.data.get("items", [])
+        if not items:
+            return Response(
+                {"detail": "Savatchada mahsulotlar mavjud emas."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        total_amount = Decimal("0.00")
+        validated_items = []
+
+        for it in items:
+            variant_id = it.get("variant_id")
+            quantity = int(it.get("quantity", 1))
+
+            if variant_id:
+                try:
+                    variant = ProductVariant.objects.select_related("product").get(id=variant_id)
+                    unit_price = variant.price
+                    line_total = unit_price * quantity
+                    total_amount += line_total
+                    validated_items.append({
+                        "variant_id": variant.id,
+                        "product_name": variant.product.name_uz,
+                        "sku": variant.sku,
+                        "color": variant.color_uz,
+                        "size": variant.size,
+                        "unit_price": str(unit_price),
+                        "quantity": quantity,
+                        "line_total": str(line_total),
+                    })
+                    continue
+                except ProductVariant.DoesNotExist:
+                    pass
+
+            # Fallback for direct payload
+            unit_price = Decimal(str(it.get("unit_price", it.get("price", 0))))
+            line_total = unit_price * quantity
+            total_amount += line_total
+            validated_items.append({
+                "variant_id": None,
+                "product_name": it.get("product_name", it.get("name", "Mahsulot")),
+                "sku": it.get("sku", ""),
+                "color": it.get("color", ""),
+                "size": it.get("size", ""),
+                "unit_price": str(unit_price),
+                "quantity": quantity,
+                "line_total": str(line_total),
+            })
+
+        session_code = uuid.uuid4().hex[:12]
+        session = TelegramCheckoutSession.objects.create(
+            session_code=session_code,
+            items_data=validated_items,
+            total_amount=total_amount,
+        )
+
+        bot_username = os.getenv("TELEGRAM_BOT_USERNAME", "velmora_silkbot")
+        telegram_url = f"https://t.me/{bot_username}?start=cart_{session_code}"
+
+        return Response(
+            {
+                "session_code": session_code,
+                "bot_username": bot_username,
+                "telegram_url": telegram_url,
+                "total_amount": str(total_amount),
+            },
+            status=status.HTTP_201_CREATED,
+        )
+
+
+class TelegramWebhookView(APIView):
+    permission_classes = []
+    authentication_classes = []
+
+    def post(self, request):
+        try:
+            update = request.data
+            from .telegram_service import process_webhook_update
+            process_webhook_update(update)
+        except Exception as e:
+            import logging
+            logging.getLogger(__name__).error(f"Telegram webhook error: {e}")
+        return Response({"ok": True}, status=status.HTTP_200_OK)

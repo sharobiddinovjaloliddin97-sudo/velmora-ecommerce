@@ -66,14 +66,17 @@ class Order(models.Model):
     district = models.CharField(
         max_length=30,
         choices=District.choices,
+        blank=True,
     )
 
     street = models.CharField(
         max_length=255,
+        blank=True,
     )
 
     house = models.CharField(
         max_length=50,
+        blank=True,
     )
 
     apartment = models.CharField(
@@ -88,6 +91,38 @@ class Order(models.Model):
 
     comment = models.TextField(
         blank=True,
+    )
+
+    telegram_user_id = models.CharField(
+        max_length=64,
+        blank=True,
+        null=True,
+    )
+
+    telegram_username = models.CharField(
+        max_length=128,
+        blank=True,
+        null=True,
+    )
+
+    latitude = models.DecimalField(
+        max_digits=11,
+        decimal_places=8,
+        null=True,
+        blank=True,
+    )
+
+    longitude = models.DecimalField(
+        max_digits=11,
+        decimal_places=8,
+        null=True,
+        blank=True,
+    )
+
+    location_url = models.URLField(
+        max_length=500,
+        blank=True,
+        null=True,
     )
 
     status = models.CharField(
@@ -254,3 +289,91 @@ class OrderStatusHistory(models.Model):
             f"{self.order.order_number}: "
             f"{self.old_status} -> {self.new_status}"
         )
+
+
+class TelegramCheckoutSession(models.Model):
+    id = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False,
+    )
+
+    session_code = models.CharField(
+        max_length=32,
+        unique=True,
+        db_index=True,
+    )
+
+    items_data = models.JSONField(
+        default=list,
+    )
+
+    total_amount = models.DecimalField(
+        max_digits=14,
+        decimal_places=2,
+        default=0,
+    )
+
+    telegram_user_id = models.CharField(
+        max_length=64,
+        blank=True,
+        null=True,
+    )
+
+    telegram_username = models.CharField(
+        max_length=128,
+        blank=True,
+        null=True,
+    )
+
+    phone = models.CharField(
+        max_length=30,
+        blank=True,
+    )
+
+    recipient_name = models.CharField(
+        max_length=150,
+        blank=True,
+    )
+
+    latitude = models.DecimalField(
+        max_digits=11,
+        decimal_places=8,
+        null=True,
+        blank=True,
+    )
+
+    longitude = models.DecimalField(
+        max_digits=11,
+        decimal_places=8,
+        null=True,
+        blank=True,
+    )
+
+    address_text = models.CharField(
+        max_length=255,
+        blank=True,
+    )
+
+    step = models.CharField(
+        max_length=30,
+        default="WAITING_PHONE",
+    )
+
+    is_completed = models.BooleanField(
+        default=False,
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True,
+    )
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"TG-Session: {self.session_code} ({self.step})"
