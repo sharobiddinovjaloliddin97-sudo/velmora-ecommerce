@@ -356,3 +356,28 @@ BREVO_SENDER_NAME = os.getenv(
     "BREVO_SENDER_NAME",
     "Velmora",
 )
+
+CONTACT_NOTIFICATION_EMAIL = os.getenv(
+    "CONTACT_NOTIFICATION_EMAIL",
+    BREVO_SENDER_EMAIL,
+)
+
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+
+    "loggers": {
+        "django.request": {
+            "handlers": ["console"],
+            "level": "ERROR",
+            "propagate": False,
+        },
+    },
+}

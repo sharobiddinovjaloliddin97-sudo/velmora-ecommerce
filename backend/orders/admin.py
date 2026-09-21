@@ -1,15 +1,82 @@
+from django import forms
 from django.contrib import admin
-from django.core.exceptions import ValidationError
 
 from .models import (
     Order,
     OrderItem,
     OrderStatusHistory,
+    TelegramCheckoutSession,
 )
 from .services import (
+    ALLOWED_STATUS_TRANSITIONS,
     change_order_status,
     mark_order_paid,
 )
+
+
+class OrderAdminForm(forms.ModelForm):
+    class Meta:
+        model = Order
+        fields = "__all__"
+
+    def clean_status(self):
+        requested_status = self.cleaned_data.get(
+            "status"
+        )
+
+        if not self.instance.pk:
+            return requested_status
+
+        old_status = (
+            Order.objects
+            .only("status")
+            .get(pk=self.instance.pk)
+            .status
+        )
+
+        if requested_status == old_status:
+            return requested_status
+
+        allowed = ALLOWED_STATUS_TRANSITIONS.get(
+            old_status,
+            set(),
+        )
+
+        if requested_status not in allowed:
+            raise forms.ValidationError(
+                f"{old_status} holatidan "
+                f"{requested_status} holatiga "
+                "o‘tish mumkin emas."
+            )
+
+        return requested_status
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        requested_status = cleaned_data.get(
+            "status"
+        )
+
+        cancellation_reason = (
+            cleaned_data.get(
+                "cancellation_reason",
+                "",
+            )
+            or ""
+        )
+
+        if (
+            requested_status
+            == Order.Status.CANCELLED
+            and not cancellation_reason.strip()
+        ):
+            self.add_error(
+                "cancellation_reason",
+                "Bekor qilish sababi majburiy.",
+            )
+
+        return cleaned_data
 
 
 class OrderItemInline(admin.TabularInline):
@@ -28,11 +95,17 @@ class OrderItemInline(admin.TabularInline):
 
     can_delete = False
 
-    def has_add_permission(self, request, obj=None):
+    def has_add_permission(
+        self,
+        request,
+        obj=None,
+    ):
         return False
 
 
-class OrderStatusHistoryInline(admin.TabularInline):
+class OrderStatusHistoryInline(
+    admin.TabularInline
+):
     model = OrderStatusHistory
     extra = 0
 
@@ -45,12 +118,18 @@ class OrderStatusHistoryInline(admin.TabularInline):
 
     can_delete = False
 
-    def has_add_permission(self, request, obj=None):
+    def has_add_permission(
+        self,
+        request,
+        obj=None,
+    ):
         return False
 
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
+    form = OrderAdminForm
+
     list_display = (
         "order_number",
         "recipient_name",
@@ -83,7 +162,11 @@ class OrderAdmin(admin.ModelAdmin):
         "delivery_fee",
         "total_amount",
         "stock_restored",
-        "idempotency_key",
+        "telegram_user_id",
+        "telegram_username",
+        "latitude",
+        "longitude",
+        "location_url",
         "paid_at",
         "paid_by",
         "created_at",
@@ -121,14 +204,18 @@ class OrderAdmin(admin.ModelAdmin):
         old_payment_status = (
             old_order.payment_status
         )
+
         requested_payment_status = (
             obj.payment_status
         )
 
-        # Status va payment statusni oddiy save
-        # orqali chetlab o'tishga yo'l qo'ymaymiz.
+        # Status va payment_status
+        # oddiy ModelAdmin save orqali
+        # o‘zgartirilmaydi.
         obj.status = old_status
-        obj.payment_status = old_payment_status
+        obj.payment_status = (
+            old_payment_status
+        )
 
         super().save_model(
             request,
@@ -137,22 +224,19 @@ class OrderAdmin(admin.ModelAdmin):
             change,
         )
 
+        # Status o‘zgarishini faqat
+        # service orqali bajaramiz.
         if requested_status != old_status:
-            try:
-                change_order_status(
-                    order=obj,
-                    new_status=requested_status,
-                    changed_by=request.user,
-                    cancellation_reason=(
-                        obj.cancellation_reason
-                    ),
-                )
+            change_order_status(
+                order=obj,
+                new_status=requested_status,
+                changed_by=request.user,
+                cancellation_reason=(
+                    obj.cancellation_reason
+                ),
+            )
 
-            except ValidationError as exc:
-                raise ValidationError(
-                    exc.messages
-                )
-
+        # Paymentni ham service orqali.
         if (
             requested_payment_status
             == Order.PaymentStatus.PAID
@@ -194,7 +278,10 @@ class OrderItemAdmin(admin.ModelAdmin):
         "line_total",
     )
 
-    def has_add_permission(self, request):
+    def has_add_permission(
+        self,
+        request,
+    ):
         return False
 
     def has_delete_permission(
@@ -206,7 +293,9 @@ class OrderItemAdmin(admin.ModelAdmin):
 
 
 @admin.register(OrderStatusHistory)
-class OrderStatusHistoryAdmin(admin.ModelAdmin):
+class OrderStatusHistoryAdmin(
+    admin.ModelAdmin
+):
     list_display = (
         "order",
         "old_status",
@@ -233,7 +322,10 @@ class OrderStatusHistoryAdmin(admin.ModelAdmin):
         "created_at",
     )
 
-    def has_add_permission(self, request):
+    def has_add_permission(
+        self,
+        request,
+    ):
         return False
 
     def has_delete_permission(
@@ -242,3 +334,32 @@ class OrderStatusHistoryAdmin(admin.ModelAdmin):
         obj=None,
     ):
         return False
+
+
+@admin.register(TelegramCheckoutSession)
+class TelegramCheckoutSessionAdmin(admin.ModelAdmin):
+    list_display = (
+        "session_code",
+        "step",
+        "recipient_name",
+        "phone",
+        "total_amount",
+        "is_completed",
+        "created_at",
+    )
+    list_filter = (
+        "step",
+        "is_completed",
+        "created_at",
+    )
+    search_fields = (
+        "session_code",
+        "phone",
+        "recipient_name",
+        "telegram_username",
+    )
+    readonly_fields = (
+        "id",
+        "created_at",
+        "updated_at",
+    )

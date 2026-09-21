@@ -3,584 +3,371 @@ import {
   useMemo,
   useState,
 } from "react";
-
 import {
   Link,
   useNavigate,
 } from "react-router-dom";
-
+import {
+  ArrowRight,
+  ChevronRight,
+  Minus,
+  Plus,
+  Send,
+  ShieldCheck,
+  ShoppingBag,
+  Sparkles,
+  Trash2,
+  Truck,
+} from "lucide-react";
+import api from "../api/client";
 import {
   getCart,
   removeFromCart,
   updateCartQuantity,
 } from "../utils/cart";
-
-import {
-  useLanguage,
-} from "../context/LanguageContext";
-
+import { useLanguage } from "../context/LanguageContext";
 
 function CartPage() {
-  const navigate =
-    useNavigate();
+  const navigate = useNavigate();
+  const { language } = useLanguage();
 
-  const {
-    language,
-  } = useLanguage();
+  const [cart, setCart] = useState(getCart());
+  const [error, setError] = useState("");
+  const [telegramLoading, setTelegramLoading] = useState(false);
 
-
-  const [
-    cart,
-    setCart,
-  ] = useState(
-    getCart()
-  );
-
-  const [
-    error,
-    setError,
-  ] = useState("");
-
-
-  // =========================
-  // CART EVENTS
-  // =========================
+  const handleTelegramCheckout = async () => {
+    if (cart.length === 0) return;
+    setTelegramLoading(true);
+    try {
+      const payload = {
+        items: cart.map((item) => ({
+          variant_id: item.variant_id,
+          product_name: item.product_name,
+          price: item.price,
+          unit_price: item.price,
+          size: item.size,
+          color: item.color,
+          quantity: item.quantity,
+        })),
+      };
+      const res = await api.post("/orders/telegram-session/", payload);
+      if (res.data?.telegram_url) {
+        window.open(res.data.telegram_url, "_blank");
+      }
+    } catch (err) {
+      console.error("Telegram checkout error:", err);
+      window.open("https://t.me/velmora_silkbot", "_blank");
+    } finally {
+      setTelegramLoading(false);
+    }
+  };
 
   useEffect(() => {
     const refreshCart = () => {
-      setCart(
-        getCart()
-      );
+      setCart(getCart());
     };
-
-
-    window.addEventListener(
-      "cart-updated",
-      refreshCart
-    );
-
-
+    window.addEventListener("cart-updated", refreshCart);
     return () => {
-      window.removeEventListener(
-        "cart-updated",
-        refreshCart
-      );
+      window.removeEventListener("cart-updated", refreshCart);
     };
   }, []);
 
+  const total = useMemo(() => {
+    return cart.reduce(
+      (sum, item) => sum + Number(item.price) * item.quantity,
+      0
+    );
+  }, [cart]);
 
-  // =========================
-  // TOTAL
-  // =========================
+  const totalItemsCount = useMemo(() => {
+    return cart.reduce((sum, item) => sum + item.quantity, 0);
+  }, [cart]);
 
-  const total =
-    useMemo(() => {
-
-      return cart.reduce(
-        (
-          sum,
-          item
-        ) =>
-          sum +
-          Number(
-            item.price
-          ) *
-            item.quantity,
-        0
-      );
-
-    }, [cart]);
-
-
-  // =========================
-  // QUANTITY
-  // =========================
-
-  const handleQuantity = (
-    item,
-    newQuantity
-  ) => {
-
+  const handleQuantity = (item, newQuantity) => {
     setError("");
+    if (newQuantity < 1) return;
 
-
-    if (newQuantity < 1) {
-      return;
-    }
-
-
-    if (
-      newQuantity >
-      item.stock
-    ) {
+    if (newQuantity > item.stock) {
       setError(
         language === "ru"
           ? `На складе доступно только ${item.stock} шт.`
           : `Omborda faqat ${item.stock} dona mavjud.`
       );
-
       return;
     }
 
-
     try {
-      updateCartQuantity(
-        item.variant_id,
-        newQuantity
-      );
-
+      updateCartQuantity(item.variant_id, newQuantity);
     } catch (err) {
-      setError(
-        err.message
-      );
+      setError(err.message);
     }
   };
 
-
-  // =========================
-  // REMOVE
-  // =========================
-
-  const handleRemove = (
-    variantId
-  ) => {
-
+  const handleRemove = (variantId) => {
     setError("");
-
-    removeFromCart(
-      variantId
-    );
+    removeFromCart(variantId);
   };
 
-
-  // =========================
-  // EMPTY CART
-  // =========================
-
-  if (
-    cart.length === 0
-  ) {
+  if (cart.length === 0) {
     return (
-      <div className="bg-[#f8f5ef]">
+      <div className="min-h-[75vh] bg-[#faf7f2] py-16 text-[#2d241e]">
+        <div className="mx-auto flex max-w-xl flex-col items-center justify-center px-4 text-center">
+          <div className="flex h-24 w-24 items-center justify-center rounded-3xl bg-[#f4efe6] text-[#8a735e] border border-[#ebdcca]">
+            <ShoppingBag className="h-10 w-10" />
+          </div>
 
-        <div className="mx-auto flex min-h-[70vh] max-w-7xl flex-col items-center justify-center px-6 text-center">
-
-          <h1 className="text-4xl font-semibold text-[#173f35]">
-
-            {language === "ru"
-              ? "Ваша корзина пуста"
-              : "Savatchangiz bo‘sh"}
-
+          <h1 className="mt-6 font-serif text-3xl sm:text-4xl font-bold text-[#3b2d24]">
+            {language === "ru" ? "Ваша корзина пуста" : "Savatchangiz hozircha bo‘sh"}
           </h1>
 
-
-          <p className="mt-4 max-w-md leading-7 text-stone-600">
-
+          <p className="mt-3 text-base sm:text-lg leading-relaxed text-[#6b584a]">
             {language === "ru"
-              ? "Добавьте понравившиеся товары в корзину."
-              : "O‘zingizga yoqqan mahsulotlarni savatchaga qo‘shing."}
-
+              ? "Похоже, вы еще не выбрали товары. Ознакомьтесь с нашей новой коллекцией постельного белья и текстиля."
+              : "Siz hali biror mahsulot tanlamadingiz. Velmoraning tabiiy to‘qimachilik to‘plamlari bilan tanishing."}
           </p>
-
 
           <Link
             to="/catalog"
-            className="mt-7 rounded-full bg-[#173f35] px-7 py-3.5 font-medium text-white"
+            className="mt-8 inline-flex items-center gap-2.5 rounded-full bg-[#3b2d24] px-9 py-4 text-base font-semibold tracking-wide text-white shadow-md transition hover:bg-[#271f19]"
           >
-
-            {language === "ru"
-              ? "Перейти в каталог"
-              : "Katalogga o‘tish"}
-
+            <span>{language === "ru" ? "Перейти в каталог" : "Katalogga o‘tish"}</span>
+            <ArrowRight className="h-5 w-5" />
           </Link>
-
         </div>
-
       </div>
     );
   }
 
-
   return (
-    <div className="min-h-screen bg-[#f8f5ef]">
+    <div className="min-h-screen bg-[#faf7f2] pb-24 text-[#2d241e]">
+      {/* BREADCRUMB */}
+      <nav className="border-b border-[#ebdcca] bg-white/60 backdrop-blur-xs">
+        <div className="mx-auto flex max-w-7xl items-center gap-2 px-4 py-3.5 text-xs sm:text-sm text-[#7a6758] sm:px-6">
+          <Link to="/" className="hover:text-[#3b2d24]">
+            {language === "ru" ? "Главная" : "Bosh sahifa"}
+          </Link>
+          <ChevronRight className="h-3.5 w-3.5 text-stone-400" />
+          <span className="font-semibold text-[#3b2d24]">
+            {language === "ru" ? "Корзина" : "Savatcha"}
+          </span>
+        </div>
+      </nav>
 
-      <div className="mx-auto max-w-7xl px-6 py-12">
+      <div className="mx-auto max-w-7xl px-4 pt-8 sm:px-6 sm:pt-10">
+        <div className="flex items-baseline justify-between border-b border-[#ebdcca] pb-5">
+          <div>
+            <span className="text-xs sm:text-sm font-bold tracking-[0.2em] text-[#8a735e] uppercase">
+              {language === "ru" ? "Оформление" : "Xarid"}
+            </span>
+            <h1 className="mt-1 font-serif text-3xl sm:text-4xl font-bold tracking-tight text-[#3b2d24]">
+              {language === "ru" ? "Корзина покупок" : "Savatchadagi mahsulotlar"}
+            </h1>
+          </div>
 
-        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#52796f]">
-          Velmora
-        </p>
-
-        <h1 className="mt-3 text-4xl font-semibold text-[#173f35]">
-
-          {language === "ru"
-            ? "Корзина"
-            : "Savatcha"}
-
-        </h1>
-
+          <span className="text-sm sm:text-base font-bold text-[#8a735e]">
+            {language === "ru"
+              ? `${totalItemsCount} шт.`
+              : `${totalItemsCount} ta mahsulot`}
+          </span>
+        </div>
 
         {error && (
-          <div className="mt-6 rounded-xl bg-red-50 p-4 text-sm text-red-700">
+          <div className="mt-6 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm font-semibold text-red-700">
             {error}
           </div>
         )}
 
-
-        <div className="mt-10 grid gap-8 lg:grid-cols-[1fr_360px]">
-
-          {/* ========================= */}
-          {/* ITEMS */}
-          {/* ========================= */}
-
-          <div className="space-y-5">
-
-            {cart.map(
-              (item) => (
-
-                <article
-                  key={
-                    item.variant_id
-                  }
-                  className="grid gap-5 rounded-[28px] bg-white p-5 shadow-sm sm:grid-cols-[140px_1fr]"
+        <div className="mt-8 grid gap-8 lg:grid-cols-12 lg:gap-10">
+          {/* CART ITEMS LIST */}
+          <div className="space-y-4 lg:col-span-8">
+            {cart.map((item) => (
+              <article
+                key={item.variant_id}
+                className="flex flex-col gap-4 rounded-3xl border border-[#ebdcca] bg-white p-5 shadow-xs transition sm:flex-row sm:items-center sm:gap-6 sm:p-6"
+              >
+                {/* THUMBNAIL */}
+                <Link
+                  to={`/products/${item.product_slug}`}
+                  className="aspect-square h-24 w-24 shrink-0 overflow-hidden rounded-2xl border border-[#ebdcca] bg-[#f4efe6] sm:h-28 sm:w-28"
                 >
-
-                  {/* IMAGE */}
-                  <Link
-                    to={`/products/${item.product_slug}`}
-                    className="aspect-square overflow-hidden rounded-2xl bg-[#eee9df]"
-                  >
-
-                    {item.image ? (
-
-                      <img
-                        src={
-                          item.image
-                        }
-                        alt={
-                          item.product_name
-                        }
-                        className="h-full w-full object-cover"
-                      />
-
-                    ) : (
-
-                      <div className="flex h-full items-center justify-center px-3 text-center text-xs text-stone-400">
-
-                        {language === "ru"
-                          ? "Нет изображения"
-                          : "Rasm mavjud emas"}
-
-                      </div>
-
-                    )}
-
-                  </Link>
-
-
-                  {/* INFO */}
-                  <div className="flex flex-col justify-between">
-
-                    <div>
-
-                      <div className="flex items-start justify-between gap-5">
-
-                        <div>
-
-                          <Link
-                            to={`/products/${item.product_slug}`}
-                            className="text-xl font-semibold text-[#173f35] hover:underline"
-                          >
-                            {
-                              item.product_name
-                            }
-                          </Link>
-
-
-                          <p className="mt-2 text-sm text-stone-500">
-
-                            {item.color}
-                            {" · "}
-                            {item.size}
-
-                          </p>
-
-
-                          <p className="mt-1 text-xs text-stone-400">
-                            SKU:{" "}
-                            {
-                              item.sku
-                            }
-                          </p>
-
-                        </div>
-
-
-                        <button
-                          type="button"
-                          onClick={() =>
-                            handleRemove(
-                              item.variant_id
-                            )
-                          }
-                          className="text-sm font-medium text-red-600 hover:underline"
-                        >
-
-                          {language === "ru"
-                            ? "Удалить"
-                            : "O‘chirish"}
-
-                        </button>
-
-                      </div>
-
-
-                      <p className="mt-5 font-semibold text-[#173f35]">
-
-                        {Number(
-                          item.price
-                        ).toLocaleString(
-                          "uz-UZ"
-                        )}{" "}
-                        so‘m
-
-                      </p>
-
+                  {item.image ? (
+                    <img
+                      src={item.image}
+                      alt={item.product_name}
+                      className="h-full w-full object-cover transition duration-300 hover:scale-105"
+                    />
+                  ) : (
+                    <div className="flex h-full items-center justify-center text-xs text-[#8a735e]">
+                      {language === "ru" ? "Нет фото" : "Rasm yo‘q"}
                     </div>
+                  )}
+                </Link>
 
+                {/* DETAILS */}
+                <div className="min-w-0 flex-1 space-y-1.5">
+                  <div className="flex items-start justify-between gap-3">
+                    <Link
+                      to={`/products/${item.product_slug}`}
+                      className="line-clamp-1 font-serif text-lg font-bold text-[#3b2d24] transition hover:text-[#8a735e] sm:text-xl"
+                    >
+                      {item.product_name}
+                    </Link>
 
-                    {/* QUANTITY */}
-                    <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
-
-                      <div className="flex items-center rounded-full border border-stone-300">
-
-                        <button
-                          type="button"
-                          disabled={
-                            item.quantity <=
-                            1
-                          }
-                          onClick={() =>
-                            handleQuantity(
-                              item,
-                              item.quantity -
-                                1
-                            )
-                          }
-                          className="h-10 w-10 text-xl disabled:opacity-30"
-                        >
-                          −
-                        </button>
-
-
-                        <span className="min-w-10 text-center font-medium">
-                          {
-                            item.quantity
-                          }
-                        </span>
-
-
-                        <button
-                          type="button"
-                          disabled={
-                            item.quantity >=
-                            item.stock
-                          }
-                          onClick={() =>
-                            handleQuantity(
-                              item,
-                              item.quantity +
-                                1
-                            )
-                          }
-                          className="h-10 w-10 text-xl disabled:opacity-30"
-                        >
-                          +
-                        </button>
-
-                      </div>
-
-
-                      <div className="text-right">
-
-                        <p className="text-xs text-stone-500">
-
-                          {language === "ru"
-                            ? "Итого"
-                            : "Jami"}
-
-                        </p>
-
-                        <p className="font-semibold text-[#173f35]">
-
-                          {(
-                            Number(
-                              item.price
-                            ) *
-                            item.quantity
-                          ).toLocaleString(
-                            "uz-UZ"
-                          )}{" "}
-                          so‘m
-
-                        </p>
-
-                      </div>
-
-                    </div>
-
+                    <button
+                      type="button"
+                      onClick={() => handleRemove(item.variant_id)}
+                      aria-label="Remove"
+                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-stone-400 transition hover:bg-rose-50 hover:text-rose-600"
+                    >
+                      <Trash2 className="h-5 w-5" />
+                    </button>
                   </div>
 
-                </article>
+                  <p className="text-sm text-[#6b584a]">
+                    <span className="font-bold text-[#3b2d24]">{item.color}</span>
+                    {" • "}
+                    <span>{item.size}</span>
+                    {item.sku && (
+                      <span className="ml-2 text-stone-400">({item.sku})</span>
+                    )}
+                  </p>
 
-              )
-            )}
+                  <p className="font-serif text-base font-bold text-[#3b2d24] sm:text-lg">
+                    {Number(item.price).toLocaleString("uz-UZ")} so‘m
+                  </p>
+                </div>
 
+                {/* STEPPER & TOTAL */}
+                <div className="flex items-center justify-between border-t border-[#f4efe6] pt-3 sm:flex-col sm:items-end sm:border-0 sm:pt-0">
+                  {/* STEPPER */}
+                  <div className="flex h-11 items-center rounded-full border border-[#d6c6b3] bg-[#faf7f2] p-1">
+                    <button
+                      type="button"
+                      disabled={item.quantity <= 1}
+                      onClick={() => handleQuantity(item, item.quantity - 1)}
+                      className="flex h-8 w-8 items-center justify-center rounded-full text-[#3b2d24] transition hover:bg-white disabled:opacity-30"
+                    >
+                      <Minus className="h-4 w-4" />
+                    </button>
+
+                    <span className="w-9 text-center text-sm font-bold text-[#3b2d24]">
+                      {item.quantity}
+                    </span>
+
+                    <button
+                      type="button"
+                      disabled={item.quantity >= item.stock}
+                      onClick={() => handleQuantity(item, item.quantity + 1)}
+                      className="flex h-8 w-8 items-center justify-center rounded-full text-[#3b2d24] transition hover:bg-white disabled:opacity-30"
+                    >
+                      <Plus className="h-4 w-4" />
+                    </button>
+                  </div>
+
+                  {/* LINE TOTAL */}
+                  <div className="text-right sm:mt-2">
+                    <p className="text-xs text-[#8a735e] font-semibold uppercase">
+                      {language === "ru" ? "Итого" : "Jami"}
+                    </p>
+                    <p className="font-serif text-base sm:text-lg font-bold text-[#3b2d24]">
+                      {(Number(item.price) * item.quantity).toLocaleString("uz-UZ")} so‘m
+                    </p>
+                  </div>
+                </div>
+              </article>
+            ))}
           </div>
 
+          {/* SUMMARY SIDEBAR */}
+          <aside className="lg:col-span-4">
+            <div className="sticky top-24 space-y-5 rounded-3xl border border-[#ebdcca] bg-white p-6 sm:p-7 shadow-sm">
+              <h2 className="font-serif text-2xl font-bold text-[#3b2d24]">
+                {language === "ru" ? "Сумма заказа" : "Buyurtma hisobi"}
+              </h2>
 
-          {/* ========================= */}
-          {/* SUMMARY */}
-          {/* ========================= */}
+              <div className="space-y-3.5 border-t border-[#f4efe6] pt-5 text-sm sm:text-base">
+                <div className="flex justify-between text-[#5c4a3d]">
+                  <span>{language === "ru" ? "Стоимость товаров" : "Tovarlar summasi"}</span>
+                  <span className="font-bold text-[#3b2d24]">
+                    {total.toLocaleString("uz-UZ")} so‘m
+                  </span>
+                </div>
 
-          <aside className="h-fit rounded-[30px] bg-white p-7 shadow-sm">
-
-            <h2 className="text-2xl font-semibold text-[#173f35]">
-
-              {language === "ru"
-                ? "Ваш заказ"
-                : "Buyurtmangiz"}
-
-            </h2>
-
-
-            <div className="mt-6 flex justify-between text-stone-600">
-
-              <span>
-                {language === "ru"
-                  ? "Товары"
-                  : "Mahsulotlar"}
-              </span>
-
-              <span>
-                {total.toLocaleString(
-                  "uz-UZ"
-                )}{" "}
-                so‘m
-              </span>
-
-            </div>
-
-
-            <div className="mt-4 flex justify-between text-stone-600">
-
-              <span>
-                {language === "ru"
-                  ? "Доставка"
-                  : "Yetkazib berish"}
-              </span>
-
-              <span className="font-medium text-green-700">
-
-                {language === "ru"
-                  ? "Бесплатно"
-                  : "Bepul"}
-
-              </span>
-
-            </div>
-
-
-            <div className="mt-6 border-t border-stone-200 pt-6">
-
-              <div className="flex items-center justify-between">
-
-                <span className="text-lg font-semibold">
-                  {language === "ru"
-                    ? "Итого"
-                    : "Jami"}
-                </span>
-
-                <span className="text-2xl font-semibold text-[#173f35]">
-
-                  {total.toLocaleString(
-                    "uz-UZ"
-                  )}{" "}
-                  so‘m
-
-                </span>
-
+                <div className="flex items-center justify-between text-[#5c4a3d]">
+                  <span>{language === "ru" ? "Доставка (Ташкент)" : "Yetkazib berish (Toshkent)"}</span>
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 font-bold text-emerald-800 text-xs sm:text-sm border border-emerald-200">
+                    <Sparkles className="h-3.5 w-3.5 text-emerald-600" />
+                    {language === "ru" ? "Бесплатно" : "0 so‘m (Bepul)"}
+                  </span>
+                </div>
               </div>
 
+              {/* TOTAL */}
+              <div className="border-t border-[#f4efe6] pt-5">
+                <div className="flex items-baseline justify-between">
+                  <span className="font-serif text-lg font-bold text-[#3b2d24]">
+                    {language === "ru" ? "Всего к оплате:" : "Jami to‘lov:"}
+                  </span>
+                  <span className="font-serif text-2xl sm:text-3xl font-bold text-[#3b2d24]">
+                    {total.toLocaleString("uz-UZ")} so‘m
+                  </span>
+                </div>
+                <p className="mt-2 text-xs sm:text-sm text-[#7a6758]">
+                  {language === "ru"
+                    ? "Оплата наличными при получении курьеру"
+                    : "To‘lov buyurtmani tekshirib olganda naqd shaklda"}
+                </p>
+              </div>
+
+              {/* TELEGRAM ORDER BUTTON */}
+              <button
+                type="button"
+                onClick={handleTelegramCheckout}
+                disabled={telegramLoading}
+                className="group flex w-full items-center justify-center gap-2.5 rounded-full bg-[#229ed9] py-4 text-base font-bold tracking-wide text-white shadow-md shadow-[#229ed9]/25 transition hover:bg-[#1e8ec3] hover:shadow-lg disabled:opacity-60 cursor-pointer"
+              >
+                <Send className="h-5 w-5 transition-transform group-hover:scale-110" />
+                <span>
+                  {telegramLoading
+                    ? (language === "ru" ? "Загрузка..." : "Yuklanmoqda...")
+                    : (language === "ru" ? "Заказать через Telegram" : "Telegram orqali buyurtma berish")}
+                </span>
+              </button>
+
+              {/* WEBSITE CHECKOUT BUTTON */}
+              <button
+                type="button"
+                onClick={() => navigate("/checkout")}
+                className="group flex w-full items-center justify-center gap-2.5 rounded-full border-2 border-[#3b2d24] bg-white py-3.5 text-sm sm:text-base font-bold tracking-wide text-[#3b2d24] transition hover:bg-[#3b2d24] hover:text-white cursor-pointer"
+              >
+                <span>{language === "ru" ? "Оформить на сайте" : "Sayt orqali rasmiylashtirish"}</span>
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </button>
+
+              <Link
+                to="/catalog"
+                className="block text-center text-sm font-bold text-[#8a735e] hover:underline"
+              >
+                {language === "ru" ? "← Продолжить покупки" : "← Xaridni davom ettirish"}
+              </Link>
+
+              {/* TRUST BADGES */}
+              <div className="space-y-2.5 border-t border-[#f4efe6] pt-5 text-xs sm:text-sm text-[#7a6758]">
+                <div className="flex items-center gap-2.5">
+                  <Truck className="h-4.5 w-4.5 text-[#8a735e]" />
+                  <span>{language === "ru" ? "Бесплатная доставка до двери" : "Eshikkacha bepul yetkazish"}</span>
+                </div>
+                <div className="flex items-center gap-2.5">
+                  <ShieldCheck className="h-4.5 w-4.5 text-[#8a735e]" />
+                  <span>{language === "ru" ? "Осмотр товара перед оплатой" : "To‘lovdan oldin tekshirish kafolati"}</span>
+                </div>
+              </div>
             </div>
-
-
-            <p className="mt-5 text-xs leading-5 text-stone-500">
-
-              {language === "ru"
-                ? "Окончательная цена и наличие товара будут повторно проверены сервером при оформлении заказа."
-                : "Buyurtma rasmiylashtirilganda yakuniy narx va mahsulot mavjudligi server tomonidan qayta tekshiriladi."}
-
-            </p>
-
-
-            <div className="mt-5 rounded-2xl bg-[#eee7da] p-4">
-
-              <p className="font-medium text-[#173f35]">
-
-                {language === "ru"
-                  ? "Бесплатная доставка"
-                  : "Bepul yetkazib berish"}
-
-              </p>
-
-              <p className="mt-1 text-sm leading-6 text-stone-600">
-
-                {language === "ru"
-                  ? "Только по городу Ташкент."
-                  : "Faqat Toshkent shahri bo‘ylab."}
-
-              </p>
-
-            </div>
-
-
-            <button
-              type="button"
-              onClick={() =>
-                navigate(
-                  "/checkout"
-                )
-              }
-              className="mt-6 w-full rounded-full bg-[#173f35] px-6 py-4 font-medium text-white transition hover:bg-[#245448]"
-            >
-
-              {language === "ru"
-                ? "Оформить заказ"
-                : "Buyurtma berish"}
-
-            </button>
-
-
-            <Link
-              to="/catalog"
-              className="mt-4 block text-center text-sm font-medium text-[#52796f] hover:underline"
-            >
-
-              {language === "ru"
-                ? "Продолжить покупки"
-                : "Xaridni davom ettirish"}
-
-            </Link>
-
           </aside>
-
         </div>
-
       </div>
-
     </div>
   );
 }
-
 
 export default CartPage;

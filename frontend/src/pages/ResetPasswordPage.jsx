@@ -1,51 +1,36 @@
 import { useState } from "react";
-
-import {
-  Link,
-  useSearchParams,
-} from "react-router-dom";
-
+import { Link, useSearchParams } from "react-router-dom";
+import { Lock, ArrowRight, CheckCircle2, AlertCircle, ShieldCheck } from "lucide-react";
 import api from "../api/client";
 import PasswordInput from "../components/PasswordInput";
 import { useLanguage } from "../context/LanguageContext";
 
-
 function ResetPasswordPage() {
   const { language } = useLanguage();
-
   const [searchParams] = useSearchParams();
 
   const uid = searchParams.get("uid");
   const token = searchParams.get("token");
 
-
   const [password, setPassword] = useState("");
-  const [
-    passwordConfirm,
-    setPasswordConfirm,
-  ] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
-
   const handleSubmit = async (event) => {
     event.preventDefault();
-
     setError("");
-
 
     if (!uid || !token) {
       setError(
         language === "ru"
           ? "Ссылка восстановления недействительна."
-          : "Parolni tiklash havolasi noto‘g‘ri."
+          : "Parolni tiklash havolasi yaroqsiz."
       );
-
       return;
     }
-
 
     if (password !== passwordConfirm) {
       setError(
@@ -53,37 +38,34 @@ function ResetPasswordPage() {
           ? "Пароли не совпадают."
           : "Parollar bir xil emas."
       );
-
       return;
     }
 
+    if (password.length < 6) {
+      setError(
+        language === "ru"
+          ? "Пароль должен содержать не менее 6 символов."
+          : "Parol kamida 6 ta belgidan iborat bo‘lishi kerak."
+      );
+      return;
+    }
 
     setSubmitting(true);
 
     try {
-      await api.post(
-        "/auth/password-reset/confirm/",
-        {
-          uid,
-          token,
-          new_password: password,
-          new_password_confirm: passwordConfirm,
-        }
-      );
+      await api.post("/auth/password-reset/confirm/", {
+        uid,
+        token,
+        new_password: password,
+        new_password_confirm: passwordConfirm,
+      });
 
       setSuccess(true);
       setPassword("");
       setPasswordConfirm("");
-
     } catch (err) {
-      console.error(
-        "Password reset error:",
-        err.response?.data || err
-      );
-
-      const responseData =
-        err.response?.data;
-
+      console.error("Password reset error:", err.response?.data || err);
+      const responseData = err.response?.data;
 
       if (responseData?.new_password) {
         setError(
@@ -91,13 +73,9 @@ function ResetPasswordPage() {
             ? responseData.new_password[0]
             : responseData.new_password
         );
-      } else if (
-        responseData?.new_password_confirm
-      ) {
+      } else if (responseData?.new_password_confirm) {
         setError(
-          Array.isArray(
-            responseData.new_password_confirm
-          )
+          Array.isArray(responseData.new_password_confirm)
             ? responseData.new_password_confirm[0]
             : responseData.new_password_confirm
         );
@@ -107,214 +85,184 @@ function ResetPasswordPage() {
         setError(
           language === "ru"
             ? "Ссылка недействительна или срок её действия истёк."
-            : "Havola noto‘g‘ri yoki uning amal qilish muddati tugagan."
+            : "Havola eskirgan yoki muddati o‘tgan. Qaytadan so‘rov yuboring."
         );
       }
-
     } finally {
       setSubmitting(false);
     }
   };
 
-
   if (success) {
     return (
-      <div className="bg-[#f8f5ef]">
-
-        <div className="mx-auto flex min-h-[70vh] max-w-7xl items-center justify-center px-6 py-16">
-
-          <div className="w-full max-w-md rounded-[30px] bg-white p-8 text-center shadow-sm">
-
-            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-emerald-50 text-2xl text-[#173f35]">
-              ✓
+      <div className="min-h-[85vh] bg-[#faf7f2] flex items-center justify-center px-4 py-12 sm:px-6 lg:py-16 relative overflow-hidden text-[#2d241e]">
+        <div className="w-full max-w-md relative z-10">
+          <div className="bg-white rounded-3xl p-8 sm:p-12 text-center shadow-[0_15px_45px_-15px_rgba(59,45,36,0.08)] border border-[#ebdcca]">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-100 shadow-sm mb-5">
+              <CheckCircle2 className="w-8 h-8" />
             </div>
 
-
-            <h1 className="mt-5 text-3xl font-semibold text-[#173f35]">
-              {language === "ru"
-                ? "Пароль обновлён"
-                : "Parol yangilandi"}
-            </h1>
-
-
-            <p className="mt-3 text-sm leading-6 text-stone-600">
-              {language === "ru"
-                ? "Теперь вы можете войти в аккаунт с новым паролем."
-                : "Endi yangi parolingiz orqali hisobingizga kirishingiz mumkin."}
+            <p className="text-xs font-bold uppercase tracking-[0.25em] text-[#8a735e]">
+              MUVAFFAQIYATLI
             </p>
 
+            <h1 className="mt-2 font-serif text-2xl sm:text-3xl font-bold text-[#3b2d24]">
+              {language === "ru" ? "Пароль обновлён" : "Parol yangilandi"}
+            </h1>
+
+            <p className="mt-3 text-sm sm:text-base text-[#6b584a] leading-relaxed max-w-xs mx-auto">
+              {language === "ru"
+                ? "Ваш пароль был успешно изменён. Теперь вы можете войти в аккаунт с новым паролем."
+                : "Parolingiz muvaffaqiyatli o‘zgartirildi. Endi yangi parolingiz orqali tizimga kirishingiz mumkin."}
+            </p>
 
             <Link
               to="/login"
-              className="mt-7 inline-flex rounded-full bg-[#173f35] px-7 py-3 font-medium text-white transition hover:bg-[#245448]"
+              className="mt-8 inline-flex items-center justify-center gap-2 w-full py-4 px-6 rounded-xl bg-[#3b2d24] text-white font-semibold text-base transition hover:bg-[#271f19] shadow-md"
             >
-              {language === "ru"
-                ? "Войти"
-                : "Kirish"}
+              <span>{language === "ru" ? "Войти в аккаунт" : "Kirish sahifasiga o‘tish"}</span>
+              <ArrowRight className="w-4 h-4" />
             </Link>
-
           </div>
-
         </div>
-
       </div>
     );
   }
 
-
   return (
-    <div className="bg-[#f8f5ef]">
+    <div className="min-h-[85vh] bg-[#faf7f2] flex items-center justify-center px-4 py-12 sm:px-6 lg:py-16 relative overflow-hidden text-[#2d241e]">
+      <div className="w-full max-w-md relative z-10">
+        <div className="bg-white rounded-3xl p-7 sm:p-10 shadow-[0_15px_45px_-15px_rgba(59,45,36,0.08)] border border-[#ebdcca]">
+          {/* Header & Logo */}
+          <div className="text-center">
+            <div className="mx-auto w-16 h-16 rounded-2xl overflow-hidden bg-white p-1 border border-[#dfd2c0] shadow-xs flex items-center justify-center mb-3">
+              <img
+                src="/logo.png"
+                alt="Velmora Logo"
+                className="w-full h-full object-contain"
+              />
+            </div>
 
-      <div className="mx-auto flex min-h-[70vh] max-w-7xl items-center justify-center px-6 py-16">
+            <p className="text-xs font-bold uppercase tracking-[0.25em] text-[#8a735e]">
+              YANGILASH
+            </p>
 
-        <div className="w-full max-w-md rounded-[30px] bg-white p-8 shadow-sm">
+            <h1 className="mt-2 font-serif text-2xl sm:text-3xl font-bold text-[#3b2d24] tracking-tight">
+              {language === "ru" ? "Новый пароль" : "Yangi parol o‘rnatish"}
+            </h1>
 
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#52796f]">
-            Velmora
-          </p>
-
-
-          <h1 className="mt-3 text-3xl font-semibold text-[#173f35]">
-            {language === "ru"
-              ? "Новый пароль"
-              : "Yangi parol"}
-          </h1>
-
-
-          <p className="mt-3 text-sm leading-6 text-stone-600">
-            {language === "ru"
-              ? "Введите новый пароль для вашего аккаунта."
-              : "Hisobingiz uchun yangi parol kiriting."}
-          </p>
-
+            <p className="mt-2 text-sm sm:text-base text-[#6b584a] max-w-xs mx-auto">
+              {language === "ru"
+                ? "Придумайте новый надежный пароль для вашей учетной записи"
+                : "Hisobingiz uchun yangi va xavfsiz parol kiriting"}
+            </p>
+          </div>
 
           {!uid || !token ? (
-            <div className="mt-6 rounded-xl bg-red-50 p-4 text-sm text-red-700">
-              {language === "ru"
-                ? "Ссылка восстановления недействительна."
-                : "Parolni tiklash havolasi noto‘g‘ri."}
+            <div className="mt-6 space-y-4">
+              <div className="flex items-start gap-3 p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm leading-relaxed">
+                <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5 text-red-600" />
+                <span>
+                  {language === "ru"
+                    ? "Ссылка восстановления недействительна или неполная."
+                    : "Parolni tiklash havolasi noto‘g‘ri yoki to‘liq emas."}
+                </span>
+              </div>
+
+              <Link
+                to="/forgot-password"
+                className="block text-center w-full py-3.5 px-4 rounded-xl bg-[#f4efe6] text-[#3b2d24] text-sm font-semibold hover:bg-[#ebdcca] transition"
+              >
+                {language === "ru" ? "Запросить ссылку заново" : "Qaytadan havola so‘rash"}
+              </Link>
             </div>
           ) : (
-            <form
-              onSubmit={handleSubmit}
-              className="mt-8 space-y-5"
-            >
-
+            <form onSubmit={handleSubmit} className="mt-8 space-y-4">
               <div>
                 <label
                   htmlFor="newPassword"
-                  className="mb-2 block text-sm font-medium text-stone-700"
+                  className="block text-sm font-semibold uppercase tracking-wider text-[#3b2d24] mb-1.5"
                 >
-                  {language === "ru"
-                    ? "Новый пароль"
-                    : "Yangi parol"}
+                  {language === "ru" ? "Новый пароль" : "Yangi parol"}
                 </label>
-
-                <PasswordInput
-                  id="newPassword"
-                  required
-                  autoComplete="new-password"
-                  value={password}
-                  onChange={(event) =>
-                    setPassword(
-                      event.target.value
-                    )
-                  }
-                  showLabel={
-                    language === "ru"
-                      ? "Показать пароль"
-                      : "Parolni ko‘rsatish"
-                  }
-                  hideLabel={
-                    language === "ru"
-                      ? "Скрыть пароль"
-                      : "Parolni yashirish"
-                  }
-                  className="rounded-xl border border-stone-300 px-4 py-3 outline-none transition focus:border-[#173f35]"
-                />
+                <div className="relative">
+                  <PasswordInput
+                    id="newPassword"
+                    required
+                    autoComplete="new-password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••"
+                    showLabel={language === "ru" ? "Показать пароль" : "Parolni ko‘rsatish"}
+                    hideLabel={language === "ru" ? "Скрыть пароль" : "Parolni yashirish"}
+                    className="pl-12 pr-12 py-3.5 text-base bg-[#faf7f2]/60 border border-[#d6c6b3] rounded-xl outline-none transition-all placeholder:text-stone-400 focus:bg-white focus:border-[#3b2d24] focus:ring-2 focus:ring-[#8a735e]/15"
+                  />
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#8a735e] pointer-events-none" />
+                </div>
               </div>
-
 
               <div>
                 <label
                   htmlFor="confirmPassword"
-                  className="mb-2 block text-sm font-medium text-stone-700"
+                  className="block text-sm font-semibold uppercase tracking-wider text-[#3b2d24] mb-1.5"
                 >
-                  {language === "ru"
-                    ? "Повторите новый пароль"
-                    : "Yangi parolni tasdiqlang"}
+                  {language === "ru" ? "Подтвердите пароль" : "Yangi parolni tasdiqlang"}
                 </label>
-
-                <PasswordInput
-                  id="confirmPassword"
-                  required
-                  autoComplete="new-password"
-                  value={passwordConfirm}
-                  onChange={(event) =>
-                    setPasswordConfirm(
-                      event.target.value
-                    )
-                  }
-                  showLabel={
-                    language === "ru"
-                      ? "Показать пароль"
-                      : "Parolni ko‘rsatish"
-                  }
-                  hideLabel={
-                    language === "ru"
-                      ? "Скрыть пароль"
-                      : "Parolni yashirish"
-                  }
-                  className="rounded-xl border border-stone-300 px-4 py-3 outline-none transition focus:border-[#173f35]"
-                />
+                <div className="relative">
+                  <PasswordInput
+                    id="confirmPassword"
+                    required
+                    autoComplete="new-password"
+                    value={passwordConfirm}
+                    onChange={(e) => setPasswordConfirm(e.target.value)}
+                    placeholder="••••••••"
+                    showLabel={language === "ru" ? "Показать пароль" : "Parolni ko‘rsatish"}
+                    hideLabel={language === "ru" ? "Скрыть пароль" : "Parolni yashirish"}
+                    className="pl-12 pr-12 py-3.5 text-base bg-[#faf7f2]/60 border border-[#d6c6b3] rounded-xl outline-none transition-all placeholder:text-stone-400 focus:bg-white focus:border-[#3b2d24] focus:ring-2 focus:ring-[#8a735e]/15"
+                  />
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#8a735e] pointer-events-none" />
+                </div>
               </div>
 
-
               {error && (
-                <div className="rounded-xl bg-red-50 p-4 text-sm text-red-700">
-                  {error}
+                <div className="flex items-start gap-3 p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm leading-relaxed animate-fadeIn">
+                  <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5 text-red-600" />
+                  <span>{error}</span>
                 </div>
               )}
-
 
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full rounded-full bg-[#173f35] px-6 py-3.5 font-medium text-white transition hover:bg-[#245448] disabled:cursor-not-allowed disabled:opacity-50"
+                className="w-full mt-3 group relative flex items-center justify-center gap-2 py-4 px-6 rounded-xl bg-[#3b2d24] text-white font-semibold text-base transition-all duration-300 shadow-md hover:bg-[#271f19] hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {submitting
-                  ? language === "ru"
-                    ? "Сохранение..."
-                    : "Saqlanmoqda..."
-                  : language === "ru"
-                    ? "Сохранить новый пароль"
-                    : "Yangi parolni saqlash"}
+                {submitting ? (
+                  <span className="flex items-center gap-2">
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    {language === "ru" ? "Сохранение..." : "Saqlanmoqda..."}
+                  </span>
+                ) : (
+                  <>
+                    <span>{language === "ru" ? "Сохранить новый пароль" : "Yangi parolni saqlash"}</span>
+                    <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                  </>
+                )}
               </button>
-
             </form>
           )}
 
-
-          <div className="mt-6 text-center">
-
+          <div className="mt-8 pt-6 border-t border-[#ebdcca] text-center">
             <Link
               to="/login"
-              className="text-sm font-medium text-[#52796f] hover:underline"
+              className="text-sm font-semibold text-[#3b2d24] hover:text-[#8a735e] transition-colors"
             >
-              {language === "ru"
-                ? "Вернуться ко входу"
-                : "Kirish sahifasiga qaytish"}
+              {language === "ru" ? "Вернуться ко входу" : "Kirish sahifasiga qaytish"}
             </Link>
-
           </div>
-
         </div>
-
       </div>
-
     </div>
   );
 }
-
 
 export default ResetPasswordPage;

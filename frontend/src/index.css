@@ -1,1 +1,60 @@
 @import "tailwindcss";
+
+@theme {
+  --font-serif: "Playfair Display", Georgia, Cambria, serif;
+  --font-sans: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+
+  /* Warm Qaymoq (Cream) & Mocha Bronze Palette */
+  --color-velmora-primary: #3b2d24;
+  --color-velmora-primary-hover: #4e3c31;
+  --color-velmora-secondary: #8a735e;
+  --color-velmora-cream: #faf7f2;
+  --color-velmora-cream-soft: #f5efe6;
+  --color-velmora-sand: #eee5d8;
+  --color-velmora-sand-dark: #ded2c0;
+  --color-velmora-dark: #271f19;
+  --color-velmora-gold: #c1a27c;
+}
+
+:root {
+  font-family: var(--font-sans);
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Warm Luxury scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #faf7f2;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #ded2c0;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #8a735e;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
