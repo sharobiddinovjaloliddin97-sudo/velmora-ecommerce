@@ -6,11 +6,9 @@ import {
   Send,
   CheckCircle2,
   AlertCircle,
-  MessageSquare,
   User,
   HelpCircle,
   Truck,
-  ShieldCheck,
 } from "lucide-react";
 import api from "../api/client";
 import { useLanguage } from "../context/LanguageContext";

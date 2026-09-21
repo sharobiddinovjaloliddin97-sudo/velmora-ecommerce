@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ShieldCheck, Truck, Banknote, Sparkles, Phone, Send } from "lucide-react";
+import { ShieldCheck, Truck, Banknote, Phone, Send } from "lucide-react";
 import { useLanguage } from "../context/LanguageContext";
 
 function Footer() {

@@ -48,13 +48,16 @@ function CatalogPage() {
 
   // Sync state when URL search params change
   useEffect(() => {
-    setSearch(searchParams.get("search") || "");
-    setCategory(searchParams.get("category") || "");
-    setMinPrice(searchParams.get("min_price") || "");
-    setMaxPrice(searchParams.get("max_price") || "");
-    setColor(searchParams.get("color") || "");
-    setSize(searchParams.get("size") || "");
-    setOrdering(searchParams.get("ordering") || "-created_at");
+    const timer = setTimeout(() => {
+      setSearch(searchParams.get("search") || "");
+      setCategory(searchParams.get("category") || "");
+      setMinPrice(searchParams.get("min_price") || "");
+      setMaxPrice(searchParams.get("max_price") || "");
+      setColor(searchParams.get("color") || "");
+      setSize(searchParams.get("size") || "");
+      setOrdering(searchParams.get("ordering") || "-created_at");
+    }, 0);
+    return () => clearTimeout(timer);
   }, [searchParams]);
 
   // Load Categories once

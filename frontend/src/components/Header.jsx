@@ -66,10 +66,13 @@ function Header() {
 
   useEffect(() => {
     if (!user) return;
-    loadNotifications();
+    const timer = setTimeout(() => {
+      loadNotifications();
+    }, 0);
     const interval = setInterval(loadNotifications, 30000);
     window.addEventListener("focus", loadNotifications);
     return () => {
+      clearTimeout(timer);
       clearInterval(interval);
       window.removeEventListener("focus", loadNotifications);
     };

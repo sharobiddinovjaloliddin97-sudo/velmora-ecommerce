@@ -9,13 +9,10 @@ import {
 import {
   ArrowRight,
   Banknote,
-  Building,
   Check,
   ChevronRight,
-  Home,
   Loader2,
   MapPin,
-  MessageSquare,
   Phone,
   ShieldCheck,
   Sparkles,

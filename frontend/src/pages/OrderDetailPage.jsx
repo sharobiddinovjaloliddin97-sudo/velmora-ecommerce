@@ -17,10 +17,7 @@ import {
   ChevronRight,
   Clock,
   MapPin,
-  Package,
   PackageCheck,
-  Phone,
-  Sparkles,
   Truck,
   User,
 } from "lucide-react";
@@ -28,7 +25,6 @@ import {
 import api from "../api/client";
 import { useLanguage } from "../context/LanguageContext";
 import {
-  getOrderStatusLabel,
   getPaymentMethodLabel,
   getPaymentStatusLabel,
 } from "../utils/orderLabels";

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { Lock, ArrowRight, CheckCircle2, AlertCircle, ShieldCheck } from "lucide-react";
+import { Lock, ArrowRight, CheckCircle2, AlertCircle } from "lucide-react";
 import api from "../api/client";
 import PasswordInput from "../components/PasswordInput";
 import { useLanguage } from "../context/LanguageContext";

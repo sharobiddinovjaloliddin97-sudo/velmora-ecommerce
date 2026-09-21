@@ -16,11 +16,7 @@ import {
   KeyRound,
   LogOut,
   Package,
-  ShieldCheck,
-  ShoppingBag,
-  Sparkles,
   Trash2,
-  Truck,
   User,
 } from "lucide-react";
 

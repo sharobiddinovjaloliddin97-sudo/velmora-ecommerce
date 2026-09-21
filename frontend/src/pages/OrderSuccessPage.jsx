@@ -5,12 +5,10 @@ import {
 } from "react-router-dom";
 
 import {
-  ArrowRight,
   CheckCircle2,
   PackageCheck,
   ShoppingBag,
   Sparkles,
-  Truck,
 } from "lucide-react";
 
 import {
@@ -20,7 +18,6 @@ import {
 import {
   getOrderStatusLabel,
   getPaymentMethodLabel,
-  getPaymentStatusLabel,
 } from "../utils/orderLabels";
 
 
