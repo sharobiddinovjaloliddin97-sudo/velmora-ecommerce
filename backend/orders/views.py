@@ -103,8 +103,14 @@ class CheckoutView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
+        req_data = request.data.copy() if hasattr(request.data, "copy") else dict(request.data)
+        if "shipping_address" in req_data and isinstance(req_data["shipping_address"], dict):
+            for addr_key, addr_val in req_data["shipping_address"].items():
+                if addr_key not in req_data or not req_data[addr_key]:
+                    req_data[addr_key] = addr_val
+
         serializer = CheckoutSerializer(
-            data=request.data
+            data=req_data
         )
 
         serializer.is_valid(

@@ -75,46 +75,69 @@ function CheckoutPage() {
     }));
   };
 
-  const getErrorMessage = (data) => {
+  const getErrorMessage = (data, errorObj) => {
     if (!data) {
+      if (errorObj?.message?.includes("Network Error") || errorObj?.code === "ERR_NETWORK") {
+        return language === "ru"
+          ? "Ошибка соединения с сервером. Проверьте интернет или повторите попытку."
+          : "Server bilan aloqa xatosi. Internetni tekshiring yoki qayta urinib ko‘ring.";
+      }
       return language === "ru"
         ? "Не удалось оформить заказ. Попробуйте еще раз."
         : "Buyurtmani rasmiylashtirib bo‘lmadi. Qaytadan urinib ko‘ring.";
     }
     if (typeof data === "string") return data;
     if (data.detail) return data.detail;
+    if (data.items) {
+      return Array.isArray(data.items) ? data.items[0] : String(data.items);
+    }
     const firstKey = Object.keys(data)[0];
     if (firstKey) {
       const val = data[firstKey];
-      return Array.isArray(val) ? val[0] : String(val);
+      const msg = Array.isArray(val) ? val[0] : String(val);
+      const fieldLabels = {
+        district: language === "ru" ? "Район" : "Tuman",
+        street: language === "ru" ? "Улица" : "Ko‘cha",
+        house: language === "ru" ? "Дом" : "Uy",
+        phone: language === "ru" ? "Телефон" : "Telefon",
+        recipient_name: language === "ru" ? "Имя получателя" : "Qabul qiluvchi",
+        items: language === "ru" ? "Товары" : "Mahsulotlar",
+      };
+      const prefix = fieldLabels[firstKey] ? `${fieldLabels[firstKey]}: ` : "";
+      return `${prefix}${msg}`;
     }
     return language === "ru" ? "Ошибка оформления" : "Xatolik yuz berdi";
   };
 
   const sendCheckout = (idempotencyKey) => {
     const payload = {
+      recipient_name: form.recipient_name.trim(),
+      phone: form.phone.trim(),
+      city: "Toshkent",
+      district: form.district,
+      street: form.street.trim(),
+      house: form.house.trim(),
+      apartment: (form.apartment || "").trim(),
+      landmark: (form.landmark || "").trim(),
+      comment: (form.comment || "").trim(),
+      payment_method: "CASH_ON_DELIVERY",
+      shipping_address: {
+        city: "Toshkent",
+        district: form.district,
+        street: form.street.trim(),
+        house: form.house.trim(),
+        apartment: (form.apartment || "").trim(),
+        landmark: (form.landmark || "").trim(),
+      },
       items: cart.map((item) => ({
         variant_id: item.variant_id,
         quantity: item.quantity,
       })),
-      shipping_address: {
-        city: "Tashkent",
-        district: form.district,
-        street: form.street,
-        house: form.house,
-        apartment: form.apartment || "",
-        landmark: form.landmark || "",
-      },
-      payment_method: "CASH_ON_DELIVERY",
-      comment: form.comment || "",
-      recipient_name: form.recipient_name,
-      phone: form.phone,
     };
 
     return api.post("/orders/checkout/", payload, {
       headers: {
         "Idempotency-Key": idempotencyKey,
-        "X-Idempotency-Key": idempotencyKey,
       },
     });
   };
@@ -155,7 +178,7 @@ function CheckoutPage() {
       });
     } catch (err) {
       console.error("Checkout error:", err.response?.data || err);
-      setError(getErrorMessage(err.response?.data));
+      setError(getErrorMessage(err.response?.data, err));
     } finally {
       setSubmitting(false);
     }
@@ -247,7 +270,7 @@ function CheckoutPage() {
                       value={form.recipient_name}
                       onChange={handleChange}
                       placeholder={language === "ru" ? "Алишер Навои" : "Alisher Navoiy"}
-                      className="mt-1.5 w-full rounded-xl border border-[#d6c6b3] bg-[#faf7f2]/60 p-3.5 text-base outline-none focus:border-[#3b2d24] focus:bg-white dark:border-[#3d342c] dark:bg-[#25201c] dark:text-[#f5efe6] dark:focus:border-[#c1a27c]"
+                      className="mt-1.5 w-full rounded-xl border border-[#d6c6b3] bg-[#faf7f2]/60 p-3.5 text-base text-[#2d241e] outline-none transition-colors placeholder:text-stone-400 focus:border-[#3b2d24] focus:bg-white dark:border-[#3d342c] dark:bg-[#25201c] dark:text-[#f5efe6] dark:placeholder:text-stone-500 dark:focus:border-[#c1a27c] dark:focus:bg-[#25201c]"
                     />
                   </div>
 
@@ -263,7 +286,7 @@ function CheckoutPage() {
                         value={form.phone}
                         onChange={handleChange}
                         placeholder="+998 90 123 45 67"
-                        className="w-full rounded-xl border border-[#d6c6b3] bg-[#faf7f2]/60 p-3.5 text-base outline-none focus:border-[#3b2d24] focus:bg-white dark:border-[#3d342c] dark:bg-[#25201c] dark:text-[#f5efe6] dark:focus:border-[#c1a27c]"
+                        className="w-full rounded-xl border border-[#d6c6b3] bg-[#faf7f2]/60 p-3.5 text-base text-[#2d241e] outline-none transition-colors placeholder:text-stone-400 focus:border-[#3b2d24] focus:bg-white dark:border-[#3d342c] dark:bg-[#25201c] dark:text-[#f5efe6] dark:placeholder:text-stone-500 dark:focus:border-[#c1a27c] dark:focus:bg-[#25201c]"
                       />
                       <Phone className="absolute top-4 right-4 h-5 w-5 text-[#8a735e] dark:text-[#e5b378]" />
                     </div>
@@ -288,13 +311,17 @@ function CheckoutPage() {
                       required
                       value={form.district}
                       onChange={handleChange}
-                      className="mt-1.5 w-full cursor-pointer rounded-xl border border-[#d6c6b3] bg-[#faf7f2]/60 p-3.5 text-base font-medium outline-none focus:border-[#3b2d24] focus:bg-white dark:border-[#3d342c] dark:bg-[#25201c] dark:text-[#f5efe6] dark:focus:border-[#c1a27c]"
+                      className="mt-1.5 w-full cursor-pointer rounded-xl border border-[#d6c6b3] bg-[#faf7f2]/60 p-3.5 text-base font-medium text-[#2d241e] outline-none transition-colors focus:border-[#3b2d24] focus:bg-white dark:border-[#3d342c] dark:bg-[#25201c] dark:text-[#f5efe6] dark:focus:border-[#c1a27c] dark:focus:bg-[#25201c] dark:[color-scheme:dark]"
                     >
-                      <option value="">
+                      <option value="" className="bg-white text-[#2d241e] dark:bg-[#25201c] dark:text-[#f5efe6]">
                         {language === "ru" ? "Выберите район..." : "Tumanni tanlang..."}
                       </option>
                       {DISTRICTS.map((d) => (
-                        <option key={d.value} value={d.value}>
+                        <option
+                          key={d.value}
+                          value={d.value}
+                          className="bg-white text-[#2d241e] dark:bg-[#25201c] dark:text-[#f5efe6]"
+                        >
                           {language === "ru" ? d.ru : d.uz}
                         </option>
                       ))}
@@ -313,7 +340,7 @@ function CheckoutPage() {
                         value={form.street}
                         onChange={handleChange}
                         placeholder={language === "ru" ? "ул. Амира Темура" : "Amir Temur ko‘chasi"}
-                        className="mt-1.5 w-full rounded-xl border border-[#d6c6b3] bg-[#faf7f2]/60 p-3.5 text-base outline-none focus:border-[#3b2d24] focus:bg-white dark:border-[#3d342c] dark:bg-[#25201c] dark:text-[#f5efe6] dark:focus:border-[#c1a27c]"
+                        className="mt-1.5 w-full rounded-xl border border-[#d6c6b3] bg-[#faf7f2]/60 p-3.5 text-base text-[#2d241e] outline-none transition-colors placeholder:text-stone-400 focus:border-[#3b2d24] focus:bg-white dark:border-[#3d342c] dark:bg-[#25201c] dark:text-[#f5efe6] dark:placeholder:text-stone-500 dark:focus:border-[#c1a27c] dark:focus:bg-[#25201c]"
                       />
                     </div>
 
@@ -328,7 +355,7 @@ function CheckoutPage() {
                         value={form.house}
                         onChange={handleChange}
                         placeholder="12A"
-                        className="mt-1.5 w-full rounded-xl border border-[#d6c6b3] bg-[#faf7f2]/60 p-3.5 text-base outline-none focus:border-[#3b2d24] focus:bg-white dark:border-[#3d342c] dark:bg-[#25201c] dark:text-[#f5efe6] dark:focus:border-[#c1a27c]"
+                        className="mt-1.5 w-full rounded-xl border border-[#d6c6b3] bg-[#faf7f2]/60 p-3.5 text-base text-[#2d241e] outline-none transition-colors placeholder:text-stone-400 focus:border-[#3b2d24] focus:bg-white dark:border-[#3d342c] dark:bg-[#25201c] dark:text-[#f5efe6] dark:placeholder:text-stone-500 dark:focus:border-[#c1a27c] dark:focus:bg-[#25201c]"
                       />
                     </div>
                   </div>
@@ -344,7 +371,7 @@ function CheckoutPage() {
                         value={form.apartment}
                         onChange={handleChange}
                         placeholder="45"
-                        className="mt-1.5 w-full rounded-xl border border-[#d6c6b3] bg-[#faf7f2]/60 p-3.5 text-base outline-none focus:border-[#3b2d24] focus:bg-white dark:border-[#3d342c] dark:bg-[#25201c] dark:text-[#f5efe6] dark:focus:border-[#c1a27c]"
+                        className="mt-1.5 w-full rounded-xl border border-[#d6c6b3] bg-[#faf7f2]/60 p-3.5 text-base text-[#2d241e] outline-none transition-colors placeholder:text-stone-400 focus:border-[#3b2d24] focus:bg-white dark:border-[#3d342c] dark:bg-[#25201c] dark:text-[#f5efe6] dark:placeholder:text-stone-500 dark:focus:border-[#c1a27c] dark:focus:bg-[#25201c]"
                       />
                     </div>
 
@@ -358,7 +385,7 @@ function CheckoutPage() {
                         value={form.landmark}
                         onChange={handleChange}
                         placeholder={language === "ru" ? "Рядом с метро" : "Metro bekati yonida"}
-                        className="mt-1.5 w-full rounded-xl border border-[#d6c6b3] bg-[#faf7f2]/60 p-3.5 text-base outline-none focus:border-[#3b2d24] focus:bg-white dark:border-[#3d342c] dark:bg-[#25201c] dark:text-[#f5efe6] dark:focus:border-[#c1a27c]"
+                        className="mt-1.5 w-full rounded-xl border border-[#d6c6b3] bg-[#faf7f2]/60 p-3.5 text-base text-[#2d241e] outline-none transition-colors placeholder:text-stone-400 focus:border-[#3b2d24] focus:bg-white dark:border-[#3d342c] dark:bg-[#25201c] dark:text-[#f5efe6] dark:placeholder:text-stone-500 dark:focus:border-[#c1a27c] dark:focus:bg-[#25201c]"
                       />
                     </div>
                   </div>
@@ -373,7 +400,7 @@ function CheckoutPage() {
                       value={form.comment}
                       onChange={handleChange}
                       placeholder={language === "ru" ? "Домофон, код или удобное время..." : "Domofon kodi yoki qulay vaqt..."}
-                      className="mt-1.5 w-full rounded-xl border border-[#d6c6b3] bg-[#faf7f2]/60 p-3.5 text-base outline-none focus:border-[#3b2d24] focus:bg-white dark:border-[#3d342c] dark:bg-[#25201c] dark:text-[#f5efe6] dark:focus:border-[#c1a27c]"
+                      className="mt-1.5 w-full rounded-xl border border-[#d6c6b3] bg-[#faf7f2]/60 p-3.5 text-base text-[#2d241e] outline-none transition-colors placeholder:text-stone-400 focus:border-[#3b2d24] focus:bg-white dark:border-[#3d342c] dark:bg-[#25201c] dark:text-[#f5efe6] dark:placeholder:text-stone-500 dark:focus:border-[#c1a27c] dark:focus:bg-[#25201c]"
                     />
                   </div>
                 </div>

@@ -242,7 +242,7 @@ function ContactPage() {
                     onChange={handleChange}
                     autoComplete="name"
                     placeholder={language === "ru" ? "Имя и фамилия" : "Ism va familiyangiz"}
-                    className="w-full pl-12 pr-4 py-3.5 text-base bg-[#faf7f2]/60 border border-[#d6c6b3] rounded-xl outline-none transition-all placeholder:text-stone-400 focus:bg-white focus:border-[#3b2d24] focus:ring-2 focus:ring-[#8a735e]/15 dark:border-[#3d342c] dark:bg-[#25201c] dark:text-[#f5efe6] dark:focus:border-[#c1a27c]"
+                    className="w-full pl-12 pr-4 py-3.5 text-base bg-[#faf7f2]/60 border border-[#d6c6b3] rounded-xl outline-none transition-all placeholder:text-stone-400 focus:bg-white dark:focus:bg-[#25201c] focus:border-[#3b2d24] focus:ring-2 focus:ring-[#8a735e]/15 dark:border-[#3d342c] dark:bg-[#25201c] dark:text-[#f5efe6] dark:focus:border-[#c1a27c]"
                   />
                   <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#8a735e] dark:text-[#e5b378]" />
                 </div>
@@ -265,7 +265,7 @@ function ContactPage() {
                       onChange={handleChange}
                       autoComplete="tel"
                       placeholder="+998 91 165 22 11"
-                      className="w-full pl-12 pr-4 py-3.5 text-base bg-[#faf7f2]/60 border border-[#d6c6b3] rounded-xl outline-none transition-all placeholder:text-stone-400 focus:bg-white focus:border-[#3b2d24] focus:ring-2 focus:ring-[#8a735e]/15 dark:border-[#3d342c] dark:bg-[#25201c] dark:text-[#f5efe6] dark:focus:border-[#c1a27c]"
+                      className="w-full pl-12 pr-4 py-3.5 text-base bg-[#faf7f2]/60 border border-[#d6c6b3] rounded-xl outline-none transition-all placeholder:text-stone-400 focus:bg-white dark:focus:bg-[#25201c] focus:border-[#3b2d24] focus:ring-2 focus:ring-[#8a735e]/15 dark:border-[#3d342c] dark:bg-[#25201c] dark:text-[#f5efe6] dark:focus:border-[#c1a27c]"
                     />
                     <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#8a735e] dark:text-[#e5b378]" />
                   </div>
@@ -287,7 +287,7 @@ function ContactPage() {
                       onChange={handleChange}
                       autoComplete="email"
                       placeholder="example@gmail.com"
-                      className="w-full pl-12 pr-4 py-3.5 text-base bg-[#faf7f2]/60 border border-[#d6c6b3] rounded-xl outline-none transition-all placeholder:text-stone-400 focus:bg-white focus:border-[#3b2d24] focus:ring-2 focus:ring-[#8a735e]/15 dark:border-[#3d342c] dark:bg-[#25201c] dark:text-[#f5efe6] dark:focus:border-[#c1a27c]"
+                      className="w-full pl-12 pr-4 py-3.5 text-base bg-[#faf7f2]/60 border border-[#d6c6b3] rounded-xl outline-none transition-all placeholder:text-stone-400 focus:bg-white dark:focus:bg-[#25201c] focus:border-[#3b2d24] focus:ring-2 focus:ring-[#8a735e]/15 dark:border-[#3d342c] dark:bg-[#25201c] dark:text-[#f5efe6] dark:focus:border-[#c1a27c]"
                     />
                     <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#8a735e] dark:text-[#e5b378]" />
                   </div>
@@ -314,7 +314,7 @@ function ContactPage() {
                         ? "Напишите, какой комплект вас интересует или оставьте вопрос..."
                         : "Sizni qaysi mahsulot yoki o‘lcham qiziqtirayotganini yozing..."
                     }
-                    className="w-full p-4 text-base bg-[#faf7f2]/60 border border-[#d6c6b3] rounded-xl outline-none transition-all placeholder:text-stone-400 resize-none focus:bg-white focus:border-[#3b2d24] focus:ring-2 focus:ring-[#8a735e]/15 dark:border-[#3d342c] dark:bg-[#25201c] dark:text-[#f5efe6] dark:focus:border-[#c1a27c]"
+                    className="w-full p-4 text-base bg-[#faf7f2]/60 border border-[#d6c6b3] rounded-xl outline-none transition-all placeholder:text-stone-400 resize-none focus:bg-white dark:focus:bg-[#25201c] focus:border-[#3b2d24] focus:ring-2 focus:ring-[#8a735e]/15 dark:border-[#3d342c] dark:bg-[#25201c] dark:text-[#f5efe6] dark:focus:border-[#c1a27c]"
                   />
                 </div>
               </div>

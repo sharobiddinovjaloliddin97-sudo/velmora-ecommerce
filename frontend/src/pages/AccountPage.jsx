@@ -298,23 +298,23 @@ function AccountPage() {
           {/* SIDEBAR TABS */}
           {/* ========================= */}
           <aside className="lg:col-span-3">
-            <nav className="flex flex-row gap-1.5 overflow-x-auto rounded-3xl border border-[#e8ded2] dark:border-[#2d241c] bg-white dark:bg-[#1e1915] p-2 shadow-xs sm:p-2.5 lg:flex-col">
+            <nav className="flex flex-row gap-1.5 overflow-x-auto no-scrollbar scrollbar-none rounded-3xl border border-[#e8ded2] dark:border-[#2d241c] bg-white dark:bg-[#1e1915] p-2 shadow-xs sm:p-2.5 lg:flex-col">
               <button
                 type="button"
                 onClick={() => setActiveTab("orders")}
-                className={`flex shrink-0 items-center justify-between rounded-2xl px-4 py-3 text-sm font-semibold tracking-wide transition ${
+                className={`flex shrink-0 items-center justify-between rounded-2xl px-3.5 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold tracking-wide transition ${
                   activeTab === "orders"
                     ? "bg-[#3b2d24] dark:bg-[#c1a27c] text-white dark:text-[#1e1915] shadow-xs"
                     : "text-stone-700 dark:text-stone-300 hover:bg-[#f4efe6] dark:hover:bg-[#28211a] hover:text-[#3b2d24] dark:hover:text-[#f3ede4]"
                 }`}
               >
-                <div className="flex items-center gap-2.5">
-                  <Package className="h-4 w-4" />
+                <div className="flex items-center gap-2 sm:gap-2.5">
+                  <Package className="h-4 w-4 shrink-0" />
                   <span>{language === "ru" ? "Мои заказы" : "Buyurtmalarim"}</span>
                 </div>
                 {orders.length > 0 && (
                   <span
-                    className={`ml-2 rounded-full px-2.5 py-0.5 text-xs font-bold ${
+                    className={`ml-2 rounded-full px-2 py-0.5 text-[11px] sm:text-xs font-bold ${
                       activeTab === "orders"
                         ? "bg-white/20 dark:bg-black/20 text-white dark:text-[#1e1915]"
                         : "bg-[#f4efe6] dark:bg-[#28211a] text-[#3b2d24] dark:text-[#c4a98e]"
@@ -328,19 +328,19 @@ function AccountPage() {
               <button
                 type="button"
                 onClick={() => setActiveTab("favorites")}
-                className={`flex shrink-0 items-center justify-between rounded-2xl px-4 py-3 text-sm font-semibold tracking-wide transition ${
+                className={`flex shrink-0 items-center justify-between rounded-2xl px-3.5 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold tracking-wide transition ${
                   activeTab === "favorites"
                     ? "bg-[#3b2d24] dark:bg-[#c1a27c] text-white dark:text-[#1e1915] shadow-xs"
                     : "text-stone-700 dark:text-stone-300 hover:bg-[#f4efe6] dark:hover:bg-[#28211a] hover:text-[#3b2d24] dark:hover:text-[#f3ede4]"
                 }`}
               >
-                <div className="flex items-center gap-2.5">
-                  <Heart className="h-4 w-4" />
+                <div className="flex items-center gap-2 sm:gap-2.5">
+                  <Heart className="h-4 w-4 shrink-0" />
                   <span>{language === "ru" ? "Избранное" : "Sevimlilar"}</span>
                 </div>
                 {favorites.length > 0 && (
                   <span
-                    className={`ml-2 rounded-full px-2.5 py-0.5 text-xs font-bold ${
+                    className={`ml-2 rounded-full px-2 py-0.5 text-[11px] sm:text-xs font-bold ${
                       activeTab === "favorites"
                         ? "bg-white/20 dark:bg-black/20 text-white dark:text-[#1e1915]"
                         : "bg-[#f4efe6] dark:bg-[#28211a] text-[#3b2d24] dark:text-[#c4a98e]"
@@ -354,26 +354,26 @@ function AccountPage() {
               <button
                 type="button"
                 onClick={() => setActiveTab("profile")}
-                className={`flex shrink-0 items-center gap-2.5 rounded-2xl px-4 py-3 text-sm font-semibold tracking-wide transition ${
+                className={`flex shrink-0 items-center gap-2 sm:gap-2.5 rounded-2xl px-3.5 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold tracking-wide transition ${
                   activeTab === "profile"
                     ? "bg-[#3b2d24] dark:bg-[#c1a27c] text-white dark:text-[#1e1915] shadow-xs"
                     : "text-stone-700 dark:text-stone-300 hover:bg-[#f4efe6] dark:hover:bg-[#28211a] hover:text-[#3b2d24] dark:hover:text-[#f3ede4]"
                 }`}
               >
-                <User className="h-4 w-4" />
+                <User className="h-4 w-4 shrink-0" />
                 <span>{language === "ru" ? "Профиль" : "Profil"}</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => setActiveTab("security")}
-                className={`flex shrink-0 items-center gap-2.5 rounded-2xl px-4 py-3 text-sm font-semibold tracking-wide transition ${
+                className={`flex shrink-0 items-center gap-2 sm:gap-2.5 rounded-2xl px-3.5 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold tracking-wide transition ${
                   activeTab === "security"
                     ? "bg-[#3b2d24] dark:bg-[#c1a27c] text-white dark:text-[#1e1915] shadow-xs"
                     : "text-stone-700 dark:text-stone-300 hover:bg-[#f4efe6] dark:hover:bg-[#28211a] hover:text-[#3b2d24] dark:hover:text-[#f3ede4]"
                 }`}
               >
-                <KeyRound className="h-4 w-4" />
+                <KeyRound className="h-4 w-4 shrink-0" />
                 <span>{language === "ru" ? "Безопасность" : "Xavfsizlik"}</span>
               </button>
             </nav>

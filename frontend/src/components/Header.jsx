@@ -153,13 +153,13 @@ function Header() {
   return (
     <>
       {/* ========================= */}
-      {/* TOP ANNOUNCEMENT BAR */}
+      {/* ANNOUNCEMENT BANNER */}
       {/* ========================= */}
-      <aside aria-label="Announcement" className="bg-[#3b2d24] dark:bg-[#1c1815] border-b border-[#4d3c30] dark:border-[#2b241f] py-2 text-xs sm:text-sm tracking-wide text-[#eee5d8]">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6">
-          <div className="flex items-center gap-2">
-            <Sparkles className="h-4 w-4 text-[#c1a27c]" />
-            <span>
+      <aside className="bg-[#241c16] text-[#e8ded4] text-xs py-2 px-3 sm:px-6 border-b border-[#3d3228] transition-colors overflow-hidden">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-2 overflow-hidden">
+          <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 flex-1 justify-center sm:justify-start">
+            <Sparkles className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-[#c1a27c] shrink-0" />
+            <span className="truncate text-[11px] sm:text-xs font-medium">
               {language === "ru"
                 ? "Бесплатная доставка по Ташкенту • Оплата при получении"
                 : "Toshkent bo‘ylab bepul yetkazib berish • To‘lov qabul qilganda"}
@@ -194,14 +194,14 @@ function Header() {
         {/* ========================= */}
         {/* MAIN NAVIGATION BAR */}
         {/* ========================= */}
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 sm:py-3.5">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-2 sm:gap-4 px-3 sm:px-6 py-2 sm:py-3.5">
           
           {/* BRAND LOGO */}
           <Link
             to="/"
-            className="group flex items-center gap-3"
+            className="group flex items-center gap-2 sm:gap-3 shrink-0"
           >
-            <div className="h-11 w-11 sm:h-12 sm:w-12 rounded-2xl overflow-hidden bg-white dark:bg-[#1f1b17] p-1 border border-[#dfd2c0]/80 dark:border-[#3d342c] shadow-xs flex items-center justify-center">
+            <div className="h-9 w-9 sm:h-12 sm:w-12 rounded-xl sm:rounded-2xl overflow-hidden bg-white dark:bg-[#1f1b17] p-1 border border-[#dfd2c0]/80 dark:border-[#3d342c] shadow-xs flex items-center justify-center shrink-0">
               <img
                 src="/logo.png"
                 alt="Velmora"
@@ -209,10 +209,10 @@ function Header() {
               />
             </div>
             <div className="flex flex-col">
-              <span className="font-serif text-2xl sm:text-3xl font-bold tracking-[0.16em] text-[#3b2d24] dark:text-[#f2e6d6] transition-colors group-hover:text-[#8a735e] dark:group-hover:text-[#e5b378]">
+              <span className="font-serif text-lg sm:text-3xl font-bold tracking-[0.14em] sm:tracking-[0.16em] text-[#3b2d24] dark:text-[#f2e6d6] transition-colors group-hover:text-[#8a735e] dark:group-hover:text-[#e5b378]">
                 VELMORA
               </span>
-              <span className="-mt-1 text-[10px] sm:text-[11px] tracking-[0.28em] text-[#8a735e] dark:text-[#c1a27c] uppercase font-bold">
+              <span className="-mt-1 text-[8px] sm:text-[11px] tracking-[0.22em] sm:tracking-[0.28em] text-[#8a735e] dark:text-[#c1a27c] uppercase font-bold">
                 Uy Tekstili
               </span>
             </div>
@@ -235,14 +235,14 @@ function Header() {
           </nav>
 
           {/* RIGHT UTILITIES */}
-          <div className="flex items-center gap-2 sm:gap-2.5">
+          <div className="flex items-center gap-1.5 sm:gap-2.5">
             
             {/* LANGUAGE SWITCHER */}
             <div className="flex items-center rounded-full border border-[#d8c8b4] bg-white p-0.5 shadow-xs dark:border-[#3d342c] dark:bg-[#1f1b17]">
               <button
                 type="button"
                 onClick={() => changeLanguage("uz")}
-                className={`rounded-full px-2.5 sm:px-3 py-1 text-xs font-bold tracking-wider transition ${
+                className={`rounded-full px-2 sm:px-3 py-0.5 sm:py-1 text-[11px] sm:text-xs font-bold tracking-wider transition ${
                   language === "uz"
                     ? "bg-[#3b2d24] text-white dark:bg-[#e5b378] dark:text-[#1c1917] shadow-xs"
                     : "text-[#6b584a] hover:text-[#3b2d24] dark:text-[#a09081] dark:hover:text-[#e8ded4]"
@@ -253,7 +253,7 @@ function Header() {
               <button
                 type="button"
                 onClick={() => changeLanguage("ru")}
-                className={`rounded-full px-2.5 sm:px-3 py-1 text-xs font-bold tracking-wider transition ${
+                className={`rounded-full px-2 sm:px-3 py-0.5 sm:py-1 text-[11px] sm:text-xs font-bold tracking-wider transition ${
                   language === "ru"
                     ? "bg-[#3b2d24] text-white dark:bg-[#e5b378] dark:text-[#1c1917] shadow-xs"
                     : "text-[#6b584a] hover:text-[#3b2d24] dark:text-[#a09081] dark:hover:text-[#e8ded4]"
@@ -266,7 +266,7 @@ function Header() {
             {/* DARK / LIGHT THEME TOGGLE */}
             <ThemeToggle />
 
-            {/* WISHLIST LINK (DESKTOP) */}
+            {/* WISHLIST LINK (TABLET & DESKTOP) */}
             <Link
               to={user ? "/account?tab=favorites" : "/login"}
               aria-label={language === "ru" ? "Избранное" : "Sevimlilar"}
@@ -281,9 +281,9 @@ function Header() {
               )}
             </Link>
 
-            {/* NOTIFICATIONS POPOVER */}
+            {/* NOTIFICATIONS POPOVER (TABLET & DESKTOP) */}
             {user && (
-              <div className="relative">
+              <div className="relative hidden sm:block">
                 <button
                   type="button"
                   onClick={() => setNotificationOpen((curr) => !curr)}
@@ -382,11 +382,11 @@ function Header() {
               </div>
             )}
 
-            {/* CART BUTTON */}
+            {/* CART BUTTON (TABLET & DESKTOP; MOBILE HAS STICKY BOTTOM NAV) */}
             <Link
               to="/cart"
               aria-label={t("cart")}
-              className="relative flex h-11 items-center gap-2 rounded-full bg-[#3b2d24] px-3.5 sm:px-4 text-white shadow-sm transition hover:bg-[#271f19] dark:bg-[#e5b378] dark:text-[#1c1917] dark:hover:bg-[#d9a365]"
+              className="relative hidden sm:flex h-11 items-center gap-2 rounded-full bg-[#3b2d24] px-3.5 sm:px-4 text-white shadow-sm transition hover:bg-[#271f19] dark:bg-[#e5b378] dark:text-[#1c1917] dark:hover:bg-[#d9a365]"
             >
               <ShoppingBag className="h-5 w-5" />
               <span className="hidden text-sm font-semibold sm:inline">
@@ -397,19 +397,6 @@ function Header() {
                 <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-[#8a735e] dark:bg-[#3b2d24] dark:text-[#f2e6d6] px-1 text-[11px] font-bold text-white shadow-xs">
                   {cartCount > 99 ? "99+" : cartCount}
                 </span>
-              )}
-            </Link>
-
-            {/* MOBILE USER PROFILE BUTTON (DIRECTLY ACCESSIBLE ON MOBILE) */}
-            <Link
-              to={user ? "/account" : "/login"}
-              aria-label={user ? (language === "ru" ? "Личный кабинет" : "Shaxsiy profil") : (language === "ru" ? "Войти" : "Kirish")}
-              className="relative flex h-11 w-11 items-center justify-center rounded-full border border-[#d8c8b4] bg-white text-[#3b2d24] transition hover:border-[#3b2d24] hover:bg-[#faf7f2] dark:border-[#3d342c] dark:bg-[#1f1b17] dark:text-[#e8ded4] dark:hover:border-[#e5b378] lg:hidden"
-              title={user ? (language === "ru" ? "Личный кабинет" : "Profil") : (language === "ru" ? "Войти" : "Kirish")}
-            >
-              <User className="h-5 w-5" />
-              {user && (
-                <span className="absolute top-1 right-1 h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-[#1f1b17]" />
               )}
             </Link>
 
@@ -467,12 +454,17 @@ function Header() {
               }
               aria-expanded={mobileMenuOpen}
               onClick={() => setMobileMenuOpen((curr) => !curr)}
-              className="flex h-11 w-11 items-center justify-center rounded-full border border-[#d8c8b4] bg-white text-[#3b2d24] transition hover:border-[#3b2d24] dark:border-[#3d342c] dark:bg-[#1f1b17] dark:text-[#e8ded4] dark:hover:border-[#e5b378] lg:hidden"
+              className="relative flex h-9 w-9 sm:h-11 sm:w-11 items-center justify-center rounded-full border border-[#d8c8b4] bg-white text-[#3b2d24] transition hover:border-[#3b2d24] dark:border-[#3d342c] dark:bg-[#1f1b17] dark:text-[#e8ded4] dark:hover:border-[#e5b378] lg:hidden"
             >
               {mobileMenuOpen ? (
-                <X className="h-5 w-5" />
+                <X className="h-4.5 w-4.5 sm:h-5 sm:w-5" />
               ) : (
-                <Menu className="h-5 w-5" />
+                <Menu className="h-4.5 w-4.5 sm:h-5 sm:w-5" />
+              )}
+              {unreadCount > 0 && !mobileMenuOpen && (
+                <span className="absolute -top-0.5 -right-0.5 flex h-3.5 min-w-3.5 items-center justify-center rounded-full bg-rose-600 px-1 text-[9px] font-bold text-white shadow-xs">
+                  {unreadCount > 9 ? "9+" : unreadCount}
+                </span>
               )}
             </button>
           </div>

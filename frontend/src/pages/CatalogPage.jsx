@@ -443,18 +443,18 @@ function CatalogPage() {
                       setOrdering(e.target.value);
                       setPage(1);
                     }}
-                    className="cursor-pointer appearance-none rounded-full border border-[#d6c6b3] dark:border-[#383028] bg-[#faf7f2] dark:bg-[#261f1a] py-2 pr-9 pl-4 text-xs sm:text-sm font-bold text-[#3b2d24] dark:text-[#ede4d8] outline-none transition hover:bg-white dark:hover:bg-[#2d251f] focus:border-[#3b2d24] dark:focus:border-[#c1a27c]"
+                    className="cursor-pointer appearance-none rounded-full border border-[#d6c6b3] dark:border-[#383028] bg-[#faf7f2] dark:bg-[#261f1a] py-2 pr-9 pl-4 text-xs sm:text-sm font-bold text-[#3b2d24] dark:text-[#ede4d8] outline-none transition hover:bg-white dark:hover:bg-[#2d251f] focus:border-[#3b2d24] dark:focus:border-[#c1a27c] dark:[color-scheme:dark]"
                   >
-                    <option value="-created_at">
+                    <option value="-created_at" className="bg-white dark:bg-[#261f1a] text-[#3b2d24] dark:text-[#ede4d8]">
                       {language === "ru" ? "Сначала новые" : "Avval yangilari"}
                     </option>
-                    <option value="created_at">
+                    <option value="created_at" className="bg-white dark:bg-[#261f1a] text-[#3b2d24] dark:text-[#ede4d8]">
                       {language === "ru" ? "Сначала старые" : "Avval eskilari"}
                     </option>
-                    <option value="min_price">
+                    <option value="min_price" className="bg-white dark:bg-[#261f1a] text-[#3b2d24] dark:text-[#ede4d8]">
                       {language === "ru" ? "Цена: по возрастанию" : "Narx: arzonidan"}
                     </option>
-                    <option value="-min_price">
+                    <option value="-min_price" className="bg-white dark:bg-[#261f1a] text-[#3b2d24] dark:text-[#ede4d8]">
                       {language === "ru" ? "Цена: по убыванию" : "Narx: qimmatidan"}
                     </option>
                   </select>
