@@ -243,19 +243,21 @@ async def start_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     # General /start
-    text = (
-        f"Assalomu alaykum, <b>{user.first_name}</b>!\n\n"
-        f"<b>Velmora Uy Tekstili</b> rasmiy botiga xush kelibsiz! ✨\n\n"
-        f"Biz tabiiy va premium matolardan tayyorlangan shinam choyshab to‘plamlari, yozgi va qishgi ko‘rpa to‘plamlari hamda matraslarni taqdim etamiz.\n\n"
-        f"✨ <b>Yangi: AI Interyer Maslahatchisi!</b>\n"
-        f"Xonangiz yoki yotoqxonangiz rasmini ushbu botga yuboring — sun'iy intellekt xonangiz ranglari va uslubini tahlil qilib, unga eng mos tushadigan to‘shak to‘plamlarini tavsiya etadi! 📸\n\n"
-        f"🛍 Mahsulotlarimiz bilan tanishish va buyurtma berish uchun saytimizga o‘ting:\n"
+        f"✨ <b>Yangi: Velmora AI Hub (3 tasi 1 da)!</b>\n"
+        f"1. 🎨 <b>Interyer tahlili:</b> Xonangiz rasmini yuboring — AI mos to‘plamni topadi.\n"
+        f"2. 🎁 <b>Sovg‘a & Tabriknoma:</b> /sovga — To‘y yoki yaqinlarga sovg‘a va shaxsiy tabriknoma.\n"
+        f"3. 🌿 <b>Mato & Uyqu:</b> /mato — Salomatlik va qulaylik uchun eng to‘g‘ri mato tanlash.\n\n"
+        f"🛍 Mahsulotlar bilan tanishish va buyurtma berish uchun saytimizga o‘ting:\n"
         f"🌐 <b>Sayt:</b> <a href=\"https://velmora-ecommerce-chi.vercel.app\">velmora-ecommerce-chi.vercel.app</a>\n"
-        f"📞 <b>Asosiy aloqa:</b> +998911652211\n"
-        f"📞 <b>Qo‘shimcha aloqa:</b> +998930791734\n"
-        f"💬 <b>Telegram:</b> @velmoramahsulotlari"
+        f"📞 <b>Aloqa:</b> +998911652211"
     )
-    await update.message.reply_text(text, parse_mode="HTML")
+    start_kb = InlineKeyboardMarkup([
+        [InlineKeyboardButton("📸 Xonamga mosini topish (Rasm yuborish)", callback_data="hint_send_photo")],
+        [InlineKeyboardButton("🎁 Sovg‘a tanlash & Tabriknoma", callback_data="open_gift_menu")],
+        [InlineKeyboardButton("🌿 Mato & Uyqu maslahati", callback_data="open_fabric_menu")],
+        [InlineKeyboardButton("🛍 Saytga o‘tish (velmora.uz)", url="https://velmora-ecommerce-chi.vercel.app/catalog")],
+    ])
+    await update.message.reply_text(text, reply_markup=start_kb, parse_mode="HTML")
 
 
 async def id_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -470,6 +472,53 @@ async def photo_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await loading_msg.edit_text(err_text, parse_mode="HTML")
 
 
+async def sovga_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    kb = InlineKeyboardMarkup([
+        [
+            InlineKeyboardButton("🌹 Onajonim uchun", callback_data="gift_preset:Onamga:Tug‘ilgan kun"),
+            InlineKeyboardButton("👰 Kelin sarposi / To‘y", callback_data="gift_preset:Kelin-kuyovga:To‘y sarposi"),
+        ],
+        [
+            InlineKeyboardButton("🏡 Yangi uy (Novoselye)", callback_data="gift_preset:Yaqinimga:Yangi uy to‘yi"),
+            InlineKeyboardButton("✨ Qadrdon do‘stimga", callback_data="gift_preset:Do‘stimga:Minnatdorchilik"),
+        ]
+    ])
+    text = (
+        "🎁 <b>Velmora AI Sovg‘a Tanlovchi & Tabriknoma:</b>\n\n"
+        "Kim uchun va qanday sabab bilan sovg‘a qidiryapsiz?\n"
+        "Pastdagi variantlardan birini tanlang — AI to‘plamni tanlab, qutiga solish uchun <b>shaxsiy tabriknoma</b> yozib beradi: 👇"
+    )
+    if update.message:
+        await update.message.reply_text(text, reply_markup=kb, parse_mode="HTML")
+    elif update.callback_query:
+        await update.callback_query.message.reply_text(text, reply_markup=kb, parse_mode="HTML")
+
+
+async def mato_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    kb = InlineKeyboardMarkup([
+        [
+            InlineKeyboardButton("❄️ Yozda salqin / Terlamaslik", callback_data="fabric_preset:cooling_sweat"),
+            InlineKeyboardButton("🧸 Nozik teri & Allergiya", callback_data="fabric_preset:sensitive_skin"),
+        ],
+        [
+            InlineKeyboardButton("☕ Qishki issiq shinamlik", callback_data="fabric_preset:winter_warmth"),
+            InlineKeyboardButton("⚡ Dazmolsiz / G‘ijimlanmas", callback_data="fabric_preset:easy_care"),
+        ],
+        [
+            InlineKeyboardButton("👶 Bolalar xonasi uchun", callback_data="fabric_preset:kids"),
+        ]
+    ])
+    text = (
+        "🌿 <b>Velmora AI Mato & Uyqu Salomatligi Eksperti:</b>\n\n"
+        "Siz uchun matoning qaysi xususiyati eng muhim?\n"
+        "Tanlang — AI matoning ilmiy afzalliklarini tushuntirib, eng mos to‘plamlarni ko‘rsatadi: 👇"
+    )
+    if update.message:
+        await update.message.reply_text(text, reply_markup=kb, parse_mode="HTML")
+    elif update.callback_query:
+        await update.callback_query.message.reply_text(text, reply_markup=kb, parse_mode="HTML")
+
+
 def build_ptb_admin_keyboard(order_id, current_status):
     s = (current_status or "NEW").upper()
     return InlineKeyboardMarkup([
@@ -489,6 +538,88 @@ async def callback_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await query.answer()
     data = query.data
     user = update.effective_user
+
+    # AI CALLBACKS
+    if data == "hint_send_photo":
+        await query.message.reply_text(
+            "📸 <b>Xonangiz yoki yotoqxonangiz rasmini ushbu chatga yuboring!</b>\n\n"
+            "AI bir necha soniyada xonaning rangi, yorug‘ligi va uslubini tahlil qilib, eng uyg‘un Velmora to‘plamlarini tanlab beradi ✨",
+            parse_mode="HTML",
+        )
+        return
+
+    if data == "open_gift_menu":
+        await sovga_command(update, context)
+        return
+
+    if data == "open_fabric_menu":
+        await mato_command(update, context)
+        return
+
+    if data.startswith("gift_preset:"):
+        parts = data.split(":")
+        recipient = parts[1] if len(parts) > 1 else "Yaqinimga"
+        occasion = parts[2] if len(parts) > 2 else "Bayram"
+
+        loading_msg = await query.message.reply_text("🎁 <i>AI eng mos sovg‘a to‘plami va samimiy tabriknoma tayyorlamoqda...</i>", parse_mode="HTML")
+        try:
+            from catalog.ai_service import recommend_gift_package
+            res = await sync_to_async(recommend_gift_package)(recipient=recipient, occasion=occasion)
+            lines = [
+                f"🎁 <b>{res.get('gift_theme_uz', 'Velmora Sovg‘a To‘plami')}</b>",
+                "━━━━━━━━━━━━━━━━━━━",
+                f"💌 <b>Shaxsiy Tabriknoma (qutiga solish uchun):</b>\n<i>\"{res.get('greeting_card_uz', '')}\"</i>",
+                "",
+                f"🎀 <b>Dizayner maslahati:</b> <i>{res.get('packaging_advice_uz', '')}</i>",
+                "━━━━━━━━━━━━━━━━━━━",
+                "🛏 <b>Tavsiya etilgan to‘plamlar:</b>",
+            ]
+            for idx, it in enumerate(res.get("recommendations", [])[:2], 1):
+                price_fmt = f"{int(it.get('price', 0)):,}".replace(",", " ")
+                slug = it.get("slug", "")
+                link = f"https://velmora-ecommerce-chi.vercel.app/catalog/{slug}" if slug else "https://velmora-ecommerce-chi.vercel.app/catalog"
+                lines.append(
+                    f"\n<b>{idx}. {it.get('name_uz')}</b> ({price_fmt} so‘m)\n"
+                    f"   💡 <i>{it.get('why_matched_uz')}</i>\n"
+                    f"   👉 <a href=\"{link}\">Saytda ko‘rish</a>"
+                )
+            lines.append("\n🛒 Buyurtma berish uchun saytimizga o‘ting.")
+            await loading_msg.edit_text("\n".join(lines), parse_mode="HTML", disable_web_page_preview=True)
+        except Exception as e:
+            logger.exception(f"Gift recommendation error: {e}")
+            await loading_msg.edit_text("Kechirasiz, sovg‘a tanlashda xatolik yuz berdi. Iltimos, qaytadan urinib ko‘ring.")
+        return
+
+    if data.startswith("fabric_preset:"):
+        concern_type = data.replace("fabric_preset:", "")
+        loading_msg = await query.message.reply_text("🌿 <i>AI matolar laboratoriyasi tahlil qilmoqda...</i>", parse_mode="HTML")
+        try:
+            from catalog.ai_service import recommend_fabric_and_sleep
+            res = await sync_to_async(recommend_fabric_and_sleep)(concern_type=concern_type)
+            lines = [
+                f"🌿 <b>Tavsiya etilgan mato: {res.get('fabric_title_uz', '100% Paxta')}</b>",
+                "━━━━━━━━━━━━━━━━━━━",
+                f"🔬 <b>Mato afzalligi:</b>\n<i>{res.get('fabric_science_uz', '')}</i>",
+                "",
+                f"🌙 <b>Sog‘lom uyqu qoidasi:</b> <i>{res.get('sleep_tip_uz', '')}</i>",
+                "━━━━━━━━━━━━━━━━━━━",
+                "🛏 <b>Ushbu matodan tikilgan sara to‘plamlar:</b>",
+            ]
+            for idx, it in enumerate(res.get("recommendations", [])[:2], 1):
+                price_fmt = f"{int(it.get('price', 0)):,}".replace(",", " ")
+                slug = it.get("slug", "")
+                link = f"https://velmora-ecommerce-chi.vercel.app/catalog/{slug}" if slug else "https://velmora-ecommerce-chi.vercel.app/catalog"
+                lines.append(
+                    f"\n<b>{idx}. {it.get('name_uz')}</b> ({price_fmt} so‘m)\n"
+                    f"   💡 <i>{it.get('why_matched_uz')}</i>\n"
+                    f"   👉 <a href=\"{link}\">Saytda ko‘rish</a>"
+                )
+            lines.append("\n🛒 Buyurtma berish uchun saytimizga o‘ting.")
+            await loading_msg.edit_text("\n".join(lines), parse_mode="HTML", disable_web_page_preview=True)
+        except Exception as e:
+            logger.exception(f"Fabric advice error: {e}")
+            await loading_msg.edit_text("Kechirasiz, mato tahlilida xatolik yuz berdi. Iltimos, qaytadan urinib ko‘ring.")
+        return
 
     # USER CONFIRM
     if data == "user_confirm_order":
@@ -587,6 +718,8 @@ class Command(BaseCommand):
         application.add_handler(CommandHandler("start", start_handler))
         application.add_handler(CommandHandler("id", id_handler))
         application.add_handler(CommandHandler("setup", id_handler))
+        application.add_handler(CommandHandler("sovga", sovga_command))
+        application.add_handler(CommandHandler("mato", mato_command))
 
         application.add_handler(MessageHandler(filters.CONTACT, contact_handler))
         application.add_handler(MessageHandler(filters.LOCATION, location_handler))

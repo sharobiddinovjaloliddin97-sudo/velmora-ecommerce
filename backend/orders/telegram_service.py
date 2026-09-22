@@ -449,6 +449,53 @@ def handle_telegram_photo(chat_id: int | str, photo_file_id: str):
             send_message(chat_id, err_text)
 
 
+def send_gift_menu(chat_id: int | str):
+    """Sends AI gift selection inline menu."""
+    inline_kb = {
+        "inline_keyboard": [
+            [
+                {"text": "🌹 Onajonim uchun", "callback_data": "gift_preset:Onamga:Tug‘ilgan kun"},
+                {"text": "👰 Kelin sarposi / To‘y", "callback_data": "gift_preset:Kelin-kuyovga:To‘y sarposi"},
+            ],
+            [
+                {"text": "🏡 Yangi uy (Novoselye)", "callback_data": "gift_preset:Yaqinimga:Yangi uy to‘yi"},
+                {"text": "✨ Qadrdon do‘stimga", "callback_data": "gift_preset:Do‘stimga:Minnatdorchilik"},
+            ]
+        ]
+    }
+    text = (
+        "🎁 <b>Velmora AI Sovg‘a Tanlovchi & Tabriknoma:</b>\n\n"
+        "Kim uchun va qanday sabab bilan sovg‘a qidiryapsiz?\n"
+        "Pastdagi variantlardan birini tanlang — AI to‘plamni tanlab, qutiga solish uchun <b>shaxsiy tabriknoma</b> yozib beradi: 👇"
+    )
+    return send_message(chat_id, text, reply_markup=inline_kb)
+
+
+def send_fabric_menu(chat_id: int | str):
+    """Sends AI fabric guide inline menu."""
+    inline_kb = {
+        "inline_keyboard": [
+            [
+                {"text": "❄️ Yozda salqin / Terlamaslik", "callback_data": "fabric_preset:cooling_sweat"},
+                {"text": "🧸 Nozik teri & Allergiya", "callback_data": "fabric_preset:sensitive_skin"},
+            ],
+            [
+                {"text": "☕ Qishki issiq shinamlik", "callback_data": "fabric_preset:winter_warmth"},
+                {"text": "⚡ Dazmolsiz / G‘ijimlanmas", "callback_data": "fabric_preset:easy_care"},
+            ],
+            [
+                {"text": "👶 Bolalar xonasi uchun", "callback_data": "fabric_preset:kids"},
+            ]
+        ]
+    }
+    text = (
+        "🌿 <b>Velmora AI Mato & Uyqu Salomatligi Eksperti:</b>\n\n"
+        "Siz uchun matoning qaysi xususiyati eng muhim?\n"
+        "Tanlang — AI matoning ilmiy afzalliklarini tushuntirib, eng mos to‘plamlarni ko‘rsatadi: 👇"
+    )
+    return send_message(chat_id, text, reply_markup=inline_kb)
+
+
 def process_webhook_update(update: dict):
     """Processes incoming Telegram updates via Webhook."""
     # 1. MESSAGE
@@ -481,6 +528,15 @@ def process_webhook_update(update: dict):
                 f"💡 Ushbu guruhga buyurtmalar tushishi uchun Railwayda <b>TELEGRAM_ADMIN_CHAT_ID={chat_id}</b> qilib saqlang."
             )
             send_message(chat_id, resp_text)
+            return
+
+        # Check /sovga and /mato commands
+        if text.startswith("/sovga") or text.startswith("/gift"):
+            send_gift_menu(chat_id)
+            return
+
+        if text.startswith("/mato") or text.startswith("/fabric"):
+            send_fabric_menu(chat_id)
             return
 
         # Check /start cart_<code>
@@ -537,15 +593,31 @@ def process_webhook_update(update: dict):
                 f"Assalomu alaykum, <b>{first_name}</b>!\n\n"
                 f"<b>Velmora Uy Tekstili</b> rasmiy botiga xush kelibsiz! ✨\n\n"
                 f"Biz tabiiy va premium matolardan tayyorlangan shinam choyshab to‘plamlari, yozgi va qishgi ko‘rpa to‘plamlari hamda matraslarni taqdim etamiz.\n\n"
-                f"✨ <b>Yangi: AI Interyer Maslahatchisi!</b>\n"
-                f"Xonangiz yoki yotoqxonangiz rasmini ushbu botga yuboring — sun'iy intellekt xonangiz ranglari va uslubini tahlil qilib, unga eng mos tushadigan to‘shak to‘plamlarini tavsiya etadi! 📸\n\n"
-                f"🛍 Mahsulotlarimiz bilan tanishish va buyurtma berish uchun saytimizga o‘ting:\n"
+                f"✨ <b>Velmora AI (3 in 1) imkoniyatlari:</b>\n"
+                f"1. 📸 <b>AI Interyer Maslahatchisi:</b> Xonangiz rasmini yuboring, AI eng mos to‘plamlarni tanlaydi.\n"
+                f"2. 🎁 <b>AI Sovg‘a Tanlovchi (/sovga):</b> Yaqinlaringiz uchun to‘plam va shaxsiy tabriknoma tayyorlaydi.\n"
+                f"3. 🌿 <b>AI Mato Eksperti (/mato):</b> Salomatlik va qulaylik uchun mos matoni tavsiya etadi.\n\n"
                 f"🌐 <b>Sayt:</b> <a href=\"https://velmora-ecommerce-chi.vercel.app\">velmora-ecommerce-chi.vercel.app</a>\n"
-                f"📞 <b>Asosiy aloqa:</b> +998911652211\n"
-                f"📞 <b>Qo‘shimcha aloqa:</b> +998930791734\n"
-                f"💬 <b>Telegram:</b> @velmoramahsulotlari"
+                f"📞 <b>Aloqa:</b> +998911652211 | +998930791734"
             )
-            send_message(chat_id, text_gen)
+            start_kb = {
+                "inline_keyboard": [
+                    [
+                        {"text": "📸 AI Interyer Tahlili (Rasm)", "callback_data": "hint_send_photo"},
+                    ],
+                    [
+                        {"text": "🎁 AI Sovg‘a & Tabriknoma", "callback_data": "open_gift_menu"},
+                        {"text": "🌿 AI Mato & Uyqu Gidi", "callback_data": "open_fabric_menu"},
+                    ],
+                    [
+                        {"text": "🛍 Saytda to‘plamlarni ko‘rish", "url": "https://velmora-ecommerce-chi.vercel.app/catalog"},
+                    ],
+                    [
+                        {"text": "💬 Aloqa: @velmoramahsulotlari", "url": "https://t.me/velmoramahsulotlari"},
+                    ]
+                ]
+            }
+            send_message(chat_id, text_gen, reply_markup=start_kb)
             return
 
 
@@ -636,6 +708,117 @@ def process_webhook_update(update: dict):
         msg_id = cb_message.get("message_id")
 
         send_telegram_request("answerCallbackQuery", {"callback_query_id": cb_id})
+
+        # AI CALLBACKS
+        if data == "hint_send_photo":
+            send_message(
+                chat_id,
+                "📸 <b>Xonangiz yoki yotoqxonangiz rasmini ushbu chatga yuboring!</b>\n\n"
+                "AI bir necha soniyada xonaning rangi, yorug‘ligi va uslubini tahlil qilib, eng uyg‘un Velmora to‘plamlarini tanlab beradi ✨"
+            )
+            return
+
+        if data == "open_gift_menu":
+            send_gift_menu(chat_id)
+            return
+
+        if data == "open_fabric_menu":
+            send_fabric_menu(chat_id)
+            return
+
+        if data.startswith("gift_preset:"):
+            parts = data.split(":")
+            recipient = parts[1] if len(parts) > 1 else "Yaqinimga"
+            occasion = parts[2] if len(parts) > 2 else "Bayram"
+            loading_res = send_message(chat_id, "🎁 <i>AI eng mos sovg‘a to‘plami va samimiy tabriknoma tayyorlamoqda...</i>")
+            loading_msg_id = loading_res.get("result", {}).get("message_id") if isinstance(loading_res, dict) else None
+            try:
+                from catalog.ai_service import recommend_gift_package
+                res = recommend_gift_package(recipient=recipient, occasion=occasion)
+                lines = [
+                    f"🎁 <b>{res.get('gift_theme_uz', 'Velmora Sovg‘a To‘plami')}</b>",
+                    "━━━━━━━━━━━━━━━━━━━",
+                    f"💌 <b>Shaxsiy Tabriknoma (qutiga solish uchun):</b>\n<i>\"{res.get('greeting_card_uz', '')}\"</i>",
+                    "",
+                    f"🎀 <b>Dizayner maslahati:</b> <i>{res.get('packaging_advice_uz', '')}</i>",
+                    "━━━━━━━━━━━━━━━━━━━",
+                    "🛏 <b>Tavsiya etilgan to‘plamlar:</b>",
+                ]
+                for idx, it in enumerate(res.get("recommendations", [])[:2], 1):
+                    price_fmt = f"{int(it.get('price', 0)):,}".replace(",", " ")
+                    slug = it.get("slug", "")
+                    link = f"https://velmora-ecommerce-chi.vercel.app/catalog/{slug}" if slug else "https://velmora-ecommerce-chi.vercel.app/catalog"
+                    lines.append(
+                        f"\n<b>{idx}. {it.get('name_uz')}</b> ({price_fmt} so‘m)\n"
+                        f"   💡 <i>{it.get('why_matched_uz')}</i>\n"
+                        f"   👉 <a href=\"{link}\">Saytda ko‘rish</a>"
+                    )
+                lines.append("\n🛒 Buyurtma berish uchun saytimizga o‘ting.")
+                final_text = "\n".join(lines)
+                if loading_msg_id:
+                    send_telegram_request("editMessageText", {
+                        "chat_id": chat_id,
+                        "message_id": loading_msg_id,
+                        "text": final_text,
+                        "parse_mode": "HTML",
+                        "disable_web_page_preview": True,
+                    })
+                else:
+                    send_message(chat_id, final_text)
+            except Exception as e:
+                logger.exception(f"Gift recommendation error: {e}")
+                err_text = "Kechirasiz, sovg‘a tanlashda xatolik yuz berdi. Iltimos, qaytadan urinib ko‘ring."
+                if loading_msg_id:
+                    send_telegram_request("editMessageText", {"chat_id": chat_id, "message_id": loading_msg_id, "text": err_text})
+                else:
+                    send_message(chat_id, err_text)
+            return
+
+        if data.startswith("fabric_preset:"):
+            concern_type = data.replace("fabric_preset:", "")
+            loading_res = send_message(chat_id, "🌿 <i>AI matolar laboratoriyasi tahlil qilmoqda...</i>")
+            loading_msg_id = loading_res.get("result", {}).get("message_id") if isinstance(loading_res, dict) else None
+            try:
+                from catalog.ai_service import recommend_fabric_and_sleep
+                res = recommend_fabric_and_sleep(concern_type=concern_type)
+                lines = [
+                    f"🌿 <b>Tavsiya etilgan mato: {res.get('fabric_title_uz', '100% Paxta')}</b>",
+                    "━━━━━━━━━━━━━━━━━━━",
+                    f"🔬 <b>Mato afzalligi:</b>\n<i>{res.get('fabric_science_uz', '')}</i>",
+                    "",
+                    f"🌙 <b>Sog‘lom uyqu qoidasi:</b> <i>{res.get('sleep_tip_uz', '')}</i>",
+                    "━━━━━━━━━━━━━━━━━━━",
+                    "🛏 <b>Ushbu matodan tikilgan sara to‘plamlar:</b>",
+                ]
+                for idx, it in enumerate(res.get("recommendations", [])[:2], 1):
+                    price_fmt = f"{int(it.get('price', 0)):,}".replace(",", " ")
+                    slug = it.get("slug", "")
+                    link = f"https://velmora-ecommerce-chi.vercel.app/catalog/{slug}" if slug else "https://velmora-ecommerce-chi.vercel.app/catalog"
+                    lines.append(
+                        f"\n<b>{idx}. {it.get('name_uz')}</b> ({price_fmt} so‘m)\n"
+                        f"   💡 <i>{it.get('why_matched_uz')}</i>\n"
+                        f"   👉 <a href=\"{link}\">Saytda ko‘rish</a>"
+                    )
+                lines.append("\n🛒 Buyurtma berish uchun saytimizga o‘ting.")
+                final_text = "\n".join(lines)
+                if loading_msg_id:
+                    send_telegram_request("editMessageText", {
+                        "chat_id": chat_id,
+                        "message_id": loading_msg_id,
+                        "text": final_text,
+                        "parse_mode": "HTML",
+                        "disable_web_page_preview": True,
+                    })
+                else:
+                    send_message(chat_id, final_text)
+            except Exception as e:
+                logger.exception(f"Fabric advice error: {e}")
+                err_text = "Kechirasiz, mato tahlilida xatolik yuz berdi. Iltimos, qaytadan urinib ko‘ring."
+                if loading_msg_id:
+                    send_telegram_request("editMessageText", {"chat_id": chat_id, "message_id": loading_msg_id, "text": err_text})
+                else:
+                    send_message(chat_id, err_text)
+            return
 
         if data == "user_confirm_order":
             from orders.models import TelegramCheckoutSession

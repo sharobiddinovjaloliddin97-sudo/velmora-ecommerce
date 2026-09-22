@@ -49,12 +49,20 @@ function Header() {
   const [notifications, setNotifications] = useState([]);
   const [notificationOpen, setNotificationOpen] = useState(false);
   const [aiModalOpen, setAiModalOpen] = useState(false);
+  const [initialAiTab, setInitialAiTab] = useState("interior");
 
   useEffect(() => {
-    const handleOpenAi = () => setAiModalOpen(true);
+    const handleOpenAi = (e) => {
+      if (e?.detail?.tab) {
+        setInitialAiTab(e.detail.tab);
+      }
+      setAiModalOpen(true);
+    };
     window.addEventListener("velmora:open-ai-interior", handleOpenAi);
+    window.addEventListener("velmora:open-ai-hub", handleOpenAi);
     return () => {
       window.removeEventListener("velmora:open-ai-interior", handleOpenAi);
+      window.removeEventListener("velmora:open-ai-hub", handleOpenAi);
     };
   }, []);
 
@@ -245,16 +253,19 @@ function Header() {
               {t("contact")}
             </NavLink>
 
-            {/* AI DESIGNER BUTTON */}
+            {/* VELMORA AI HUB (3-IN-1) BUTTON */}
             <button
               type="button"
-              onClick={() => setAiModalOpen(true)}
+              onClick={() => {
+                setInitialAiTab("interior");
+                setAiModalOpen(true);
+              }}
               className="flex items-center gap-1.5 rounded-full border border-[#c1a27c]/60 bg-gradient-to-r from-[#c1a27c]/15 to-[#8a735e]/15 px-3.5 py-1.5 text-xs font-semibold text-[#8a735e] dark:text-[#e5b378] hover:border-[#c1a27c] hover:bg-[#c1a27c]/25 transition shadow-2xs group cursor-pointer"
             >
               <Sparkles className="h-3.5 w-3.5 text-[#c1a27c] group-hover:rotate-12 transition-transform animate-pulse" />
-              <span>{language === "ru" ? "AI Дизайнер" : "AI Dizayner"}</span>
+              <span>{language === "ru" ? "Velmora AI (3 в 1)" : "Velmora AI (3 in 1)"}</span>
               <span className="rounded-full bg-[#c1a27c] px-1.5 py-0.2 text-[9px] font-bold text-white uppercase">
-                New
+                Hub
               </span>
             </button>
           </nav>
@@ -557,11 +568,12 @@ function Header() {
                 )}
               </div>
 
-              {/* AI DESIGNER BUTTON ON MOBILE */}
+              {/* VELMORA AI HUB (3-IN-1) ON MOBILE */}
               <button
                 type="button"
                 onClick={() => {
                   setMobileMenuOpen(false);
+                  setInitialAiTab("interior");
                   setAiModalOpen(true);
                 }}
                 className="w-full flex items-center justify-between rounded-2xl bg-gradient-to-r from-[#c1a27c]/20 to-[#8a735e]/15 border border-[#c1a27c]/50 p-3.5 text-sm font-bold text-[#3b2d24] dark:text-[#f5efe6] transition hover:brightness-105 shadow-xs text-left cursor-pointer"
@@ -572,15 +584,17 @@ function Header() {
                   </div>
                   <div>
                     <div className="text-xs sm:text-sm font-bold">
-                      {language === "ru" ? "AI Интерьер-Консультант" : "AI Interyer Maslahatchisi"}
+                      {language === "ru" ? "Velmora AI Hub (3 в 1)" : "Velmora AI Hub (3 in 1)"}
                     </div>
                     <div className="text-[10px] text-[#8a735e] dark:text-[#c1a27c] font-normal">
-                      {language === "ru" ? "Подбор комплекта под фото комнаты" : "Xonangiz rasmi orqali to‘plam tanlash"}
+                      {language === "ru"
+                        ? "Интерьер, Подарки и Гид по тканям"
+                        : "Interyer, Sovg‘a & Tabrik, Mato gidi"}
                     </div>
                   </div>
                 </div>
                 <span className="rounded-full bg-[#c1a27c] px-2 py-0.5 text-[9px] font-bold text-white uppercase">
-                  New
+                  3 in 1
                 </span>
               </button>
 
@@ -698,10 +712,11 @@ function Header() {
         )}
       </header>
 
-      {/* AI INTERIOR MODAL */}
+      {/* AI INTERIOR & 3-IN-1 HUB MODAL */}
       <AIInteriorModal
         isOpen={aiModalOpen}
         onClose={() => setAiModalOpen(false)}
+        initialTab={initialAiTab}
       />
     </>
   );
