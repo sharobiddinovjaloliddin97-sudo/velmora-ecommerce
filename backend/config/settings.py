@@ -80,6 +80,7 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_HEADERS = (
     *default_headers,
     "idempotency-key",
+    "x-idempotency-key",
 )
 
 CSRF_TRUSTED_ORIGINS = [
