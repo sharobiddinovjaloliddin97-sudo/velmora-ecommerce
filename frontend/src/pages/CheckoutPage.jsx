@@ -113,6 +113,7 @@ function CheckoutPage() {
 
     return api.post("/orders/checkout/", payload, {
       headers: {
+        "Idempotency-Key": idempotencyKey,
         "X-Idempotency-Key": idempotencyKey,
       },
     });
@@ -185,36 +186,36 @@ function CheckoutPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#faf7f2] pb-24 text-[#2d241e]">
+    <div className="min-h-screen bg-[#faf7f2] pb-24 text-[#2d241e] transition-colors duration-200 dark:bg-[#141210] dark:text-[#ede4d8]">
       {/* BREADCRUMB */}
-      <nav className="border-b border-[#ebdcca] bg-white/60 backdrop-blur-xs">
-        <div className="mx-auto flex max-w-7xl items-center gap-2 px-4 py-3.5 text-xs sm:text-sm text-[#7a6758] sm:px-6">
-          <Link to="/" className="hover:text-[#3b2d24]">
+      <nav className="border-b border-[#ebdcca] bg-white/60 backdrop-blur-xs dark:border-[#383028] dark:bg-[#1c1917]/60">
+        <div className="mx-auto flex max-w-7xl items-center gap-2 px-4 py-3.5 text-xs sm:text-sm text-[#7a6758] sm:px-6 dark:text-[#a09081]">
+          <Link to="/" className="hover:text-[#3b2d24] dark:hover:text-[#e8ded4]">
             {language === "ru" ? "Главная" : "Bosh sahifa"}
           </Link>
           <ChevronRight className="h-3.5 w-3.5 text-stone-400" />
-          <Link to="/cart" className="hover:text-[#3b2d24]">
+          <Link to="/cart" className="hover:text-[#3b2d24] dark:hover:text-[#e8ded4]">
             {language === "ru" ? "Корзина" : "Savatcha"}
           </Link>
           <ChevronRight className="h-3.5 w-3.5 text-stone-400" />
-          <span className="font-semibold text-[#3b2d24]">
+          <span className="font-semibold text-[#3b2d24] dark:text-[#f5efe6]">
             {language === "ru" ? "Оформление заказа" : "Rasmiylashtirish"}
           </span>
         </div>
       </nav>
 
       <div className="mx-auto max-w-7xl px-4 pt-8 sm:px-6 sm:pt-10">
-        <div className="border-b border-[#ebdcca] pb-5">
-          <span className="text-xs sm:text-sm font-bold tracking-[0.2em] text-[#8a735e] uppercase">
+        <div className="border-b border-[#ebdcca] pb-5 dark:border-[#383028]">
+          <span className="text-xs sm:text-sm font-bold tracking-[0.2em] text-[#8a735e] dark:text-[#c1a27c] uppercase">
             {language === "ru" ? "Шаг 2 из 2" : "2-bosqich"}
           </span>
-          <h1 className="mt-1 font-serif text-3xl sm:text-4xl font-bold tracking-tight text-[#3b2d24]">
+          <h1 className="mt-1 font-serif text-3xl sm:text-4xl font-bold tracking-tight text-[#3b2d24] dark:text-[#f5efe6]">
             {language === "ru" ? "Оформление заказа" : "Yetkazib berish va to‘lov"}
           </h1>
         </div>
 
         {error && (
-          <div className="mt-6 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm font-semibold text-red-700">
+          <div className="mt-6 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm font-semibold text-red-700 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-400">
             {error}
           </div>
         )}
@@ -225,18 +226,18 @@ function CheckoutPage() {
             <form
               id="checkout-form"
               onSubmit={handleSubmit}
-              className="space-y-6 rounded-3xl border border-[#ebdcca] bg-white p-6 shadow-sm sm:p-8"
+              className="space-y-6 rounded-3xl border border-[#ebdcca] bg-white p-6 shadow-sm sm:p-8 dark:border-[#383028] dark:bg-[#1c1917]"
             >
               {/* SECTION 1: RECIPIENT */}
               <div>
-                <h2 className="flex items-center gap-2.5 font-serif text-xl font-bold text-[#3b2d24]">
-                  <User className="h-5 w-5 text-[#8a735e]" />
+                <h2 className="flex items-center gap-2.5 font-serif text-xl font-bold text-[#3b2d24] dark:text-[#f5efe6]">
+                  <User className="h-5 w-5 text-[#8a735e] dark:text-[#e5b378]" />
                   <span>{language === "ru" ? "Получатель" : "Qabul qiluvchi"}</span>
                 </h2>
 
                 <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div>
-                    <label className="text-xs sm:text-sm font-bold tracking-wider text-[#3b2d24] uppercase">
+                    <label className="text-xs sm:text-sm font-bold tracking-wider text-[#3b2d24] uppercase dark:text-[#d4c8bc]">
                       {language === "ru" ? "Имя и фамилия *" : "Ism va familiya *"}
                     </label>
                     <input
@@ -246,12 +247,12 @@ function CheckoutPage() {
                       value={form.recipient_name}
                       onChange={handleChange}
                       placeholder={language === "ru" ? "Алишер Навои" : "Alisher Navoiy"}
-                      className="mt-1.5 w-full rounded-xl border border-[#d6c6b3] bg-[#faf7f2]/60 p-3.5 text-base outline-none focus:border-[#3b2d24] focus:bg-white"
+                      className="mt-1.5 w-full rounded-xl border border-[#d6c6b3] bg-[#faf7f2]/60 p-3.5 text-base outline-none focus:border-[#3b2d24] focus:bg-white dark:border-[#3d342c] dark:bg-[#25201c] dark:text-[#f5efe6] dark:focus:border-[#c1a27c]"
                     />
                   </div>
 
                   <div>
-                    <label className="text-xs sm:text-sm font-bold tracking-wider text-[#3b2d24] uppercase">
+                    <label className="text-xs sm:text-sm font-bold tracking-wider text-[#3b2d24] uppercase dark:text-[#d4c8bc]">
                       {language === "ru" ? "Телефон *" : "Telefon raqami *"}
                     </label>
                     <div className="relative mt-1.5">
@@ -262,24 +263,24 @@ function CheckoutPage() {
                         value={form.phone}
                         onChange={handleChange}
                         placeholder="+998 90 123 45 67"
-                        className="w-full rounded-xl border border-[#d6c6b3] bg-[#faf7f2]/60 p-3.5 text-base outline-none focus:border-[#3b2d24] focus:bg-white"
+                        className="w-full rounded-xl border border-[#d6c6b3] bg-[#faf7f2]/60 p-3.5 text-base outline-none focus:border-[#3b2d24] focus:bg-white dark:border-[#3d342c] dark:bg-[#25201c] dark:text-[#f5efe6] dark:focus:border-[#c1a27c]"
                       />
-                      <Phone className="absolute top-4 right-4 h-5 w-5 text-[#8a735e]" />
+                      <Phone className="absolute top-4 right-4 h-5 w-5 text-[#8a735e] dark:text-[#e5b378]" />
                     </div>
                   </div>
                 </div>
               </div>
 
               {/* SECTION 2: ADDRESS */}
-              <div className="border-t border-[#f4efe6] pt-6">
-                <h2 className="flex items-center gap-2.5 font-serif text-xl font-bold text-[#3b2d24]">
-                  <MapPin className="h-5 w-5 text-[#8a735e]" />
+              <div className="border-t border-[#f4efe6] pt-6 dark:border-[#2e2722]">
+                <h2 className="flex items-center gap-2.5 font-serif text-xl font-bold text-[#3b2d24] dark:text-[#f5efe6]">
+                  <MapPin className="h-5 w-5 text-[#8a735e] dark:text-[#e5b378]" />
                   <span>{language === "ru" ? "Адрес доставки (Ташкент)" : "Yetkazish manzili (Toshkent)"}</span>
                 </h2>
 
                 <div className="mt-4 space-y-4">
                   <div>
-                    <label className="text-xs sm:text-sm font-bold tracking-wider text-[#3b2d24] uppercase">
+                    <label className="text-xs sm:text-sm font-bold tracking-wider text-[#3b2d24] uppercase dark:text-[#d4c8bc]">
                       {language === "ru" ? "Район города Ташкент *" : "Toshkent shahar tumani *"}
                     </label>
                     <select
@@ -287,7 +288,7 @@ function CheckoutPage() {
                       required
                       value={form.district}
                       onChange={handleChange}
-                      className="mt-1.5 w-full cursor-pointer rounded-xl border border-[#d6c6b3] bg-[#faf7f2]/60 p-3.5 text-base font-medium outline-none focus:border-[#3b2d24] focus:bg-white"
+                      className="mt-1.5 w-full cursor-pointer rounded-xl border border-[#d6c6b3] bg-[#faf7f2]/60 p-3.5 text-base font-medium outline-none focus:border-[#3b2d24] focus:bg-white dark:border-[#3d342c] dark:bg-[#25201c] dark:text-[#f5efe6] dark:focus:border-[#c1a27c]"
                     >
                       <option value="">
                         {language === "ru" ? "Выберите район..." : "Tumanni tanlang..."}
@@ -302,7 +303,7 @@ function CheckoutPage() {
 
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                     <div className="sm:col-span-2">
-                      <label className="text-xs sm:text-sm font-bold tracking-wider text-[#3b2d24] uppercase">
+                      <label className="text-xs sm:text-sm font-bold tracking-wider text-[#3b2d24] uppercase dark:text-[#d4c8bc]">
                         {language === "ru" ? "Улица / Махалля *" : "Ko‘cha / Mahalla *"}
                       </label>
                       <input
@@ -312,12 +313,12 @@ function CheckoutPage() {
                         value={form.street}
                         onChange={handleChange}
                         placeholder={language === "ru" ? "ул. Амира Темура" : "Amir Temur ko‘chasi"}
-                        className="mt-1.5 w-full rounded-xl border border-[#d6c6b3] bg-[#faf7f2]/60 p-3.5 text-base outline-none focus:border-[#3b2d24] focus:bg-white"
+                        className="mt-1.5 w-full rounded-xl border border-[#d6c6b3] bg-[#faf7f2]/60 p-3.5 text-base outline-none focus:border-[#3b2d24] focus:bg-white dark:border-[#3d342c] dark:bg-[#25201c] dark:text-[#f5efe6] dark:focus:border-[#c1a27c]"
                       />
                     </div>
 
                     <div>
-                      <label className="text-xs sm:text-sm font-bold tracking-wider text-[#3b2d24] uppercase">
+                      <label className="text-xs sm:text-sm font-bold tracking-wider text-[#3b2d24] uppercase dark:text-[#d4c8bc]">
                         {language === "ru" ? "Дом *" : "Uy raqami *"}
                       </label>
                       <input
@@ -327,14 +328,14 @@ function CheckoutPage() {
                         value={form.house}
                         onChange={handleChange}
                         placeholder="12A"
-                        className="mt-1.5 w-full rounded-xl border border-[#d6c6b3] bg-[#faf7f2]/60 p-3.5 text-base outline-none focus:border-[#3b2d24] focus:bg-white"
+                        className="mt-1.5 w-full rounded-xl border border-[#d6c6b3] bg-[#faf7f2]/60 p-3.5 text-base outline-none focus:border-[#3b2d24] focus:bg-white dark:border-[#3d342c] dark:bg-[#25201c] dark:text-[#f5efe6] dark:focus:border-[#c1a27c]"
                       />
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div>
-                      <label className="text-xs sm:text-sm font-bold tracking-wider text-[#3b2d24] uppercase">
+                      <label className="text-xs sm:text-sm font-bold tracking-wider text-[#3b2d24] uppercase dark:text-[#d4c8bc]">
                         {language === "ru" ? "Квартира (опционально)" : "Xonadon / Kvartira (ixtiyoriy)"}
                       </label>
                       <input
@@ -343,12 +344,12 @@ function CheckoutPage() {
                         value={form.apartment}
                         onChange={handleChange}
                         placeholder="45"
-                        className="mt-1.5 w-full rounded-xl border border-[#d6c6b3] bg-[#faf7f2]/60 p-3.5 text-base outline-none focus:border-[#3b2d24] focus:bg-white"
+                        className="mt-1.5 w-full rounded-xl border border-[#d6c6b3] bg-[#faf7f2]/60 p-3.5 text-base outline-none focus:border-[#3b2d24] focus:bg-white dark:border-[#3d342c] dark:bg-[#25201c] dark:text-[#f5efe6] dark:focus:border-[#c1a27c]"
                       />
                     </div>
 
                     <div>
-                      <label className="text-xs sm:text-sm font-bold tracking-wider text-[#3b2d24] uppercase">
+                      <label className="text-xs sm:text-sm font-bold tracking-wider text-[#3b2d24] uppercase dark:text-[#d4c8bc]">
                         {language === "ru" ? "Ориентир (опционально)" : "Mo‘ljal (ixtiyoriy)"}
                       </label>
                       <input
@@ -357,13 +358,13 @@ function CheckoutPage() {
                         value={form.landmark}
                         onChange={handleChange}
                         placeholder={language === "ru" ? "Рядом с метро" : "Metro bekati yonida"}
-                        className="mt-1.5 w-full rounded-xl border border-[#d6c6b3] bg-[#faf7f2]/60 p-3.5 text-base outline-none focus:border-[#3b2d24] focus:bg-white"
+                        className="mt-1.5 w-full rounded-xl border border-[#d6c6b3] bg-[#faf7f2]/60 p-3.5 text-base outline-none focus:border-[#3b2d24] focus:bg-white dark:border-[#3d342c] dark:bg-[#25201c] dark:text-[#f5efe6] dark:focus:border-[#c1a27c]"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="text-xs sm:text-sm font-bold tracking-wider text-[#3b2d24] uppercase">
+                    <label className="text-xs sm:text-sm font-bold tracking-wider text-[#3b2d24] uppercase dark:text-[#d4c8bc]">
                       {language === "ru" ? "Комментарий к заказу" : "Kuryer uchun izoh"}
                     </label>
                     <textarea
@@ -372,35 +373,35 @@ function CheckoutPage() {
                       value={form.comment}
                       onChange={handleChange}
                       placeholder={language === "ru" ? "Домофон, код или удобное время..." : "Domofon kodi yoki qulay vaqt..."}
-                      className="mt-1.5 w-full rounded-xl border border-[#d6c6b3] bg-[#faf7f2]/60 p-3.5 text-base outline-none focus:border-[#3b2d24] focus:bg-white"
+                      className="mt-1.5 w-full rounded-xl border border-[#d6c6b3] bg-[#faf7f2]/60 p-3.5 text-base outline-none focus:border-[#3b2d24] focus:bg-white dark:border-[#3d342c] dark:bg-[#25201c] dark:text-[#f5efe6] dark:focus:border-[#c1a27c]"
                     />
                   </div>
                 </div>
               </div>
 
               {/* SECTION 3: PAYMENT METHOD CARD */}
-              <div className="border-t border-[#f4efe6] pt-6">
-                <h2 className="flex items-center gap-2.5 font-serif text-xl font-bold text-[#3b2d24]">
-                  <Banknote className="h-5 w-5 text-[#8a735e]" />
+              <div className="border-t border-[#f4efe6] pt-6 dark:border-[#2e2722]">
+                <h2 className="flex items-center gap-2.5 font-serif text-xl font-bold text-[#3b2d24] dark:text-[#f5efe6]">
+                  <Banknote className="h-5 w-5 text-[#8a735e] dark:text-[#e5b378]" />
                   <span>{language === "ru" ? "Способ оплаты" : "To‘lov usuli"}</span>
                 </h2>
 
-                <div className="mt-3 flex items-center justify-between rounded-2xl border-2 border-[#3b2d24] bg-[#8a735e]/10 p-4 sm:p-5">
+                <div className="mt-3 flex items-center justify-between rounded-2xl border-2 border-[#3b2d24] bg-[#8a735e]/10 p-4 sm:p-5 dark:border-[#e5b378] dark:bg-[#e5b378]/10">
                   <div className="flex items-center gap-3.5">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#3b2d24] text-white">
-                      <Banknote className="h-6 w-6 text-[#c1a27c]" />
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#3b2d24] text-white dark:bg-[#e5b378] dark:text-[#1c1917]">
+                      <Banknote className="h-6 w-6 text-[#c1a27c] dark:text-[#1c1917]" />
                     </div>
                     <div>
-                      <p className="text-sm sm:text-base font-bold text-[#3b2d24]">
+                      <p className="text-sm sm:text-base font-bold text-[#3b2d24] dark:text-[#f5efe6]">
                         {language === "ru" ? "Оплата при получении (Наличными)" : "Eshik oldida tekshirib to‘lov (Naqd)"}
                       </p>
-                      <p className="text-xs sm:text-sm text-[#6b584a]">
+                      <p className="text-xs sm:text-sm text-[#6b584a] dark:text-[#c4b6a8]">
                         {language === "ru" ? "Оплата курьеру после проверки заказа" : "Buyurtmani ko‘rib olgach kuryerga to‘lanadi"}
                       </p>
                     </div>
                   </div>
 
-                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#3b2d24] text-white">
+                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#3b2d24] text-white dark:bg-[#e5b378] dark:text-[#1c1917]">
                     <Check className="h-4 w-4" />
                   </span>
                 </div>
@@ -410,16 +411,16 @@ function CheckoutPage() {
 
           {/* ORDER SUMMARY (STICKY) */}
           <aside className="lg:col-span-5">
-            <div className="sticky top-24 space-y-5 rounded-3xl border border-[#ebdcca] bg-white p-6 shadow-sm sm:p-7">
-              <h2 className="font-serif text-2xl font-bold text-[#3b2d24]">
+            <div className="sticky top-24 space-y-5 rounded-3xl border border-[#ebdcca] bg-white p-6 shadow-sm sm:p-7 dark:border-[#383028] dark:bg-[#1c1917]">
+              <h2 className="font-serif text-2xl font-bold text-[#3b2d24] dark:text-[#f5efe6]">
                 {language === "ru" ? "Ваш заказ" : "Buyurtma tarkibi"}
               </h2>
 
               {/* ITEMS MINI LIST */}
-              <div className="max-h-64 divide-y divide-[#f4efe6] overflow-y-auto pr-1">
+              <div className="max-h-64 divide-y divide-[#f4efe6] overflow-y-auto pr-1 dark:divide-[#2e2722]">
                 {cart.map((item) => (
                   <div key={item.variant_id} className="flex items-center gap-3.5 py-3">
-                    <div className="h-14 w-14 shrink-0 overflow-hidden rounded-xl border border-[#ebdcca] bg-[#f4efe6]">
+                    <div className="h-14 w-14 shrink-0 overflow-hidden rounded-xl border border-[#ebdcca] bg-[#f4efe6] dark:border-[#383028] dark:bg-[#25201c]">
                       {item.image ? (
                         <img
                           src={item.image}
@@ -427,22 +428,22 @@ function CheckoutPage() {
                           className="h-full w-full object-cover"
                         />
                       ) : (
-                        <div className="flex h-full items-center justify-center text-[10px] text-[#8a735e]">
+                        <div className="flex h-full items-center justify-center text-[10px] text-[#8a735e] dark:text-[#c1a27c]">
                           -
                         </div>
                       )}
                     </div>
 
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-bold text-[#3b2d24]">
+                      <p className="truncate text-sm font-bold text-[#3b2d24] dark:text-[#f5efe6]">
                         {item.product_name}
                       </p>
-                      <p className="text-xs text-[#6b584a]">
+                      <p className="text-xs text-[#6b584a] dark:text-[#a6988a]">
                         {item.color} • {item.size} × {item.quantity}
                       </p>
                     </div>
 
-                    <span className="font-serif text-sm font-bold text-[#3b2d24]">
+                    <span className="font-serif text-sm font-bold text-[#3b2d24] dark:text-[#f5efe6]">
                       {(Number(item.price) * item.quantity).toLocaleString("uz-UZ")} so‘m
                     </span>
                   </div>
@@ -450,29 +451,29 @@ function CheckoutPage() {
               </div>
 
               {/* TOTAL CALCULATION */}
-              <div className="space-y-2.5 border-t border-[#f4efe6] pt-4 text-sm sm:text-base">
-                <div className="flex justify-between text-[#5c4a3d]">
+              <div className="space-y-2.5 border-t border-[#f4efe6] pt-4 text-sm sm:text-base dark:border-[#2e2722]">
+                <div className="flex justify-between text-[#5c4a3d] dark:text-[#c4b6a8]">
                   <span>{language === "ru" ? "Товары" : "Tovarlar summasi"}</span>
-                  <span className="font-bold text-[#3b2d24]">
+                  <span className="font-bold text-[#3b2d24] dark:text-[#f5efe6]">
                     {frontendTotal.toLocaleString("uz-UZ")} so‘m
                   </span>
                 </div>
 
-                <div className="flex items-center justify-between text-[#5c4a3d]">
+                <div className="flex items-center justify-between text-[#5c4a3d] dark:text-[#c4b6a8]">
                   <span>{language === "ru" ? "Доставка (Ташкент)" : "Yetkazib berish (Toshkent)"}</span>
-                  <span className="inline-flex items-center gap-1 font-bold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-full text-xs sm:text-sm border border-emerald-200">
-                    <Sparkles className="h-3.5 w-3.5 text-emerald-600" />
+                  <span className="inline-flex items-center gap-1 font-bold text-emerald-800 bg-emerald-50 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800 px-2.5 py-0.5 rounded-full text-xs sm:text-sm border border-emerald-200">
+                    <Sparkles className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
                     {language === "ru" ? "Бесплатно" : "0 so‘m (Bepul)"}
                   </span>
                 </div>
               </div>
 
-              <div className="border-t border-[#f4efe6] pt-4">
+              <div className="border-t border-[#f4efe6] pt-4 dark:border-[#2e2722]">
                 <div className="flex items-baseline justify-between">
-                  <span className="font-serif text-lg font-bold text-[#3b2d24]">
+                  <span className="font-serif text-lg font-bold text-[#3b2d24] dark:text-[#f5efe6]">
                     {language === "ru" ? "Всего к оплате:" : "Jami to‘lov:"}
                   </span>
-                  <span className="font-serif text-2xl sm:text-3xl font-bold text-[#3b2d24]">
+                  <span className="font-serif text-2xl sm:text-3xl font-bold text-[#3b2d24] dark:text-[#e5b378]">
                     {frontendTotal.toLocaleString("uz-UZ")} so‘m
                   </span>
                 </div>
@@ -483,7 +484,7 @@ function CheckoutPage() {
                 type="submit"
                 form="checkout-form"
                 disabled={submitting}
-                className="group flex w-full items-center justify-center gap-2.5 rounded-full bg-[#3b2d24] py-4 text-base font-semibold tracking-wide text-white shadow-md transition hover:bg-[#271f19] hover:shadow-lg disabled:opacity-50"
+                className="group flex w-full items-center justify-center gap-2.5 rounded-full bg-[#3b2d24] py-4 text-base font-semibold tracking-wide text-white shadow-md transition hover:bg-[#271f19] hover:shadow-lg disabled:opacity-50 dark:bg-[#e5b378] dark:text-[#1c1917] dark:hover:bg-[#d9a365]"
               >
                 {submitting ? (
                   <>
@@ -498,13 +499,13 @@ function CheckoutPage() {
                 )}
               </button>
 
-              <div className="space-y-2 border-t border-[#f4efe6] pt-4 text-xs sm:text-sm text-[#7a6758]">
+              <div className="space-y-2 border-t border-[#f4efe6] pt-4 text-xs sm:text-sm text-[#7a6758] dark:border-[#2e2722] dark:text-[#a09081]">
                 <div className="flex items-center gap-2">
-                  <Truck className="h-4 w-4 text-[#8a735e]" />
+                  <Truck className="h-4 w-4 text-[#8a735e] dark:text-[#e5b378]" />
                   <span>{language === "ru" ? "Бесплатно по всем районам Ташкента" : "Toshkent shahri bo‘ylab bepul"}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <ShieldCheck className="h-4 w-4 text-[#8a735e]" />
+                  <ShieldCheck className="h-4 w-4 text-[#8a735e] dark:text-[#e5b378]" />
                   <span>{language === "ru" ? "Оплата только после проверки товара" : "To‘lov buyurtmani ko‘rgach to‘lanadi"}</span>
                 </div>
               </div>

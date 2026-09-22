@@ -114,11 +114,25 @@ function Footer() {
 
           <div className="mt-4 space-y-3 text-sm sm:text-base text-[#d1c3b2]">
             <a
-              href="tel:+998930791734"
+              href="tel:+998911652211"
               className="flex items-center gap-2.5 font-bold text-white hover:text-[#c1a27c] transition-colors"
             >
               <Phone className="h-4 w-4 text-[#c1a27c]" />
+              <span>+998 91 165 22 11</span>
+              <span className="text-[11px] font-normal text-[#c1a27c]">
+                ({language === "ru" ? "Основной" : "Asosiy"})
+              </span>
+            </a>
+
+            <a
+              href="tel:+998930791734"
+              className="flex items-center gap-2.5 font-medium text-[#d1c3b2] hover:text-[#c1a27c] transition-colors"
+            >
+              <span className="w-4" />
               <span>+998 93 079 17 34</span>
+              <span className="text-[11px] font-normal text-stone-400">
+                ({language === "ru" ? "Доп." : "Qo‘shimcha"})
+              </span>
             </a>
 
             <a

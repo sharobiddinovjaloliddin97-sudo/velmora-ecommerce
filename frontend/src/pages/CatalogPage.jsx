@@ -160,25 +160,25 @@ function CatalogPage() {
   );
 
   return (
-    <div className="min-h-screen bg-[#faf7f2] pb-20 text-[#2d241e]">
+    <div className="min-h-screen bg-[#faf7f2] dark:bg-[#141210] pb-20 text-[#2d241e] dark:text-[#ede4d8] transition-colors duration-300">
       {/* ========================= */}
       {/* HERO / BREADCRUMB HEADER */}
       {/* ========================= */}
-      <section className="border-b border-[#ebdcca] bg-gradient-to-b from-[#f5efe6] to-[#faf7f2] py-8 sm:py-12">
+      <section className="border-b border-[#ebdcca] dark:border-[#2d241c] bg-gradient-to-b from-[#f5efe6] to-[#faf7f2] dark:from-[#1c1713] dark:to-[#141210] py-8 sm:py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
           <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 rounded-full border border-[#d6c6b3] bg-white/90 px-3.5 py-1.5 backdrop-blur-xs shadow-xs mb-3">
-              <Sparkles className="h-3.5 w-3.5 text-[#8a735e]" />
-              <span className="text-xs font-bold tracking-[0.2em] text-[#8a735e] uppercase">
+            <div className="inline-flex items-center gap-2 rounded-full border border-[#d6c6b3] dark:border-[#383028] bg-white/90 dark:bg-[#1e1915]/90 px-3.5 py-1.5 backdrop-blur-xs shadow-xs mb-3">
+              <Sparkles className="h-3.5 w-3.5 text-[#8a735e] dark:text-[#c4a98e]" />
+              <span className="text-xs font-bold tracking-[0.2em] text-[#8a735e] dark:text-[#c4a98e] uppercase">
                 {language === "ru" ? "Коллекции текстиля" : "To‘qimachilik to‘plamlari"}
               </span>
             </div>
 
-            <h1 className="font-serif text-3xl font-bold tracking-tight text-[#3b2d24] sm:text-4xl lg:text-5xl">
+            <h1 className="font-serif text-3xl font-bold tracking-tight text-[#3b2d24] dark:text-[#f3ede4] sm:text-4xl lg:text-5xl">
               {language === "ru" ? "Каталог продукции" : "Mahsulotlar katalogi"}
             </h1>
 
-            <p className="mt-2 text-base sm:text-lg leading-relaxed text-[#6b584a]">
+            <p className="mt-2 text-base sm:text-lg leading-relaxed text-[#6b584a] dark:text-[#b8a99a]">
               {language === "ru"
                 ? "Комплекты постельного белья, одеяла, матрасы и наволочки из натуральных качественных тканей."
                 : "Tabiiy matolardan tayyorlangan choyshab to‘plamlari, ko‘rpalar, matraslar hamda yostiq jildlari."}
@@ -199,8 +199,8 @@ function CatalogPage() {
               }}
               className={`shrink-0 rounded-full px-5 py-2.5 text-sm font-semibold tracking-wider transition-all ${
                 category === ""
-                  ? "bg-[#3b2d24] text-white shadow-sm"
-                  : "border border-[#d6c6b3] bg-white text-[#5c4a3d] hover:border-[#8a735e] hover:text-[#8a735e]"
+                  ? "bg-[#3b2d24] dark:bg-[#c1a27c] text-white dark:text-[#1e1915] shadow-sm"
+                  : "border border-[#d6c6b3] dark:border-[#383028] bg-white dark:bg-[#1e1915] text-[#5c4a3d] dark:text-[#d1c2b4] hover:border-[#8a735e] dark:hover:border-[#c1a27c] hover:text-[#8a735e] dark:hover:text-[#c1a27c]"
               }`}
             >
               {language === "ru" ? "Все товары" : "Barchasi"}
@@ -220,8 +220,8 @@ function CatalogPage() {
                 }}
                 className={`shrink-0 rounded-full px-5 py-2.5 text-sm font-semibold tracking-wider transition-all ${
                   category === cat.slug
-                    ? "bg-[#3b2d24] text-white shadow-sm"
-                    : "border border-[#d6c6b3] bg-white text-[#5c4a3d] hover:border-[#8a735e] hover:text-[#8a735e]"
+                    ? "bg-[#3b2d24] dark:bg-[#c1a27c] text-white dark:text-[#1e1915] shadow-sm"
+                    : "border border-[#d6c6b3] dark:border-[#383028] bg-white dark:bg-[#1e1915] text-[#5c4a3d] dark:text-[#d1c2b4] hover:border-[#8a735e] dark:hover:border-[#c1a27c] hover:text-[#8a735e] dark:hover:text-[#c1a27c]"
                 }`}
               >
                 {cat.name}
@@ -240,11 +240,11 @@ function CatalogPage() {
           {/* SIDEBAR FILTERS (DESKTOP) */}
           {/* ========================= */}
           <aside className="lg:col-span-3">
-            <div className="sticky top-24 rounded-3xl border border-[#ebdcca] bg-white p-6 shadow-sm">
-              <div className="flex items-center justify-between border-b border-[#f4efe6] pb-4">
+            <div className="sticky top-24 rounded-3xl border border-[#ebdcca] dark:border-[#2d241c] bg-white dark:bg-[#1e1915] p-6 shadow-sm">
+              <div className="flex items-center justify-between border-b border-[#f4efe6] dark:border-[#2d241c] pb-4">
                 <div className="flex items-center gap-2">
-                  <SlidersHorizontal className="h-5 w-5 text-[#8a735e]" />
-                  <h2 className="font-serif text-xl font-bold text-[#3b2d24]">
+                  <SlidersHorizontal className="h-5 w-5 text-[#8a735e] dark:text-[#c4a98e]" />
+                  <h2 className="font-serif text-xl font-bold text-[#3b2d24] dark:text-[#f3ede4]">
                     {language === "ru" ? "Фильтры" : "Filterlar"}
                   </h2>
                 </div>
@@ -253,7 +253,7 @@ function CatalogPage() {
                   <button
                     type="button"
                     onClick={resetFilters}
-                    className="flex items-center gap-1 text-xs sm:text-sm font-bold text-rose-600 hover:underline"
+                    className="flex items-center gap-1 text-xs sm:text-sm font-bold text-rose-600 dark:text-rose-400 hover:underline"
                   >
                     <RotateCcw className="h-3.5 w-3.5" />
                     <span>{language === "ru" ? "Сброс" : "Tozalash"}</span>
@@ -263,7 +263,7 @@ function CatalogPage() {
 
               {/* SEARCH INPUT */}
               <div className="mt-5">
-                <label className="text-xs sm:text-sm font-bold tracking-wider text-[#3b2d24] uppercase">
+                <label className="text-xs sm:text-sm font-bold tracking-wider text-[#3b2d24] dark:text-[#f3ede4] uppercase">
                   {language === "ru" ? "Поиск" : "Qidiruv"}
                 </label>
                 <div className="relative mt-2">
@@ -277,14 +277,14 @@ function CatalogPage() {
                     placeholder={
                       language === "ru" ? "Название товара..." : "Mahsulot nomi..."
                     }
-                    className="w-full rounded-xl border border-[#d6c6b3] bg-[#faf7f2]/60 py-3 pr-9 pl-10 text-sm outline-none transition focus:border-[#3b2d24] focus:bg-white"
+                    className="w-full rounded-xl border border-[#d6c6b3] dark:border-[#383028] bg-[#faf7f2]/60 dark:bg-[#261f1a] py-3 pr-9 pl-10 text-sm text-[#2d241e] dark:text-[#ede4d8] outline-none transition focus:border-[#3b2d24] dark:focus:border-[#c1a27c] focus:bg-white dark:focus:bg-[#2d251f]"
                   />
-                  <Search className="absolute top-3.5 left-3.5 h-4 w-4 text-[#8a735e]" />
+                  <Search className="absolute top-3.5 left-3.5 h-4 w-4 text-[#8a735e] dark:text-[#c4a98e]" />
                   {search && (
                     <button
                       type="button"
                       onClick={() => setSearch("")}
-                      className="absolute top-3.5 right-3 text-stone-400 hover:text-stone-700"
+                      className="absolute top-3.5 right-3 text-stone-400 hover:text-stone-700 dark:hover:text-stone-200"
                     >
                       <X className="h-4 w-4" />
                     </button>
@@ -294,7 +294,7 @@ function CatalogPage() {
 
               {/* CATEGORY SELECTOR */}
               <div className="mt-6">
-                <label className="text-xs sm:text-sm font-bold tracking-wider text-[#3b2d24] uppercase">
+                <label className="text-xs sm:text-sm font-bold tracking-wider text-[#3b2d24] dark:text-[#f3ede4] uppercase">
                   {language === "ru" ? "Категория" : "Kategoriya"}
                 </label>
                 <div className="mt-2 space-y-1.5">
@@ -306,12 +306,12 @@ function CatalogPage() {
                     }}
                     className={`flex w-full items-center justify-between rounded-xl px-3.5 py-2.5 text-left text-sm transition ${
                       category === ""
-                        ? "bg-[#8a735e]/15 font-bold text-[#3b2d24]"
-                        : "text-[#5c4a3d] hover:bg-[#faf7f2]"
+                        ? "bg-[#8a735e]/15 dark:bg-[#c1a27c]/20 font-bold text-[#3b2d24] dark:text-[#c1a27c]"
+                        : "text-[#5c4a3d] dark:text-[#d1c2b4] hover:bg-[#faf7f2] dark:hover:bg-[#261f1a]"
                     }`}
                   >
                     <span>{language === "ru" ? "Все категории" : "Barcha toifalar"}</span>
-                    {category === "" && <Check className="h-4 w-4 text-[#8a735e]" />}
+                    {category === "" && <Check className="h-4 w-4 text-[#8a735e] dark:text-[#c1a27c]" />}
                   </button>
 
                   {categories.map((cat) => (
@@ -324,13 +324,13 @@ function CatalogPage() {
                       }}
                       className={`flex w-full items-center justify-between rounded-xl px-3.5 py-2.5 text-left text-sm transition ${
                         category === cat.slug
-                          ? "bg-[#8a735e]/15 font-bold text-[#3b2d24]"
-                          : "text-[#5c4a3d] hover:bg-[#faf7f2]"
+                          ? "bg-[#8a735e]/15 dark:bg-[#c1a27c]/20 font-bold text-[#3b2d24] dark:text-[#c1a27c]"
+                          : "text-[#5c4a3d] dark:text-[#d1c2b4] hover:bg-[#faf7f2] dark:hover:bg-[#261f1a]"
                       }`}
                     >
                       <span className="truncate">{cat.name}</span>
                       {category === cat.slug && (
-                        <Check className="h-4 w-4 text-[#8a735e]" />
+                        <Check className="h-4 w-4 text-[#8a735e] dark:text-[#c1a27c]" />
                       )}
                     </button>
                   ))}
@@ -338,8 +338,8 @@ function CatalogPage() {
               </div>
 
               {/* PRICE RANGE */}
-              <div className="mt-6 border-t border-[#f4efe6] pt-5">
-                <label className="text-xs sm:text-sm font-bold tracking-wider text-[#3b2d24] uppercase">
+              <div className="mt-6 border-t border-[#f4efe6] dark:border-[#2d241c] pt-5">
+                <label className="text-xs sm:text-sm font-bold tracking-wider text-[#3b2d24] dark:text-[#f3ede4] uppercase">
                   {language === "ru" ? "Цена (so‘m)" : "Narx oralig‘i (so‘m)"}
                 </label>
                 <div className="mt-2.5 grid grid-cols-2 gap-2">
@@ -352,7 +352,7 @@ function CatalogPage() {
                       setPage(1);
                     }}
                     placeholder={language === "ru" ? "От" : "Dan"}
-                    className="w-full rounded-xl border border-[#d6c6b3] bg-[#faf7f2]/60 p-2.5 text-sm outline-none focus:border-[#3b2d24] focus:bg-white"
+                    className="w-full rounded-xl border border-[#d6c6b3] dark:border-[#383028] bg-[#faf7f2]/60 dark:bg-[#261f1a] p-2.5 text-sm text-[#2d241e] dark:text-[#ede4d8] outline-none focus:border-[#3b2d24] dark:focus:border-[#c1a27c] focus:bg-white dark:focus:bg-[#2d251f]"
                   />
                   <input
                     type="number"
@@ -363,14 +363,14 @@ function CatalogPage() {
                       setPage(1);
                     }}
                     placeholder={language === "ru" ? "До" : "Gacha"}
-                    className="w-full rounded-xl border border-[#d6c6b3] bg-[#faf7f2]/60 p-2.5 text-sm outline-none focus:border-[#3b2d24] focus:bg-white"
+                    className="w-full rounded-xl border border-[#d6c6b3] dark:border-[#383028] bg-[#faf7f2]/60 dark:bg-[#261f1a] p-2.5 text-sm text-[#2d241e] dark:text-[#ede4d8] outline-none focus:border-[#3b2d24] dark:focus:border-[#c1a27c] focus:bg-white dark:focus:bg-[#2d251f]"
                   />
                 </div>
               </div>
 
               {/* COLOR FILTER */}
-              <div className="mt-5 border-t border-[#f4efe6] pt-5">
-                <label className="text-xs sm:text-sm font-bold tracking-wider text-[#3b2d24] uppercase">
+              <div className="mt-5 border-t border-[#f4efe6] dark:border-[#2d241c] pt-5">
+                <label className="text-xs sm:text-sm font-bold tracking-wider text-[#3b2d24] dark:text-[#f3ede4] uppercase">
                   {language === "ru" ? "Цвет (Код)" : "Rang kodi"}
                 </label>
                 <input
@@ -381,13 +381,13 @@ function CatalogPage() {
                     setPage(1);
                   }}
                   placeholder="beige, white, krem..."
-                  className="mt-2 w-full rounded-xl border border-[#d6c6b3] bg-[#faf7f2]/60 p-3 text-sm outline-none focus:border-[#3b2d24] focus:bg-white"
+                  className="mt-2 w-full rounded-xl border border-[#d6c6b3] dark:border-[#383028] bg-[#faf7f2]/60 dark:bg-[#261f1a] p-3 text-sm text-[#2d241e] dark:text-[#ede4d8] outline-none focus:border-[#3b2d24] dark:focus:border-[#c1a27c] focus:bg-white dark:focus:bg-[#2d251f]"
                 />
               </div>
 
               {/* SIZE FILTER */}
-              <div className="mt-5 border-t border-[#f4efe6] pt-5">
-                <label className="text-xs sm:text-sm font-bold tracking-wider text-[#3b2d24] uppercase">
+              <div className="mt-5 border-t border-[#f4efe6] dark:border-[#2d241c] pt-5">
+                <label className="text-xs sm:text-sm font-bold tracking-wider text-[#3b2d24] dark:text-[#f3ede4] uppercase">
                   {language === "ru" ? "Размер" : "O‘lcham"}
                 </label>
                 <input
@@ -398,7 +398,7 @@ function CatalogPage() {
                     setPage(1);
                   }}
                   placeholder="200x220, 160x200, 50x70..."
-                  className="mt-2 w-full rounded-xl border border-[#d6c6b3] bg-[#faf7f2]/60 p-3 text-sm outline-none focus:border-[#3b2d24] focus:bg-white"
+                  className="mt-2 w-full rounded-xl border border-[#d6c6b3] dark:border-[#383028] bg-[#faf7f2]/60 dark:bg-[#261f1a] p-3 text-sm text-[#2d241e] dark:text-[#ede4d8] outline-none focus:border-[#3b2d24] dark:focus:border-[#c1a27c] focus:bg-white dark:focus:bg-[#2d251f]"
                 />
               </div>
             </div>
@@ -409,22 +409,22 @@ function CatalogPage() {
           {/* ========================= */}
           <main className="lg:col-span-9">
             {/* TOOLBAR */}
-            <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[#ebdcca] bg-white px-5 py-3.5 shadow-xs">
+            <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[#ebdcca] dark:border-[#2d241c] bg-white dark:bg-[#1e1915] px-5 py-3.5 shadow-xs">
               <div className="flex items-center gap-3">
                 {/* MOBILE FILTER TOGGLE */}
                 <button
                   type="button"
                   onClick={() => setFiltersOpen(true)}
-                  className="inline-flex items-center gap-2 rounded-full border border-[#d6c6b3] bg-[#faf7f2] px-4 py-2 text-xs sm:text-sm font-bold text-[#3b2d24] lg:hidden"
+                  className="inline-flex items-center gap-2 rounded-full border border-[#d6c6b3] dark:border-[#383028] bg-[#faf7f2] dark:bg-[#261f1a] px-4 py-2 text-xs sm:text-sm font-bold text-[#3b2d24] dark:text-[#ede4d8] lg:hidden"
                 >
                   <Filter className="h-4 w-4" />
                   <span>{language === "ru" ? "Фильтры" : "Filterlar"}</span>
                   {hasActiveFilters && (
-                    <span className="h-2 w-2 rounded-full bg-[#8a735e]" />
+                    <span className="h-2 w-2 rounded-full bg-[#8a735e] dark:bg-[#c1a27c]" />
                   )}
                 </button>
 
-                <p className="text-sm font-semibold text-[#5c4a3d]">
+                <p className="text-sm font-semibold text-[#5c4a3d] dark:text-[#b8a99a]">
                   {language === "ru"
                     ? `Найдено: ${count} товаров`
                     : `Jami: ${count} ta mahsulot`}
@@ -433,7 +433,7 @@ function CatalogPage() {
 
               {/* SORT DROPDOWN */}
               <div className="flex items-center gap-2.5">
-                <span className="hidden text-xs sm:text-sm text-[#7a6758] sm:inline">
+                <span className="hidden text-xs sm:text-sm text-[#7a6758] dark:text-stone-400 sm:inline">
                   {language === "ru" ? "Сортировка:" : "Saralash:"}
                 </span>
                 <div className="relative">
@@ -443,7 +443,7 @@ function CatalogPage() {
                       setOrdering(e.target.value);
                       setPage(1);
                     }}
-                    className="cursor-pointer appearance-none rounded-full border border-[#d6c6b3] bg-[#faf7f2] py-2 pr-9 pl-4 text-xs sm:text-sm font-bold text-[#3b2d24] outline-none transition hover:bg-white focus:border-[#3b2d24]"
+                    className="cursor-pointer appearance-none rounded-full border border-[#d6c6b3] dark:border-[#383028] bg-[#faf7f2] dark:bg-[#261f1a] py-2 pr-9 pl-4 text-xs sm:text-sm font-bold text-[#3b2d24] dark:text-[#ede4d8] outline-none transition hover:bg-white dark:hover:bg-[#2d251f] focus:border-[#3b2d24] dark:focus:border-[#c1a27c]"
                   >
                     <option value="-created_at">
                       {language === "ru" ? "Сначала новые" : "Avval yangilari"}
@@ -458,7 +458,7 @@ function CatalogPage() {
                       {language === "ru" ? "Цена: по убыванию" : "Narx: qimmatidan"}
                     </option>
                   </select>
-                  <ArrowUpDown className="pointer-events-none absolute top-3 right-3 h-3.5 w-3.5 text-[#8a735e]" />
+                  <ArrowUpDown className="pointer-events-none absolute top-3 right-3 h-3.5 w-3.5 text-[#8a735e] dark:text-[#c4a98e]" />
                 </div>
               </div>
             </div>
@@ -469,13 +469,13 @@ function CatalogPage() {
                 {[1, 2, 3, 4, 5, 6].map((i) => (
                   <div
                     key={i}
-                    className="animate-pulse overflow-hidden rounded-3xl border border-[#ebdcca] bg-white p-4"
+                    className="animate-pulse overflow-hidden rounded-3xl border border-[#ebdcca] dark:border-[#2d241c] bg-white dark:bg-[#1e1915] p-4"
                   >
-                    <div className="aspect-4/5 w-full rounded-2xl bg-[#f4efe6]" />
+                    <div className="aspect-4/5 w-full rounded-2xl bg-[#f4efe6] dark:bg-[#261f1a]" />
                     <div className="mt-4 space-y-2.5 p-2">
-                      <div className="h-3 w-1/3 rounded bg-[#f4efe6]" />
-                      <div className="h-5 w-3/4 rounded bg-[#f4efe6]" />
-                      <div className="h-4 w-1/2 rounded bg-[#f4efe6]" />
+                      <div className="h-3 w-1/3 rounded bg-[#f4efe6] dark:bg-[#261f1a]" />
+                      <div className="h-5 w-3/4 rounded bg-[#f4efe6] dark:bg-[#261f1a]" />
+                      <div className="h-4 w-1/2 rounded bg-[#f4efe6] dark:bg-[#261f1a]" />
                     </div>
                   </div>
                 ))}
@@ -484,21 +484,21 @@ function CatalogPage() {
 
             {/* ERROR VIEW */}
             {!loading && error && (
-              <div className="mt-6 rounded-3xl border border-red-200 bg-red-50 p-8 text-center text-sm text-red-700">
+              <div className="mt-6 rounded-3xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950/30 p-8 text-center text-sm text-red-700 dark:text-red-300">
                 {error}
               </div>
             )}
 
             {/* EMPTY PRODUCTS VIEW */}
             {!loading && !error && products.length === 0 && (
-              <div className="mt-6 rounded-3xl border border-[#ebdcca] bg-white p-12 text-center shadow-xs">
-                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#faf7f2] text-[#8a735e] border border-[#d6c6b3]">
+              <div className="mt-6 rounded-3xl border border-[#ebdcca] dark:border-[#2d241c] bg-white dark:bg-[#1e1915] p-12 text-center shadow-xs">
+                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#faf7f2] dark:bg-[#261f1a] text-[#8a735e] dark:text-[#c4a98e] border border-[#d6c6b3] dark:border-[#383028]">
                   <Search className="h-7 w-7" />
                 </div>
-                <h3 className="mt-4 font-serif text-2xl font-bold text-[#3b2d24]">
+                <h3 className="mt-4 font-serif text-2xl font-bold text-[#3b2d24] dark:text-[#f3ede4]">
                   {language === "ru" ? "Товары не найдены" : "Mahsulot topilmadi"}
                 </h3>
-                <p className="mt-2 text-sm sm:text-base text-[#6b584a]">
+                <p className="mt-2 text-sm sm:text-base text-[#6b584a] dark:text-[#b8a99a]">
                   {language === "ru"
                     ? "Попробуйте изменить параметры поиска или фильтров."
                     : "Filter parametrlarini yoki qidiruv so‘zini o‘zgartirib ko‘ring."}
@@ -507,7 +507,7 @@ function CatalogPage() {
                   <button
                     type="button"
                     onClick={resetFilters}
-                    className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#3b2d24] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#271f19]"
+                    className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#3b2d24] dark:bg-[#c1a27c] px-6 py-3 text-sm font-semibold text-white dark:text-[#1e1915] transition hover:bg-[#271f19] dark:hover:bg-[#d6ba94]"
                   >
                     <RotateCcw className="h-4 w-4" />
                     <span>{language === "ru" ? "Сбросить фильтры" : "Filterlarni tozalash"}</span>
@@ -532,13 +532,13 @@ function CatalogPage() {
                   type="button"
                   disabled={!previousPage}
                   onClick={() => setPage((curr) => Math.max(1, curr - 1))}
-                  className="flex items-center gap-2 rounded-full border border-[#d6c6b3] bg-white px-5 py-2.5 text-sm font-semibold text-[#3b2d24] shadow-xs transition hover:border-[#3b2d24] disabled:cursor-not-allowed disabled:opacity-40"
+                  className="flex items-center gap-2 rounded-full border border-[#d6c6b3] dark:border-[#383028] bg-white dark:bg-[#1e1915] px-5 py-2.5 text-sm font-semibold text-[#3b2d24] dark:text-[#ede4d8] shadow-xs transition hover:border-[#3b2d24] dark:hover:border-[#c1a27c] disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   <ChevronLeft className="h-4 w-4" />
                   <span>{language === "ru" ? "Назад" : "Oldingi"}</span>
                 </button>
 
-                <span className="font-serif text-base font-bold text-[#3b2d24]">
+                <span className="font-serif text-base font-bold text-[#3b2d24] dark:text-[#f3ede4]">
                   {language === "ru" ? `Страница ${page}` : `${page}-sahifa`}
                 </span>
 
@@ -546,7 +546,7 @@ function CatalogPage() {
                   type="button"
                   disabled={!nextPage}
                   onClick={() => setPage((curr) => curr + 1)}
-                  className="flex items-center gap-2 rounded-full bg-[#3b2d24] px-5 py-2.5 text-sm font-semibold text-white shadow-xs transition hover:bg-[#271f19] disabled:cursor-not-allowed disabled:opacity-40"
+                  className="flex items-center gap-2 rounded-full bg-[#3b2d24] dark:bg-[#c1a27c] px-5 py-2.5 text-sm font-semibold text-white dark:text-[#1e1915] shadow-xs transition hover:bg-[#271f19] dark:hover:bg-[#d6ba94] disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   <span>{language === "ru" ? "Вперед" : "Keyingi"}</span>
                   <ChevronRight className="h-4 w-4" />
@@ -562,18 +562,18 @@ function CatalogPage() {
       {/* ========================= */}
       {filtersOpen && (
         <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 backdrop-blur-xs lg:hidden">
-          <div className="max-h-[85vh] w-full overflow-y-auto rounded-t-3xl bg-white p-6 shadow-2xl border-t border-[#ebdcca]">
-            <div className="flex items-center justify-between border-b border-[#f4efe6] pb-4">
+          <div className="max-h-[85vh] w-full overflow-y-auto rounded-t-3xl bg-white dark:bg-[#1e1915] p-6 shadow-2xl border-t border-[#ebdcca] dark:border-[#2d241c]">
+            <div className="flex items-center justify-between border-b border-[#f4efe6] dark:border-[#2d241c] pb-4">
               <div className="flex items-center gap-2">
-                <Filter className="h-5 w-5 text-[#8a735e]" />
-                <h3 className="font-serif text-xl font-bold text-[#3b2d24]">
+                <Filter className="h-5 w-5 text-[#8a735e] dark:text-[#c4a98e]" />
+                <h3 className="font-serif text-xl font-bold text-[#3b2d24] dark:text-[#f3ede4]">
                   {language === "ru" ? "Фильтры" : "Filterlar"}
                 </h3>
               </div>
               <button
                 type="button"
                 onClick={() => setFiltersOpen(false)}
-                className="flex h-9 w-9 items-center justify-center rounded-full bg-[#f4efe6] text-[#3b2d24]"
+                className="flex h-9 w-9 items-center justify-center rounded-full bg-[#f4efe6] dark:bg-[#28211a] text-[#3b2d24] dark:text-[#ede4d8]"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -582,7 +582,7 @@ function CatalogPage() {
             <div className="space-y-4 pt-4">
               {/* SEARCH */}
               <div>
-                <label className="text-sm font-bold text-[#3b2d24]">
+                <label className="text-sm font-bold text-[#3b2d24] dark:text-[#f3ede4]">
                   {language === "ru" ? "Поиск" : "Qidiruv"}
                 </label>
                 <input
@@ -593,13 +593,13 @@ function CatalogPage() {
                     setPage(1);
                   }}
                   placeholder="Mahsulot nomi..."
-                  className="mt-1.5 w-full rounded-xl border border-[#d6c6b3] bg-[#faf7f2] p-3 text-sm outline-none"
+                  className="mt-1.5 w-full rounded-xl border border-[#d6c6b3] dark:border-[#383028] bg-[#faf7f2] dark:bg-[#261f1a] p-3 text-sm text-[#2d241e] dark:text-[#ede4d8] outline-none"
                 />
               </div>
 
               {/* PRICE */}
               <div>
-                <label className="text-sm font-bold text-[#3b2d24]">
+                <label className="text-sm font-bold text-[#3b2d24] dark:text-[#f3ede4]">
                   {language === "ru" ? "Цена (so‘m)" : "Narx oralig‘i (so‘m)"}
                 </label>
                 <div className="mt-1.5 grid grid-cols-2 gap-2">
@@ -611,7 +611,7 @@ function CatalogPage() {
                       setPage(1);
                     }}
                     placeholder="Min"
-                    className="rounded-xl border border-[#d6c6b3] bg-[#faf7f2] p-2.5 text-sm"
+                    className="rounded-xl border border-[#d6c6b3] dark:border-[#383028] bg-[#faf7f2] dark:bg-[#261f1a] p-2.5 text-sm text-[#2d241e] dark:text-[#ede4d8]"
                   />
                   <input
                     type="number"
@@ -621,27 +621,27 @@ function CatalogPage() {
                       setPage(1);
                     }}
                     placeholder="Max"
-                    className="rounded-xl border border-[#d6c6b3] bg-[#faf7f2] p-2.5 text-sm"
+                    className="rounded-xl border border-[#d6c6b3] dark:border-[#383028] bg-[#faf7f2] dark:bg-[#261f1a] p-2.5 text-sm text-[#2d241e] dark:text-[#ede4d8]"
                   />
                 </div>
               </div>
 
               {/* ACTIONS */}
-              <div className="grid grid-cols-2 gap-3 pt-4 border-t border-[#f4efe6]">
+              <div className="grid grid-cols-2 gap-3 pt-4 border-t border-[#f4efe6] dark:border-[#2d241c]">
                 <button
                   type="button"
                   onClick={() => {
                     resetFilters();
                     setFiltersOpen(false);
                   }}
-                  className="rounded-xl border border-[#d6c6b3] py-3 text-sm font-bold text-[#3b2d24]"
+                  className="rounded-xl border border-[#d6c6b3] dark:border-[#383028] py-3 text-sm font-bold text-[#3b2d24] dark:text-[#ede4d8]"
                 >
                   {language === "ru" ? "Сбросить" : "Tozalash"}
                 </button>
                 <button
                   type="button"
                   onClick={() => setFiltersOpen(false)}
-                  className="rounded-xl bg-[#3b2d24] py-3 text-sm font-bold text-white shadow-xs"
+                  className="rounded-xl bg-[#3b2d24] dark:bg-[#c1a27c] py-3 text-sm font-bold text-white dark:text-[#1e1915] shadow-xs"
                 >
                   {language === "ru" ? "Применить" : "Qo‘llash"}
                 </button>

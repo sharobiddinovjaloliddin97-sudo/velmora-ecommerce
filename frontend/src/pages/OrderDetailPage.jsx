@@ -124,19 +124,19 @@ function OrderDetailPage() {
   const isCancelled = order.status === "CANCELLED";
 
   return (
-    <div className="min-h-screen bg-[#faf7f2] pb-24">
+    <div className="min-h-screen bg-[#faf7f2] dark:bg-[#141210] text-[#2d241e] dark:text-[#ede4d8] pb-24 transition-colors duration-300">
       {/* BREADCRUMB */}
-      <nav className="border-b border-[#e8ded2] bg-white/60 backdrop-blur-xs">
-        <div className="mx-auto flex max-w-7xl items-center gap-2 px-4 py-3.5 text-xs text-stone-500 sm:px-6">
-          <Link to="/" className="hover:text-[#3b2d24] transition">
+      <nav className="border-b border-[#e8ded2] dark:border-[#2d241c] bg-white/60 dark:bg-[#1e1915]/60 backdrop-blur-xs">
+        <div className="mx-auto flex max-w-7xl items-center gap-2 px-4 py-3.5 text-xs text-stone-500 dark:text-stone-400 sm:px-6">
+          <Link to="/" className="hover:text-[#3b2d24] dark:hover:text-[#f3ede4] transition">
             {language === "ru" ? "Главная" : "Bosh sahifa"}
           </Link>
-          <ChevronRight className="h-3.5 w-3.5 text-stone-400" />
-          <Link to="/account" className="hover:text-[#3b2d24] transition">
+          <ChevronRight className="h-3.5 w-3.5 text-stone-400 dark:text-stone-600" />
+          <Link to="/account" className="hover:text-[#3b2d24] dark:hover:text-[#f3ede4] transition">
             {language === "ru" ? "Личный кабинет" : "Kabinet"}
           </Link>
-          <ChevronRight className="h-3.5 w-3.5 text-stone-400" />
-          <span className="font-mono font-bold text-[#3b2d24]">
+          <ChevronRight className="h-3.5 w-3.5 text-stone-400 dark:text-stone-600" />
+          <span className="font-mono font-bold text-[#3b2d24] dark:text-[#f3ede4]">
             {order.order_number}
           </span>
         </div>
@@ -145,7 +145,7 @@ function OrderDetailPage() {
       <div className="mx-auto max-w-4xl px-4 pt-8 sm:px-6 sm:pt-10">
         <Link
           to="/account"
-          className="inline-flex items-center gap-2 text-sm font-bold text-[#8a735e] transition hover:text-[#3b2d24]"
+          className="inline-flex items-center gap-2 text-sm font-bold text-[#8a735e] dark:text-[#c4a98e] transition hover:text-[#3b2d24] dark:hover:text-[#f3ede4]"
         >
           <ArrowLeft className="h-4 w-4" />
           <span>{language === "ru" ? "Назад в кабинет" : "Kabinetga qaytish"}</span>
@@ -154,15 +154,15 @@ function OrderDetailPage() {
         {/* HEADER */}
         <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between">
           <div>
-            <span className="text-xs font-bold tracking-[0.2em] text-[#8a735e] uppercase">
+            <span className="text-xs font-bold tracking-[0.2em] text-[#8a735e] dark:text-[#c4a98e] uppercase">
               {language === "ru" ? "Детали заказа" : "Buyurtma tafsilotlari"}
             </span>
-            <h1 className="mt-1 font-mono text-2xl font-bold text-[#3b2d24] sm:text-3xl">
+            <h1 className="mt-1 font-mono text-2xl font-bold text-[#3b2d24] dark:text-[#f3ede4] sm:text-3xl">
               {order.order_number}
             </h1>
           </div>
 
-          <p className="text-sm text-stone-500">
+          <p className="text-sm text-stone-500 dark:text-stone-400">
             {new Date(order.created_at).toLocaleString(
               language === "ru" ? "ru-RU" : "uz-UZ",
               {
@@ -179,20 +179,20 @@ function OrderDetailPage() {
         {/* ========================= */}
         {/* STATUS STEPPER PROGRESS */}
         {/* ========================= */}
-        <div className="mt-8 rounded-3xl border border-[#e8ded2] bg-white p-6 shadow-xs sm:p-8">
-          <h2 className="font-serif text-lg font-bold text-[#3b2d24]">
+        <div className="mt-8 rounded-3xl border border-[#e8ded2] dark:border-[#2d241c] bg-white dark:bg-[#1e1915] p-6 shadow-xs sm:p-8">
+          <h2 className="font-serif text-lg font-bold text-[#3b2d24] dark:text-[#f3ede4]">
             {language === "ru" ? "Статус выполнения" : "Buyurtma holati"}
           </h2>
 
           {isCancelled ? (
-            <div className="mt-4 flex items-center gap-3 rounded-2xl bg-rose-50 p-4 text-sm font-semibold text-rose-700 border border-rose-200">
+            <div className="mt-4 flex items-center gap-3 rounded-2xl bg-rose-50 dark:bg-rose-950/30 p-4 text-sm font-semibold text-rose-700 dark:text-rose-400 border border-rose-200 dark:border-rose-800">
               <AlertCircle className="h-5 w-5 shrink-0" />
               <div>
                 <p className="font-bold">
                   {language === "ru" ? "Заказ отменен" : "Buyurtma bekor qilingan"}
                 </p>
                 {order.cancellation_reason && (
-                  <p className="mt-0.5 text-rose-600 font-normal">
+                  <p className="mt-0.5 text-rose-600 dark:text-rose-400 font-normal">
                     {order.cancellation_reason}
                   </p>
                 )}
@@ -210,14 +210,14 @@ function OrderDetailPage() {
                     <div
                       className={`flex h-12 w-12 items-center justify-center rounded-2xl transition-all ${
                         isCurrent
-                          ? "bg-[#3b2d24] text-white shadow-md ring-4 ring-[#8a735e]/20"
+                          ? "bg-[#3b2d24] dark:bg-[#c1a27c] text-white dark:text-[#1e1915] shadow-md ring-4 ring-[#8a735e]/20"
                           : isPassed
-                            ? "bg-[#f4efe6] text-[#3b2d24] border border-[#e8ded2]"
-                            : "bg-[#faf7f2] text-stone-400 border border-stone-200"
+                            ? "bg-[#f4efe6] dark:bg-[#28211a] text-[#3b2d24] dark:text-[#c4a98e] border border-[#e8ded2] dark:border-[#383028]"
+                            : "bg-[#faf7f2] dark:bg-[#201a15] text-stone-400 dark:text-stone-600 border border-stone-200 dark:border-stone-800"
                       }`}
                     >
                       {isPassed ? (
-                        <Check className="h-5 w-5 text-[#8a735e]" />
+                        <Check className="h-5 w-5 text-[#8a735e] dark:text-[#c4a98e]" />
                       ) : (
                         <IconComponent className="h-5 w-5" />
                       )}
@@ -226,10 +226,10 @@ function OrderDetailPage() {
                     <p
                       className={`mt-2.5 text-xs font-bold uppercase tracking-wider ${
                         isCurrent
-                          ? "text-[#3b2d24]"
+                          ? "text-[#3b2d24] dark:text-[#f3ede4]"
                           : isPassed
-                            ? "text-stone-700"
-                            : "text-stone-400"
+                            ? "text-stone-700 dark:text-stone-300"
+                            : "text-stone-400 dark:text-stone-500"
                       }`}
                     >
                       {language === "ru" ? step.ru : step.uz}
@@ -246,40 +246,40 @@ function OrderDetailPage() {
         {/* ========================= */}
         <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2">
           {/* ADDRESS */}
-          <div className="rounded-3xl border border-[#e8ded2] bg-white p-6 shadow-xs">
-            <div className="flex items-center gap-2 text-xs font-bold tracking-wider text-[#8a735e] uppercase">
+          <div className="rounded-3xl border border-[#e8ded2] dark:border-[#2d241c] bg-white dark:bg-[#1e1915] p-6 shadow-xs">
+            <div className="flex items-center gap-2 text-xs font-bold tracking-wider text-[#8a735e] dark:text-[#c4a98e] uppercase">
               <MapPin className="h-4 w-4" />
               <span>{language === "ru" ? "Адрес доставки" : "Yetkazish manzili"}</span>
             </div>
-            <p className="mt-3 text-base font-semibold text-stone-900">
+            <p className="mt-3 text-base font-semibold text-stone-900 dark:text-[#f3ede4]">
               {order.city}, {order.district_display || order.district}
             </p>
-            <p className="mt-1 text-sm leading-relaxed text-stone-600">
+            <p className="mt-1 text-sm leading-relaxed text-stone-600 dark:text-stone-300">
               {order.street}, {language === "ru" ? "дом" : "uy"} {order.house}
               {order.apartment ? `, ${language === "ru" ? "кв." : "xonadon"} ${order.apartment}` : ""}
             </p>
             {order.landmark && (
-              <p className="mt-2 text-xs text-stone-500">
+              <p className="mt-2 text-xs text-stone-500 dark:text-stone-400">
                 {language === "ru" ? "Ориентир: " : "Mo‘ljal: "} {order.landmark}
               </p>
             )}
           </div>
 
           {/* RECIPIENT & PAYMENT */}
-          <div className="rounded-3xl border border-[#e8ded2] bg-white p-6 shadow-xs">
-            <div className="flex items-center gap-2 text-xs font-bold tracking-wider text-[#8a735e] uppercase">
+          <div className="rounded-3xl border border-[#e8ded2] dark:border-[#2d241c] bg-white dark:bg-[#1e1915] p-6 shadow-xs">
+            <div className="flex items-center gap-2 text-xs font-bold tracking-wider text-[#8a735e] dark:text-[#c4a98e] uppercase">
               <User className="h-4 w-4" />
               <span>{language === "ru" ? "Получатель и оплата" : "Qabul qiluvchi va to‘lov"}</span>
             </div>
-            <p className="mt-3 text-base font-semibold text-stone-900">
+            <p className="mt-3 text-base font-semibold text-stone-900 dark:text-[#f3ede4]">
               {order.recipient_name}
             </p>
-            <p className="mt-1 text-sm text-stone-600">{order.phone}</p>
-            <div className="mt-3.5 flex items-center gap-2 border-t border-[#e8ded2] pt-3.5">
-              <Banknote className="h-4 w-4 text-[#8a735e]" />
-              <span className="text-sm font-medium text-stone-700">
+            <p className="mt-1 text-sm text-stone-600 dark:text-stone-300">{order.phone}</p>
+            <div className="mt-3.5 flex items-center gap-2 border-t border-[#e8ded2] dark:border-[#2d241c] pt-3.5">
+              <Banknote className="h-4 w-4 text-[#8a735e] dark:text-[#c4a98e]" />
+              <span className="text-sm font-medium text-stone-700 dark:text-stone-300">
                 {getPaymentMethodLabel(order.payment_method, language)} •{" "}
-                <span className="font-bold text-[#3b2d24]">
+                <span className="font-bold text-[#3b2d24] dark:text-[#f3ede4]">
                   {getPaymentStatusLabel(order.payment_status, language)}
                 </span>
               </span>
@@ -290,37 +290,37 @@ function OrderDetailPage() {
         {/* ========================= */}
         {/* ORDER ITEMS LIST */}
         {/* ========================= */}
-        <div className="mt-6 rounded-3xl border border-[#e8ded2] bg-white p-6 shadow-xs sm:p-8">
-          <h2 className="font-serif text-lg font-bold text-[#3b2d24]">
+        <div className="mt-6 rounded-3xl border border-[#e8ded2] dark:border-[#2d241c] bg-white dark:bg-[#1e1915] p-6 shadow-xs sm:p-8">
+          <h2 className="font-serif text-lg font-bold text-[#3b2d24] dark:text-[#f3ede4]">
             {language === "ru" ? "Заказанные товары" : "Buyurtma qilingan tovarlar"}
           </h2>
 
-          <div className="mt-4 divide-y divide-[#e8ded2]">
+          <div className="mt-4 divide-y divide-[#e8ded2] dark:divide-[#2d241c]">
             {order.items?.map((item) => (
               <div
                 key={item.id}
                 className="flex flex-col gap-2 py-4 sm:flex-row sm:items-center sm:justify-between"
               >
                 <div className="space-y-1">
-                  <p className="font-serif text-base font-bold text-[#3b2d24]">
+                  <p className="font-serif text-base font-bold text-[#3b2d24] dark:text-[#f3ede4]">
                     {item.product_name}
                   </p>
-                  <p className="text-sm text-stone-500">
+                  <p className="text-sm text-stone-500 dark:text-stone-400">
                     <span>{item.color}</span>
                     {" • "}
                     <span>{item.size}</span>
                     {item.sku && (
-                      <span className="ml-1 text-stone-400">({item.sku})</span>
+                      <span className="ml-1 text-stone-400 dark:text-stone-500">({item.sku})</span>
                     )}
                   </p>
                 </div>
 
                 <div className="flex items-center justify-between gap-4 text-sm sm:text-right">
-                  <span className="text-stone-500">
+                  <span className="text-stone-500 dark:text-stone-400">
                     {item.quantity} {language === "ru" ? "шт." : "dona"} ×{" "}
                     {Number(item.unit_price).toLocaleString("uz-UZ")} so‘m
                   </span>
-                  <span className="font-serif text-base font-bold text-[#3b2d24]">
+                  <span className="font-serif text-base font-bold text-[#3b2d24] dark:text-[#f3ede4]">
                     {Number(item.line_total).toLocaleString("uz-UZ")} so‘m
                   </span>
                 </div>
@@ -329,19 +329,19 @@ function OrderDetailPage() {
           </div>
 
           {/* TOTAL BREAKDOWN */}
-          <div className="mt-6 space-y-2 border-t border-[#e8ded2] pt-5 text-sm">
-            <div className="flex justify-between text-stone-600">
+          <div className="mt-6 space-y-2 border-t border-[#e8ded2] dark:border-[#2d241c] pt-5 text-sm">
+            <div className="flex justify-between text-stone-600 dark:text-stone-300">
               <span>{language === "ru" ? "Доставка (Ташкент)" : "Yetkazib berish (Toshkent)"}</span>
-              <span className="font-bold text-[#8a735e]">
+              <span className="font-bold text-[#8a735e] dark:text-[#c4a98e]">
                 {language === "ru" ? "Бесплатно" : "0 so‘m (Bepul)"}
               </span>
             </div>
 
-            <div className="flex items-baseline justify-between pt-3 border-t border-[#e8ded2]">
-              <span className="font-serif text-base font-bold text-stone-900">
+            <div className="flex items-baseline justify-between pt-3 border-t border-[#e8ded2] dark:border-[#2d241c]">
+              <span className="font-serif text-base font-bold text-stone-900 dark:text-[#f3ede4]">
                 {language === "ru" ? "Итого к оплате:" : "Jami to‘lov:"}
               </span>
-              <span className="font-serif text-2xl font-bold text-[#3b2d24]">
+              <span className="font-serif text-2xl font-bold text-[#3b2d24] dark:text-[#c1a27c]">
                 {Number(order.total_amount).toLocaleString("uz-UZ")} so‘m
               </span>
             </div>

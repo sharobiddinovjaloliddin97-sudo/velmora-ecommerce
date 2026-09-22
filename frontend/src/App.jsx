@@ -84,20 +84,12 @@ function App() {
 
         <Route
           path="/checkout"
-          element={
-            <ProtectedRoute>
-              <CheckoutPage />
-            </ProtectedRoute>
-          }
+          element={<CheckoutPage />}
         />
 
         <Route
           path="/order-success"
-          element={
-            <ProtectedRoute>
-              <OrderSuccessPage />
-            </ProtectedRoute>
-          }
+          element={<OrderSuccessPage />}
         />
 
 
