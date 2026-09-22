@@ -50,6 +50,35 @@ def send_message(chat_id: str | int, text: str, reply_markup: dict = None, parse
     return send_telegram_request("sendMessage", payload)
 
 
+def get_admin_order_keyboard(order_id: str, current_status: str = "NEW") -> dict:
+    """Returns persistent inline keyboard for admin group with all actionable status options."""
+    s = (current_status or "NEW").upper()
+    return {
+        "inline_keyboard": [
+            [
+                {
+                    "text": f"{'🔘 ' if s == 'CONFIRMED' else ''}✅ Qabul qilish",
+                    "callback_data": f"adm_st:CONFIRMED:{str(order_id)}"
+                },
+                {
+                    "text": f"{'🔘 ' if s == 'SHIPPING' else ''}🚚 Kuryerga berish",
+                    "callback_data": f"adm_st:SHIPPING:{str(order_id)}"
+                },
+            ],
+            [
+                {
+                    "text": f"{'🔘 ' if s == 'DELIVERED' else ''}🎉 Yetkazildi",
+                    "callback_data": f"adm_st:DELIVERED:{str(order_id)}"
+                },
+                {
+                    "text": f"{'🔘 ' if s == 'CANCELLED' else ''}❌ Bekor qilish",
+                    "callback_data": f"adm_st:CANCELLED:{str(order_id)}"
+                },
+            ]
+        ]
+    }
+
+
 def send_order_to_admin_group(order) -> dict:
     """
     Sends full order alert to Admin Telegram Group.
@@ -96,19 +125,11 @@ def send_order_to_admin_group(order) -> dict:
         f"💰 <b>Jami to‘lov:</b> <b>{total_str} so‘m</b> (Naqd / Click)\n"
     )
 
-    inline_keyboard = {
-        "inline_keyboard": [
-            [
-                {"text": "✅ Qabul qilindi", "callback_data": f"adm_st:CONFIRMED:{str(order.id)}"},
-                {"text": "🚚 Yetkazilmoqda", "callback_data": f"adm_st:SHIPPING:{str(order.id)}"},
-            ],
-            [
-                {"text": "❌ Bekor qilish", "callback_data": f"adm_st:CANCELLED:{str(order.id)}"},
-            ]
-        ]
-    }
-
-    return send_message(chat_id=chat_id, text=message_text, reply_markup=inline_keyboard)
+    return send_message(
+        chat_id=chat_id,
+        text=message_text,
+        reply_markup=get_admin_order_keyboard(order.id, order.status or "NEW")
+    )
 
 
 def notify_user_status_changed(order, new_status: str):
@@ -541,36 +562,73 @@ def process_webhook_update(update: dict):
 
         # ADMIN BUTTONS: adm_st:<STATUS>:<ORDER_ID>
         if data.startswith("adm_st:"):
-            _, new_status, order_id = data.split(":")
-            from orders.models import Order, OrderStatusHistory
-            order = Order.objects.filter(id=order_id).first()
-            if order:
-                old_status = order.status
-                order.status = new_status
-                order.save(update_fields=["status", "updated_at"])
-                OrderStatusHistory.objects.create(
-                    order=order,
-                    old_status=old_status,
-                    new_status=new_status,
-                )
-                try:
-                    notify_user_status_changed(order, new_status)
-                except Exception as e:
-                    logger.error(f"Error notifying user: {e}")
+            parts = data.split(":")
+            if len(parts) == 3:
+                _, new_status, order_id = parts
+                from orders.models import Order, OrderStatusHistory
+                order = Order.objects.filter(id=order_id).first()
+                if order:
+                    old_status = order.status
+                    order.status = new_status
+                    order.save(update_fields=["status", "updated_at"])
+                    OrderStatusHistory.objects.create(
+                        order=order,
+                        old_status=old_status,
+                        new_status=new_status,
+                    )
+                    try:
+                        notify_user_status_changed(order, new_status)
+                    except Exception as e:
+                        logger.error(f"Error notifying user: {e}")
 
-                status_text = {
-                    "CONFIRMED": "✅ QABUL QILINDI",
-                    "SHIPPING": "🚚 KURYERGA BERILDI",
-                    "CANCELLED": "❌ BEKOR QILINDI",
-                }.get(new_status, new_status)
+                    # Also create website notification if order has user
+                    if order.user:
+                        try:
+                            from core.models import Notification
+                            st_uz = {
+                                "CONFIRMED": "Qabul qilindi",
+                                "SHIPPING": "Yetkazilmoqda",
+                                "DELIVERED": "Yetkazildi",
+                                "CANCELLED": "Bekor qilindi",
+                            }.get(new_status, new_status)
+                            st_ru = {
+                                "CONFIRMED": "Принят",
+                                "SHIPPING": "В пути",
+                                "DELIVERED": "Доставлен",
+                                "CANCELLED": "Отменён",
+                            }.get(new_status, new_status)
+                            Notification.objects.create(
+                                user=order.user,
+                                notification_type=Notification.Type.CONTACT_REPLY,
+                                title_uz=f"Buyurtma #{order.order_number}: {st_uz}",
+                                title_ru=f"Заказ #{order.order_number}: {st_ru}",
+                                message=f"Buyurtmangiz holati yangilandi: {st_uz}.",
+                                link="/account",
+                            )
+                        except Exception as e:
+                            logger.error(f"Error creating user notification: {e}")
 
-                admin_name = from_user.get("first_name") or from_user.get("username") or "Admin"
-                current_text = cb_message.get("text", "")
-                new_caption = f"{current_text}\n\n━━━━━━━━━━━━━━━━━━━\n🔄 <b>Holat: {status_text}</b> (Admin: {admin_name})"
+                    status_text = {
+                        "CONFIRMED": "✅ QABUL QILINDI",
+                        "SHIPPING": "🚚 KURYERGA BERILDI",
+                        "DELIVERED": "🎉 YETKAZILDI",
+                        "CANCELLED": "❌ BEKOR QILINDI",
+                    }.get(new_status, new_status)
 
-                send_telegram_request("editMessageText", {
-                    "chat_id": chat_id,
-                    "message_id": msg_id,
-                    "text": new_caption,
-                    "parse_mode": "HTML",
-                })
+                    admin_name = from_user.get("first_name") or from_user.get("username") or "Admin"
+                    current_text = cb_message.get("text", "")
+
+                    import re
+                    # Remove any previous "Holat:" block so it doesn't keep accumulating
+                    base_text = re.split(r"\n*━━━━━━━━━━━━━━━━━━━\n*🔄\s*Holat:", current_text)[0]
+                    base_text = re.split(r"\n*🔄\s*Holat:", base_text)[0].strip()
+
+                    new_caption = f"{base_text}\n\n━━━━━━━━━━━━━━━━━━━\n🔄 <b>Holat: {status_text}</b> (Admin: {admin_name})"
+
+                    send_telegram_request("editMessageText", {
+                        "chat_id": chat_id,
+                        "message_id": msg_id,
+                        "text": new_caption,
+                        "parse_mode": "HTML",
+                        "reply_markup": get_admin_order_keyboard(order.id, new_status),
+                    })

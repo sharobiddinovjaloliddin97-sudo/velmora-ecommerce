@@ -72,10 +72,12 @@ function Header() {
     }, 0);
     const interval = setInterval(loadNotifications, 30000);
     window.addEventListener("focus", loadNotifications);
+    window.addEventListener("velmora:refresh-notifications", loadNotifications);
     return () => {
       clearTimeout(timer);
       clearInterval(interval);
       window.removeEventListener("focus", loadNotifications);
+      window.removeEventListener("velmora:refresh-notifications", loadNotifications);
     };
   }, [user, loadNotifications]);
 
@@ -201,11 +203,11 @@ function Header() {
             to="/"
             className="group flex items-center gap-2 sm:gap-3 shrink-0"
           >
-            <div className="h-9 w-9 sm:h-12 sm:w-12 rounded-xl sm:rounded-2xl overflow-hidden bg-white dark:bg-[#1f1b17] p-1 border border-[#dfd2c0]/80 dark:border-[#3d342c] shadow-xs flex items-center justify-center shrink-0">
+            <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-xl sm:rounded-2xl overflow-hidden bg-white dark:bg-[#1f1b17] p-1.5 border border-[#dfd2c0] dark:border-[#3d342c] shadow-xs flex items-center justify-center shrink-0 transition-all duration-300 group-hover:border-[#c1a27c]">
               <img
                 src="/logo.png"
                 alt="Velmora"
-                className="h-full w-full object-contain"
+                className="h-full w-full object-contain dark:brightness-125 transition-transform duration-300 group-hover:scale-105"
               />
             </div>
             <div className="flex flex-col">
@@ -270,7 +272,7 @@ function Header() {
             <Link
               to={user ? "/account?tab=favorites" : "/login"}
               aria-label={language === "ru" ? "Избранное" : "Sevimlilar"}
-              className="relative hidden h-11 w-11 items-center justify-center rounded-full border border-[#d8c8b4] bg-white text-[#4a3b32] transition hover:border-[#3b2d24] hover:text-[#8a735e] dark:border-[#3d342c] dark:bg-[#1f1b17] dark:text-[#e8ded4] dark:hover:border-[#c1a27c] dark:hover:text-[#e5b378] sm:flex"
+              className="relative hidden h-11 w-11 items-center justify-center rounded-full border border-[#d8c8b4] bg-white text-[#4a3b32] transition hover:border-[#3b2d24] hover:text-[#8a735e] dark:border-[#3d342c] dark:bg-[#1f1b17] dark:text-[#e8ded4] dark:hover:border-[#c1a27c] dark:hover:text-[#e5b378] dark:hover:bg-[#27221d] sm:flex"
               title={language === "ru" ? "Избранное" : "Sevimlilar"}
             >
               <Heart className="h-5 w-5" />
@@ -288,7 +290,7 @@ function Header() {
                   type="button"
                   onClick={() => setNotificationOpen((curr) => !curr)}
                   aria-label={language === "ru" ? "Уведомления" : "Bildirishnomalar"}
-                  className="relative flex h-11 w-11 items-center justify-center rounded-full border border-[#d8c8b4] bg-white text-[#4a3b32] transition hover:border-[#3b2d24] hover:text-[#8a735e] dark:border-[#3d342c] dark:bg-[#1f1b17] dark:text-[#e8ded4] dark:hover:border-[#c1a27c]"
+                  className="relative flex h-11 w-11 items-center justify-center rounded-full border border-[#d8c8b4] bg-white text-[#4a3b32] transition hover:border-[#3b2d24] hover:text-[#8a735e] dark:border-[#3d342c] dark:bg-[#1f1b17] dark:text-[#e8ded4] dark:hover:border-[#c1a27c] dark:hover:bg-[#27221d]"
                 >
                   <Bell className="h-5 w-5" />
                   {unreadCount > 0 && (
@@ -406,7 +408,7 @@ function Header() {
                 <div className="flex items-center gap-2 pl-2">
                   <Link
                     to="/account"
-                    className="flex items-center gap-2 rounded-full border border-[#d8c8b4] bg-white px-4 py-2 text-sm font-medium text-[#3b2d24] transition hover:border-[#3b2d24] hover:bg-[#faf7f2] dark:border-[#3d342c] dark:bg-[#1f1b17] dark:text-[#e8ded4] dark:hover:border-[#e5b378]"
+                    className="flex items-center gap-2 rounded-full border border-[#d8c8b4] bg-white px-4 py-2 text-sm font-medium text-[#3b2d24] transition hover:border-[#3b2d24] hover:bg-[#faf7f2] dark:border-[#3d342c] dark:bg-[#1f1b17] dark:text-[#e8ded4] dark:hover:border-[#c1a27c] dark:hover:bg-[#2a241f] dark:hover:text-[#f5efe6]"
                   >
                     <User className="h-4 w-4 text-[#8a735e] dark:text-[#e5b378]" />
                     <span className="max-w-[120px] truncate">
@@ -454,7 +456,7 @@ function Header() {
               }
               aria-expanded={mobileMenuOpen}
               onClick={() => setMobileMenuOpen((curr) => !curr)}
-              className="relative flex h-9 w-9 sm:h-11 sm:w-11 items-center justify-center rounded-full border border-[#d8c8b4] bg-white text-[#3b2d24] transition hover:border-[#3b2d24] dark:border-[#3d342c] dark:bg-[#1f1b17] dark:text-[#e8ded4] dark:hover:border-[#e5b378] lg:hidden"
+              className="relative flex h-9 w-9 sm:h-11 sm:w-11 items-center justify-center rounded-full border border-[#d8c8b4] bg-white text-[#3b2d24] transition hover:border-[#3b2d24] dark:border-[#3d342c] dark:bg-[#1f1b17] dark:text-[#e8ded4] dark:hover:border-[#c1a27c] dark:hover:bg-[#27221d] lg:hidden"
             >
               {mobileMenuOpen ? (
                 <X className="h-4.5 w-4.5 sm:h-5 sm:w-5" />

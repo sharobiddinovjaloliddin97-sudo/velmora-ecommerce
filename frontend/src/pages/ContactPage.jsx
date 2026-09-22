@@ -55,6 +55,9 @@ function ContactPage() {
           : "Xabaringiz muvaffaqiyatli yuborildi! Tez orada siz bilan bog‘lanamiz."
       );
 
+      // Trigger instant notification bell refresh in header
+      window.dispatchEvent(new Event("velmora:refresh-notifications"));
+
       setForm({
         name: "",
         email: "",

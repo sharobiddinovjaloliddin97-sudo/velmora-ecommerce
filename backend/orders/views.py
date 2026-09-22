@@ -135,6 +135,24 @@ class CheckoutView(APIView):
                 import logging
                 logging.getLogger(__name__).error(f"Error sending order notification to admin group: {e}")
 
+            if order.user:
+                try:
+                    from core.models import Notification
+                    Notification.objects.create(
+                        user=order.user,
+                        notification_type=Notification.Type.CONTACT_REPLY,
+                        title_uz="Buyurtmangiz qabul qilindi!",
+                        title_ru="Ваш заказ принят!",
+                        message=(
+                            f"Buyurtma #{order.order_number} muvaffaqiyatli rasmiylashtirildi. "
+                            f"Summasi: {int(order.total_amount):,} so‘m. Tez orada kuryerimiz bog‘lanadi."
+                        ).replace(",", " "),
+                        link="/account",
+                    )
+                except Exception as e:
+                    import logging
+                    logging.getLogger(__name__).error(f"Error creating order user notification: {e}")
+
         response_serializer = OrderSerializer(
             order,
             context={"request": request},
