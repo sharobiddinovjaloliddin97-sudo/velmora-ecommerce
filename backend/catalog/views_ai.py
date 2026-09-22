@@ -54,6 +54,8 @@ class AIInteriorAdviceView(APIView):
                 status=status.HTTP_429_TOO_MANY_REQUESTS,
             )
 
+        lang = (request.query_params.get("lang") or request.data.get("lang") or "uz").lower()
+
         try:
             image_bytes = image_file.read()
             result = get_interior_recommendations(image_bytes, mime_type=content_type)
@@ -61,13 +63,25 @@ class AIInteriorAdviceView(APIView):
             return Response(result, status=status.HTTP_200_OK)
         except ValueError as e:
             logger.warning(f"AI configuration error: {e}")
-            return Response(
-                {"error": "AI xizmati hozirda sozlanmagan. Iltimos, administratorga murojaat qiling."},
-                status=status.HTTP_503_SERVICE_UNAVAILABLE,
+            msg = (
+                "Сервис AI временно не настроен. Обратитесь к администратору."
+                if lang == "ru"
+                else "AI xizmati hozirda sozlanmagan. Iltimos, administratorga murojaat qiling."
             )
+            return Response({"error": msg}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
+        except RuntimeError as e:
+            logger.warning(f"AI runtime error: {e}")
+            msg = (
+                "Не удалось подключиться к сервису AI. Пожалуйста, попробуйте через минуту."
+                if lang == "ru"
+                else f"AI xizmatiga ulanishda xatolik: {e}"
+            )
+            return Response({"error": msg}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
         except Exception as e:
             logger.exception(f"AI interior analysis failed: {e}")
-            return Response(
-                {"error": "Xona rasmini tahlil qilishda xatolik yuz berdi. Iltimos, boshqa rasm yuklab ko‘ring."},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            msg = (
+                "Произошла ошибка при анализе фото комнаты. Пожалуйста, попробуйте другое фото."
+                if lang == "ru"
+                else "Xona rasmini tahlil qilishda xatolik yuz berdi. Iltimos, boshqa rasm yuklab ko‘ring."
             )
+            return Response({"error": msg}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

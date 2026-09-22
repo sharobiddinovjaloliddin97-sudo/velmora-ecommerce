@@ -216,12 +216,14 @@ export default function AIInteriorModal({ isOpen, onClose }) {
 
       const formData = new FormData();
       formData.append("image", uploadFile);
+      formData.append("lang", language);
 
       const res = await api.post("/ai-interior-advice/", formData, {
+        params: { lang: language },
         headers: {
           "Content-Type": "multipart/form-data",
         },
-        timeout: 30000,
+        timeout: 45000,
       });
 
       clearInterval(stepInterval);

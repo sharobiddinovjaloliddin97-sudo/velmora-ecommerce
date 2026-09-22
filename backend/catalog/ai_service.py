@@ -82,9 +82,9 @@ Javobni FAQAT quyidagi JSON formatida qaytar:
 """
 
     models_to_try = [
-        "models/gemini-3-flash-preview",
-        "models/gemini-flash-latest",
         "models/gemini-2.5-flash",
+        "models/gemini-flash-latest",
+        "models/gemini-3-flash-preview",
     ]
 
     last_error = None
@@ -116,9 +116,16 @@ Javobni FAQAT quyidagi JSON formatida qaytar:
         )
 
         try:
-            with urllib.request.urlopen(req, timeout=18) as response:
+            with urllib.request.urlopen(req, timeout=28) as response:
                 res_data = json.loads(response.read().decode("utf-8"))
-                text = res_data["candidates"][0]["content"]["parts"][0]["text"]
+                text = res_data["candidates"][0]["content"]["parts"][0]["text"].strip()
+                if text.startswith("```"):
+                    parts = text.split("```")
+                    if len(parts) >= 3:
+                        inner = parts[1]
+                        if inner.startswith("json"):
+                            inner = inner[4:]
+                        text = inner.strip()
                 return json.loads(text)
         except Exception as e:
             logger.warning(f"Gemini model {model_name} failed: {e}")
@@ -206,23 +213,28 @@ def get_interior_recommendations(image_bytes: bytes, mime_type: str = "image/jpe
     catalog_items = get_catalog_context()
 
     ai_result = None
+    last_error = None
 
     # Try Gemini first
-    if getattr(settings, "GEMINI_API_KEY", None):
+    if getattr(settings, "GEMINI_API_KEY", ""):
         try:
             ai_result = analyze_room_with_gemini(image_b64, mime_type, catalog_items)
         except Exception as e:
             logger.error(f"Gemini vision error: {e}")
+            last_error = e
 
     # Fallback to OpenAI if Gemini fails or is absent
-    if not ai_result and getattr(settings, "OPENAI_API_KEY", None):
+    if not ai_result and getattr(settings, "OPENAI_API_KEY", ""):
         try:
             ai_result = analyze_room_with_openai(image_b64, mime_type, catalog_items)
         except Exception as e:
             logger.error(f"OpenAI vision error: {e}")
+            last_error = e
 
     if not ai_result:
-        raise RuntimeError("AI xizmatiga ulanib bo‘lmadi. Iltimos, API kalitni tekshiring.")
+        if not getattr(settings, "GEMINI_API_KEY", "") and not getattr(settings, "OPENAI_API_KEY", ""):
+            raise ValueError("GEMINI_API_KEY serverda sozlanmagan. Railway 'Variables' bo‘limiga GEMINI_API_KEY qo‘shilishi kerak.")
+        raise RuntimeError(f"AI xizmatiga ulanib bo‘lmadi: {last_error}")
 
     # Enrich recommendations with full product records (images, slug, pricing)
     recommended_raw = ai_result.get("recommendations", [])
