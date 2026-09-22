@@ -6,7 +6,11 @@ from .views import (
     FavoriteListCreateView,
     ProductViewSet,
 )
-from .views_ai import AIInteriorAdviceView
+from .views_ai import (
+    AIFabricAdvisorView,
+    AIGiftAdvisorView,
+    AIInteriorAdviceView,
+)
 
 
 router = DefaultRouter()
@@ -41,5 +45,17 @@ urlpatterns = router.urls + [
         "ai-interior-advice/",
         AIInteriorAdviceView.as_view(),
         name="ai-interior-advice",
+    ),
+
+    path(
+        "ai-gift-advisor/",
+        AIGiftAdvisorView.as_view(),
+        name="ai-gift-advisor",
+    ),
+
+    path(
+        "ai-fabric-advisor/",
+        AIFabricAdvisorView.as_view(),
+        name="ai-fabric-advisor",
     ),
 ]
