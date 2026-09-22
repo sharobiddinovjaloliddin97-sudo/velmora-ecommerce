@@ -245,8 +245,10 @@ async def start_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # General /start
     text = (
         f"Assalomu alaykum, <b>{user.first_name}</b>!\n\n"
-        f"<b>Velmora</b> rasmiy savdo botiga xush kelibsiz! ✨\n\n"
-        f"Biz tabiiy va yuqori sifatli matolardan tayyorlangan choyshab to‘plamlari, yozgi va qishgi ko‘rpa to‘plamlari, matraslar hamda yostiq jildlarini ishlab chiqaramiz.\n\n"
+        f"<b>Velmora Uy Tekstili</b> rasmiy botiga xush kelibsiz! ✨\n\n"
+        f"Biz tabiiy va premium matolardan tayyorlangan shinam choyshab to‘plamlari, yozgi va qishgi ko‘rpa to‘plamlari hamda matraslarni taqdim etamiz.\n\n"
+        f"✨ <b>Yangi: AI Interyer Maslahatchisi!</b>\n"
+        f"Xonangiz yoki yotoqxonangiz rasmini ushbu botga yuboring — sun'iy intellekt xonangiz ranglari va uslubini tahlil qilib, unga eng mos tushadigan to‘shak to‘plamlarini tavsiya etadi! 📸\n\n"
         f"🛍 Mahsulotlarimiz bilan tanishish va buyurtma berish uchun saytimizga o‘ting:\n"
         f"🌐 <b>Sayt:</b> <a href=\"https://velmora-ecommerce-chi.vercel.app\">velmora-ecommerce-chi.vercel.app</a>\n"
         f"📞 <b>Asosiy aloqa:</b> +998911652211\n"
@@ -385,6 +387,89 @@ async def send_confirmation_prompt(update: Update, session):
     )
 
 
+async def photo_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Handles room photo uploads in Telegram and generates AI interior recommendations."""
+    if not update.message or not update.message.photo:
+        return
+
+    best_photo = update.message.photo[-1]
+    loading_msg = await update.message.reply_text(
+        "🎨 <i>AI xonangiz interyeri va ranglarini tahlil qilmoqda...\nIltimos, bir necha soniya kuting...</i>",
+        parse_mode="HTML",
+    )
+
+    try:
+        tg_file = await context.bot.get_file(best_photo.file_id)
+        photo_bytes = await tg_file.download_as_bytearray()
+
+        from catalog.ai_service import get_interior_recommendations
+        result = await sync_to_async(get_interior_recommendations)(bytes(photo_bytes), mime_type="image/jpeg")
+
+        palette_list = result.get("palette", [])
+        palette_str = " ".join([f"<code>{p}</code>" for p in palette_list]) if palette_list else "Iliq tabiiy ranglar"
+
+        lines = [
+            "✨ <b>Velmora AI Interyer Maslahatchisi</b>",
+            "━━━━━━━━━━━━━━━━━━━",
+            f"🏠 <b>Xona uslubi:</b> {result.get('room_style_uz', 'Zamonaviy')}",
+            f"💡 <b>Yorug‘lik:</b> {result.get('lighting_uz', 'Iliq tabiiy yorug‘lik')}",
+            f"🎨 <b>Ranglar palitrasi:</b> {palette_str}",
+            "",
+            f"💬 <b>Dizayner xulosasi:</b>",
+            f"<i>{result.get('designer_advice_uz', 'Ushbu xonaga yumshoq va uyg‘un to‘plamlar mos keladi.')}</i>",
+            "",
+            "━━━━━━━━━━━━━━━━━━━",
+            "🛏 <b>Xonangizga eng mos Velmora to‘plamlari:</b>",
+        ]
+
+        recs = result.get("recommendations", [])[:3]
+        if not recs:
+            lines.append("\nKatalogimizdagi barcha to‘plamlar bilan saytimizda tanishishingiz mumkin.")
+        else:
+            for idx, rec in enumerate(recs, 1):
+                price_fmt = f"{int(rec.get('price', 0)):,}".replace(",", " ")
+                name = rec.get("name_uz", "Velmora to‘plami")
+                color = rec.get("recommended_color_uz", "")
+                why = rec.get("why_matched_uz", "")
+                slug = rec.get("slug", "")
+                link = f"https://velmora-ecommerce-chi.vercel.app/catalog/{slug}" if slug else "https://velmora-ecommerce-chi.vercel.app/catalog"
+
+                lines.append(
+                    f"\n<b>{idx}. {name}</b>\n"
+                    f"   💰 Narxi: <b>{price_fmt} so‘m</b>\n"
+                    + (f"   🎨 Mos rang: <i>{color}</i>\n" if color else "")
+                    + (f"   💡 <i>{why}</i>\n" if why else "")
+                    + f"   👉 <a href=\"{link}\">Saytda ko‘rish</a>"
+                )
+
+        lines.append("\n━━━━━━━━━━━━━━━━━━━\n🛍 Saytimiz orqali buyurtma berishingiz yoki to‘plam haqida batafsil ma’lumot olishingiz mumkin.")
+        final_text = "\n".join(lines)
+
+        reply_kb = InlineKeyboardMarkup([
+            [
+                InlineKeyboardButton("🛍 Saytda to‘plamlarni ko‘rish", url="https://velmora-ecommerce-chi.vercel.app/catalog"),
+            ],
+            [
+                InlineKeyboardButton("💬 Dizayner bilan bog‘lanish", url="https://t.me/velmoramahsulotlari"),
+            ]
+        ])
+
+        await loading_msg.edit_text(
+            final_text,
+            parse_mode="HTML",
+            reply_markup=reply_kb,
+            disable_web_page_preview=True,
+        )
+    except Exception as e:
+        logger.exception(f"Bot photo analysis error: {e}")
+        err_text = (
+            "😔 Kechirasiz, xona rasmini tahlil qilishda xatolik yuz berdi.\n"
+            "Iltimos, boshqa burchakdan olingan sifatliroq rasm yuborib ko‘ring yoki saytimizdagi AI maslahatchisidan foydalaning: "
+            "<a href=\"https://velmora-ecommerce-chi.vercel.app\">velmora.uz</a>"
+        )
+        await loading_msg.edit_text(err_text, parse_mode="HTML")
+
+
 def build_ptb_admin_keyboard(order_id, current_status):
     s = (current_status or "NEW").upper()
     return InlineKeyboardMarkup([
@@ -505,6 +590,7 @@ class Command(BaseCommand):
 
         application.add_handler(MessageHandler(filters.CONTACT, contact_handler))
         application.add_handler(MessageHandler(filters.LOCATION, location_handler))
+        application.add_handler(MessageHandler(filters.PHOTO, photo_handler))
         application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, text_address_handler))
 
         application.add_handler(CallbackQueryHandler(callback_handler))
