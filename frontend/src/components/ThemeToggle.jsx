@@ -3,7 +3,7 @@ import { useTheme } from "../context/ThemeContext";
 import { useLanguage } from "../context/LanguageContext";
 
 function ThemeToggle({ className = "", showLabel = false }) {
-  const { theme, toggleTheme, isDark } = useTheme();
+  const { toggleTheme, isDark } = useTheme();
   const { language } = useLanguage();
 
   const label = isDark

@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import api from "../api/client";
 import {
+  clearCart,
   getCart,
   removeFromCart,
   updateCartQuantity,
