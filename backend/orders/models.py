@@ -304,6 +304,14 @@ class TelegramCheckoutSession(models.Model):
         db_index=True,
     )
 
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="telegram_checkout_sessions",
+    )
+
     items_data = models.JSONField(
         default=list,
     )

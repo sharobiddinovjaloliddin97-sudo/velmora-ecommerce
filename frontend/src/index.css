@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --font-serif: "Playfair Display", Georgia, Cambria, serif;
   --font-sans: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
@@ -21,11 +23,15 @@
   color-scheme: light;
 }
 
+html.dark {
+  color-scheme: dark;
+}
+
 html {
   scroll-behavior: smooth;
 }
 
-/* Warm Luxury scrollbar */
+/* Luxury scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -35,13 +41,26 @@ html {
   background: #faf7f2;
 }
 
+.dark ::-webkit-scrollbar-track {
+  background: #141210;
+}
+
 ::-webkit-scrollbar-thumb {
   background: #ded2c0;
   border-radius: 9999px;
 }
 
+.dark ::-webkit-scrollbar-thumb {
+  background: #383028;
+  border-radius: 9999px;
+}
+
 ::-webkit-scrollbar-thumb:hover {
   background: #8a735e;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #c1a27c;
 }
 
 @keyframes fadeIn {

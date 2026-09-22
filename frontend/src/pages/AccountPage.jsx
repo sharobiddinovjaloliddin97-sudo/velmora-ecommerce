@@ -228,24 +228,24 @@ function AccountPage() {
   const getStatusBadgeClass = (status) => {
     switch (status) {
       case "NEW":
-        return "bg-sky-50 text-sky-700 border-sky-200";
+        return "bg-sky-50 dark:bg-sky-950/40 text-sky-700 dark:text-sky-300 border-sky-200 dark:border-sky-800";
       case "CONFIRMED":
-        return "bg-amber-50 text-amber-700 border-amber-200";
+        return "bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800";
       case "SHIPPING":
-        return "bg-purple-50 text-purple-700 border-purple-200";
+        return "bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 border-purple-200 dark:border-purple-800";
       case "DELIVERED":
-        return "bg-emerald-50 text-emerald-700 border-emerald-200";
+        return "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800";
       case "CANCELLED":
-        return "bg-rose-50 text-rose-700 border-rose-200";
+        return "bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-800";
       default:
-        return "bg-stone-50 text-stone-700 border-stone-200";
+        return "bg-stone-50 dark:bg-stone-800 text-stone-700 dark:text-stone-300 border-stone-200 dark:border-stone-700";
     }
   };
 
   if (loading) {
     return (
-      <div className="flex min-h-[65vh] items-center justify-center bg-[#faf8f5]">
-        <p className="text-sm font-medium text-stone-500">
+      <div className="flex min-h-[65vh] items-center justify-center bg-[#faf8f5] dark:bg-[#141210]">
+        <p className="text-sm font-medium text-stone-500 dark:text-stone-400">
           {language === "ru" ? "Загрузка кабинета..." : "Kabinet yuklanmoqda..."}
         </p>
       </div>
@@ -259,30 +259,30 @@ function AccountPage() {
       : "V";
 
   return (
-    <div className="min-h-screen bg-[#faf7f2] pb-24">
+    <div className="min-h-screen bg-[#faf7f2] dark:bg-[#141210] text-[#2d241e] dark:text-[#ede4d8] pb-24 transition-colors duration-300">
       {/* HEADER BANNER */}
-      <section className="border-b border-[#e8ded2] bg-gradient-to-b from-[#f4efe6] to-[#faf7f2] py-8 sm:py-12">
+      <section className="border-b border-[#e8ded2] dark:border-[#2d241c] bg-gradient-to-b from-[#f4efe6] to-[#faf7f2] dark:from-[#1c1713] dark:to-[#141210] py-8 sm:py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-4">
-              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#3b2d24] font-serif text-2xl font-bold text-[#faf7f2] shadow-md">
+              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#3b2d24] dark:bg-[#c1a27c] font-serif text-2xl font-bold text-[#faf7f2] dark:text-[#1e1915] shadow-md">
                 {userInitial}
               </div>
               <div>
-                <span className="text-xs font-bold tracking-[0.2em] text-[#8a735e] uppercase">
+                <span className="text-xs font-bold tracking-[0.2em] text-[#8a735e] dark:text-[#c4a98e] uppercase">
                   {language === "ru" ? "Личный кабинет" : "Shaxsiy kabinet"}
                 </span>
-                <h1 className="font-serif text-2xl font-bold text-[#3b2d24] sm:text-3xl">
+                <h1 className="font-serif text-2xl font-bold text-[#3b2d24] dark:text-[#f3ede4] sm:text-3xl">
                   {profile.first_name || user?.email}
                 </h1>
-                <p className="text-sm text-stone-500">{user?.email}</p>
+                <p className="text-sm text-stone-500 dark:text-stone-400">{user?.email}</p>
               </div>
             </div>
 
             <button
               type="button"
               onClick={handleLogout}
-              className="inline-flex items-center gap-2 self-start rounded-full border border-[#d6c7b2] bg-white px-5 py-2.5 text-xs font-bold tracking-wider text-stone-700 uppercase transition hover:bg-rose-50 hover:border-rose-300 hover:text-rose-600 sm:self-auto shadow-xs"
+              className="inline-flex items-center gap-2 self-start rounded-full border border-[#d6c7b2] dark:border-[#383028] bg-white dark:bg-[#1e1915] px-5 py-2.5 text-xs font-bold tracking-wider text-stone-700 dark:text-stone-300 uppercase transition hover:bg-rose-50 dark:hover:bg-rose-950/30 hover:border-rose-300 dark:hover:border-rose-800 hover:text-rose-600 dark:hover:text-rose-400 sm:self-auto shadow-xs"
             >
               <LogOut className="h-4 w-4" />
               <span>{language === "ru" ? "Выйти из аккаунта" : "Chiqish"}</span>
@@ -298,14 +298,14 @@ function AccountPage() {
           {/* SIDEBAR TABS */}
           {/* ========================= */}
           <aside className="lg:col-span-3">
-            <nav className="flex flex-row gap-1.5 overflow-x-auto rounded-3xl border border-[#e8ded2] bg-white p-2 shadow-xs sm:p-2.5 lg:flex-col">
+            <nav className="flex flex-row gap-1.5 overflow-x-auto rounded-3xl border border-[#e8ded2] dark:border-[#2d241c] bg-white dark:bg-[#1e1915] p-2 shadow-xs sm:p-2.5 lg:flex-col">
               <button
                 type="button"
                 onClick={() => setActiveTab("orders")}
                 className={`flex shrink-0 items-center justify-between rounded-2xl px-4 py-3 text-sm font-semibold tracking-wide transition ${
                   activeTab === "orders"
-                    ? "bg-[#3b2d24] text-white shadow-xs"
-                    : "text-stone-700 hover:bg-[#f4efe6] hover:text-[#3b2d24]"
+                    ? "bg-[#3b2d24] dark:bg-[#c1a27c] text-white dark:text-[#1e1915] shadow-xs"
+                    : "text-stone-700 dark:text-stone-300 hover:bg-[#f4efe6] dark:hover:bg-[#28211a] hover:text-[#3b2d24] dark:hover:text-[#f3ede4]"
                 }`}
               >
                 <div className="flex items-center gap-2.5">
@@ -316,8 +316,8 @@ function AccountPage() {
                   <span
                     className={`ml-2 rounded-full px-2.5 py-0.5 text-xs font-bold ${
                       activeTab === "orders"
-                        ? "bg-white/20 text-white"
-                        : "bg-[#f4efe6] text-[#3b2d24]"
+                        ? "bg-white/20 dark:bg-black/20 text-white dark:text-[#1e1915]"
+                        : "bg-[#f4efe6] dark:bg-[#28211a] text-[#3b2d24] dark:text-[#c4a98e]"
                     }`}
                   >
                     {orders.length}
@@ -330,8 +330,8 @@ function AccountPage() {
                 onClick={() => setActiveTab("favorites")}
                 className={`flex shrink-0 items-center justify-between rounded-2xl px-4 py-3 text-sm font-semibold tracking-wide transition ${
                   activeTab === "favorites"
-                    ? "bg-[#3b2d24] text-white shadow-xs"
-                    : "text-stone-700 hover:bg-[#f4efe6] hover:text-[#3b2d24]"
+                    ? "bg-[#3b2d24] dark:bg-[#c1a27c] text-white dark:text-[#1e1915] shadow-xs"
+                    : "text-stone-700 dark:text-stone-300 hover:bg-[#f4efe6] dark:hover:bg-[#28211a] hover:text-[#3b2d24] dark:hover:text-[#f3ede4]"
                 }`}
               >
                 <div className="flex items-center gap-2.5">
@@ -342,8 +342,8 @@ function AccountPage() {
                   <span
                     className={`ml-2 rounded-full px-2.5 py-0.5 text-xs font-bold ${
                       activeTab === "favorites"
-                        ? "bg-white/20 text-white"
-                        : "bg-[#f4efe6] text-[#3b2d24]"
+                        ? "bg-white/20 dark:bg-black/20 text-white dark:text-[#1e1915]"
+                        : "bg-[#f4efe6] dark:bg-[#28211a] text-[#3b2d24] dark:text-[#c4a98e]"
                     }`}
                   >
                     {favorites.length}
@@ -356,8 +356,8 @@ function AccountPage() {
                 onClick={() => setActiveTab("profile")}
                 className={`flex shrink-0 items-center gap-2.5 rounded-2xl px-4 py-3 text-sm font-semibold tracking-wide transition ${
                   activeTab === "profile"
-                    ? "bg-[#3b2d24] text-white shadow-xs"
-                    : "text-stone-700 hover:bg-[#f4efe6] hover:text-[#3b2d24]"
+                    ? "bg-[#3b2d24] dark:bg-[#c1a27c] text-white dark:text-[#1e1915] shadow-xs"
+                    : "text-stone-700 dark:text-stone-300 hover:bg-[#f4efe6] dark:hover:bg-[#28211a] hover:text-[#3b2d24] dark:hover:text-[#f3ede4]"
                 }`}
               >
                 <User className="h-4 w-4" />
@@ -369,8 +369,8 @@ function AccountPage() {
                 onClick={() => setActiveTab("security")}
                 className={`flex shrink-0 items-center gap-2.5 rounded-2xl px-4 py-3 text-sm font-semibold tracking-wide transition ${
                   activeTab === "security"
-                    ? "bg-[#3b2d24] text-white shadow-xs"
-                    : "text-stone-700 hover:bg-[#f4efe6] hover:text-[#3b2d24]"
+                    ? "bg-[#3b2d24] dark:bg-[#c1a27c] text-white dark:text-[#1e1915] shadow-xs"
+                    : "text-stone-700 dark:text-stone-300 hover:bg-[#f4efe6] dark:hover:bg-[#28211a] hover:text-[#3b2d24] dark:hover:text-[#f3ede4]"
                 }`}
               >
                 <KeyRound className="h-4 w-4" />
@@ -386,29 +386,29 @@ function AccountPage() {
             {/* 1. ORDERS TAB */}
             {activeTab === "orders" && (
               <div className="space-y-5">
-                <div className="flex items-center justify-between border-b border-[#e8ded2] pb-4">
-                  <h2 className="font-serif text-xl font-bold text-[#3b2d24]">
+                <div className="flex items-center justify-between border-b border-[#e8ded2] dark:border-[#2d241c] pb-4">
+                  <h2 className="font-serif text-xl font-bold text-[#3b2d24] dark:text-[#f3ede4]">
                     {language === "ru" ? "История заказов" : "Buyurtmalar tarixi"}
                   </h2>
-                  <span className="text-sm text-stone-500">
+                  <span className="text-sm text-stone-500 dark:text-stone-400">
                     {orders.length} {language === "ru" ? "заказов" : "ta buyurtma"}
                   </span>
                 </div>
 
                 {orders.length === 0 ? (
-                  <div className="rounded-3xl border border-[#e8ded2] bg-white p-12 text-center shadow-xs">
-                    <Package className="mx-auto h-12 w-12 text-stone-300" />
-                    <h3 className="mt-4 font-serif text-lg font-bold text-[#3b2d24]">
+                  <div className="rounded-3xl border border-[#e8ded2] dark:border-[#2d241c] bg-white dark:bg-[#1e1915] p-12 text-center shadow-xs">
+                    <Package className="mx-auto h-12 w-12 text-stone-300 dark:text-stone-600" />
+                    <h3 className="mt-4 font-serif text-lg font-bold text-[#3b2d24] dark:text-[#f3ede4]">
                       {language === "ru" ? "У вас пока нет заказов" : "Hozircha buyurtmalar yo‘q"}
                     </h3>
-                    <p className="mt-2 text-sm text-stone-500">
+                    <p className="mt-2 text-sm text-stone-500 dark:text-stone-400">
                       {language === "ru"
                         ? "Когда вы оформите заказ, он появится на этой странице."
                         : "Siz bergan buyurtmalar ushbu bo‘limda aks etadi."}
                     </p>
                     <Link
                       to="/catalog"
-                      className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#3b2d24] px-7 py-3 text-xs font-bold tracking-wider text-white uppercase shadow-md transition hover:bg-[#534135]"
+                      className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#3b2d24] dark:bg-[#c1a27c] px-7 py-3 text-xs font-bold tracking-wider text-white dark:text-[#1e1915] uppercase shadow-md transition hover:bg-[#534135] dark:hover:bg-[#d6ba94]"
                     >
                       <span>{language === "ru" ? "В каталог" : "Katalogga o‘tish"}</span>
                       <ChevronRight className="h-4 w-4" />
@@ -420,12 +420,12 @@ function AccountPage() {
                       <Link
                         key={order.id}
                         to={`/account/orders/${order.id}`}
-                        className="group block rounded-3xl border border-[#e8ded2] bg-white p-5 shadow-xs transition hover:border-[#8a735e] hover:shadow-md sm:p-6"
+                        className="group block rounded-3xl border border-[#e8ded2] dark:border-[#2d241c] bg-white dark:bg-[#1e1915] p-5 shadow-xs transition hover:border-[#8a735e] dark:hover:border-[#c1a27c] hover:shadow-md sm:p-6"
                       >
                         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                           <div className="space-y-1.5">
                             <div className="flex items-center gap-3">
-                              <span className="font-mono text-base font-bold text-[#3b2d24]">
+                              <span className="font-mono text-base font-bold text-[#3b2d24] dark:text-[#f3ede4]">
                                 {order.order_number}
                               </span>
                               <span
@@ -437,8 +437,8 @@ function AccountPage() {
                               </span>
                             </div>
 
-                            <p className="flex items-center gap-1.5 text-sm text-stone-500">
-                              <Clock className="h-4 w-4 text-[#8a735e]" />
+                            <p className="flex items-center gap-1.5 text-sm text-stone-500 dark:text-stone-400">
+                              <Clock className="h-4 w-4 text-[#8a735e] dark:text-[#c4a98e]" />
                               <span>
                                 {new Date(order.created_at).toLocaleString(
                                   language === "ru" ? "ru-RU" : "uz-UZ",
@@ -454,17 +454,17 @@ function AccountPage() {
                             </p>
                           </div>
 
-                          <div className="flex items-center justify-between border-t border-[#e8ded2] pt-3 sm:border-0 sm:pt-0 sm:text-right">
+                          <div className="flex items-center justify-between border-t border-[#e8ded2] dark:border-[#2d241c] pt-3 sm:border-0 sm:pt-0 sm:text-right">
                             <div>
-                              <p className="text-xs font-semibold text-stone-500 uppercase tracking-wider">
+                              <p className="text-xs font-semibold text-stone-500 dark:text-stone-400 uppercase tracking-wider">
                                 {language === "ru" ? "Сумма" : "Summa"}
                               </p>
-                              <p className="font-serif text-lg font-bold text-[#3b2d24]">
+                              <p className="font-serif text-lg font-bold text-[#3b2d24] dark:text-[#c1a27c]">
                                 {Number(order.total_amount).toLocaleString("uz-UZ")} so‘m
                               </p>
                             </div>
 
-                            <span className="ml-4 flex h-9 w-9 items-center justify-center rounded-full bg-[#f4efe6] text-[#3b2d24] transition group-hover:bg-[#3b2d24] group-hover:text-white">
+                            <span className="ml-4 flex h-9 w-9 items-center justify-center rounded-full bg-[#f4efe6] dark:bg-[#28211a] text-[#3b2d24] dark:text-[#ede4d8] transition group-hover:bg-[#3b2d24] group-hover:text-white dark:group-hover:bg-[#c1a27c] dark:group-hover:text-[#1e1915]">
                               <ChevronRight className="h-4 w-4" />
                             </span>
                           </div>
@@ -479,31 +479,31 @@ function AccountPage() {
             {/* 2. FAVORITES TAB */}
             {activeTab === "favorites" && (
               <div className="space-y-5">
-                <div className="flex items-center justify-between border-b border-[#e8ded2] pb-4">
-                  <h2 className="font-serif text-xl font-bold text-[#3b2d24]">
+                <div className="flex items-center justify-between border-b border-[#e8ded2] dark:border-[#2d241c] pb-4">
+                  <h2 className="font-serif text-xl font-bold text-[#3b2d24] dark:text-[#f3ede4]">
                     {language === "ru" ? "Избранные товары" : "Sevimli mahsulotlar"}
                   </h2>
-                  <span className="text-sm text-stone-500">
+                  <span className="text-sm text-stone-500 dark:text-stone-400">
                     {favorites.length} {language === "ru" ? "товаров" : "ta mahsulot"}
                   </span>
                 </div>
 
                 {favorites.length === 0 ? (
-                  <div className="rounded-3xl border border-[#e8ded2] bg-white p-12 text-center shadow-xs">
-                    <Heart className="mx-auto h-12 w-12 text-stone-300" />
-                    <h3 className="mt-4 font-serif text-lg font-bold text-[#3b2d24]">
+                  <div className="rounded-3xl border border-[#e8ded2] dark:border-[#2d241c] bg-white dark:bg-[#1e1915] p-12 text-center shadow-xs">
+                    <Heart className="mx-auto h-12 w-12 text-stone-300 dark:text-stone-600" />
+                    <h3 className="mt-4 font-serif text-lg font-bold text-[#3b2d24] dark:text-[#f3ede4]">
                       {language === "ru"
                         ? "В избранном пока пусто"
                         : "Sevimli mahsulotlar ro‘yxati bo‘sh"}
                     </h3>
-                    <p className="mt-2 text-sm text-stone-500">
+                    <p className="mt-2 text-sm text-stone-500 dark:text-stone-400">
                       {language === "ru"
                         ? "Нажмите на сердечко у любого товара, чтобы сохранить его сюда."
                         : "Mahsulot ustidagi yurakcha tugmasini bosib, uni bu yerga saqlab qo‘yishingiz mumkin."}
                     </p>
                     <Link
                       to="/catalog"
-                      className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#3b2d24] px-7 py-3 text-xs font-bold tracking-wider text-white uppercase shadow-md transition hover:bg-[#534135]"
+                      className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#3b2d24] dark:bg-[#c1a27c] px-7 py-3 text-xs font-bold tracking-wider text-white dark:text-[#1e1915] uppercase shadow-md transition hover:bg-[#534135] dark:hover:bg-[#d6ba94]"
                     >
                       <span>{language === "ru" ? "Смотреть каталог" : "Katalogga o‘tish"}</span>
                       <ChevronRight className="h-4 w-4" />
@@ -520,12 +520,12 @@ function AccountPage() {
                       return (
                         <div
                           key={fav.id}
-                          className="group flex flex-col justify-between overflow-hidden rounded-3xl border border-[#e8ded2] bg-white p-4 shadow-xs transition hover:shadow-md hover:border-[#8a735e]"
+                          className="group flex flex-col justify-between overflow-hidden rounded-3xl border border-[#e8ded2] dark:border-[#2d241c] bg-white dark:bg-[#1e1915] p-4 shadow-xs transition hover:shadow-md hover:border-[#8a735e] dark:hover:border-[#c1a27c]"
                         >
                           <div>
                             <Link
                               to={`/products/${prod.slug}`}
-                              className="block aspect-4/5 w-full overflow-hidden rounded-2xl bg-[#faf7f2]"
+                              className="block aspect-4/5 w-full overflow-hidden rounded-2xl bg-[#faf7f2] dark:bg-[#261f1a]"
                             >
                               {primaryImg ? (
                                 <img
@@ -542,22 +542,22 @@ function AccountPage() {
 
                             <Link
                               to={`/products/${prod.slug}`}
-                              className="mt-3.5 block font-serif text-base font-bold text-[#3b2d24] hover:text-[#8a735e] transition"
+                              className="mt-3.5 block font-serif text-base font-bold text-[#3b2d24] dark:text-[#f3ede4] hover:text-[#8a735e] dark:hover:text-[#c1a27c] transition"
                             >
                               {prod.name}
                             </Link>
 
-                            <p className="mt-1.5 font-serif text-base font-semibold text-[#8a735e]">
+                            <p className="mt-1.5 font-serif text-base font-semibold text-[#8a735e] dark:text-[#c4a98e]">
                               {prod.min_price
                                 ? `${Number(prod.min_price).toLocaleString("uz-UZ")} so‘m`
                                 : "-"}
                             </p>
                           </div>
 
-                          <div className="mt-5 flex items-center justify-between border-t border-[#e8ded2] pt-3.5">
+                          <div className="mt-5 flex items-center justify-between border-t border-[#e8ded2] dark:border-[#2d241c] pt-3.5">
                             <Link
                               to={`/products/${prod.slug}`}
-                              className="text-xs font-bold tracking-wider text-[#3b2d24] uppercase hover:text-[#8a735e] transition"
+                              className="text-xs font-bold tracking-wider text-[#3b2d24] dark:text-[#ede4d8] uppercase hover:text-[#8a735e] dark:hover:text-[#c1a27c] transition"
                             >
                               {language === "ru" ? "Открыть →" : "Ko‘rish →"}
                             </Link>
@@ -565,7 +565,7 @@ function AccountPage() {
                             <button
                               type="button"
                               onClick={() => handleRemoveFavorite(prod.id)}
-                              className="flex items-center gap-1.5 text-xs font-semibold text-rose-600 hover:text-rose-700"
+                              className="flex items-center gap-1.5 text-xs font-semibold text-rose-600 dark:text-rose-400 hover:text-rose-700"
                             >
                               <Trash2 className="h-4 w-4" />
                               <span>{language === "ru" ? "Удалить" : "O‘chirish"}</span>
@@ -581,20 +581,20 @@ function AccountPage() {
 
             {/* 3. PROFILE TAB */}
             {activeTab === "profile" && (
-              <div className="rounded-3xl border border-[#e8ded2] bg-white p-6 shadow-xs sm:p-8">
-                <h2 className="font-serif text-xl font-bold text-[#3b2d24]">
+              <div className="rounded-3xl border border-[#e8ded2] dark:border-[#2d241c] bg-white dark:bg-[#1e1915] p-6 shadow-xs sm:p-8">
+                <h2 className="font-serif text-xl font-bold text-[#3b2d24] dark:text-[#f3ede4]">
                   {language === "ru" ? "Данные профиля" : "Shaxsiy ma’lumotlar"}
                 </h2>
 
                 {message && (
-                  <div className="mt-4 flex items-center gap-2 rounded-2xl bg-emerald-50 p-4 text-sm font-semibold text-emerald-800 border border-emerald-200">
-                    <Check className="h-4 w-4 text-emerald-600 shrink-0" />
+                  <div className="mt-4 flex items-center gap-2 rounded-2xl bg-emerald-50 dark:bg-emerald-950/30 p-4 text-sm font-semibold text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+                    <Check className="h-4 w-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
                     <span>{message}</span>
                   </div>
                 )}
 
                 {error && (
-                  <div className="mt-4 rounded-2xl bg-rose-50 p-4 text-sm font-semibold text-rose-800 border border-rose-200">
+                  <div className="mt-4 rounded-2xl bg-rose-50 dark:bg-rose-950/30 p-4 text-sm font-semibold text-rose-800 dark:text-rose-300 border border-rose-200 dark:border-rose-800">
                     {error}
                   </div>
                 )}
@@ -602,7 +602,7 @@ function AccountPage() {
                 <form onSubmit={saveProfile} className="mt-6 space-y-4">
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div>
-                      <label className="text-xs font-bold tracking-wider text-stone-700 uppercase">
+                      <label className="text-xs font-bold tracking-wider text-stone-700 dark:text-stone-300 uppercase">
                         {language === "ru" ? "Имя" : "Ism"}
                       </label>
                       <input
@@ -610,12 +610,12 @@ function AccountPage() {
                         name="first_name"
                         value={profile.first_name}
                         onChange={handleProfileChange}
-                        className="mt-2 w-full rounded-xl border border-[#e8ded2] bg-[#faf7f2]/60 p-3.5 text-sm text-[#3b2d24] outline-none focus:border-[#3b2d24] focus:bg-white"
+                        className="mt-2 w-full rounded-xl border border-[#e8ded2] dark:border-[#383028] bg-[#faf7f2]/60 dark:bg-[#261f1a] p-3.5 text-sm text-[#3b2d24] dark:text-[#ede4d8] outline-none focus:border-[#3b2d24] dark:focus:border-[#c1a27c] focus:bg-white dark:focus:bg-[#2d251f]"
                       />
                     </div>
 
                     <div>
-                      <label className="text-xs font-bold tracking-wider text-stone-700 uppercase">
+                      <label className="text-xs font-bold tracking-wider text-stone-700 dark:text-stone-300 uppercase">
                         {language === "ru" ? "Фамилия" : "Familiya"}
                       </label>
                       <input
@@ -623,13 +623,13 @@ function AccountPage() {
                         name="last_name"
                         value={profile.last_name}
                         onChange={handleProfileChange}
-                        className="mt-2 w-full rounded-xl border border-[#e8ded2] bg-[#faf7f2]/60 p-3.5 text-sm text-[#3b2d24] outline-none focus:border-[#3b2d24] focus:bg-white"
+                        className="mt-2 w-full rounded-xl border border-[#e8ded2] dark:border-[#383028] bg-[#faf7f2]/60 dark:bg-[#261f1a] p-3.5 text-sm text-[#3b2d24] dark:text-[#ede4d8] outline-none focus:border-[#3b2d24] dark:focus:border-[#c1a27c] focus:bg-white dark:focus:bg-[#2d251f]"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="text-xs font-bold tracking-wider text-stone-700 uppercase">
+                    <label className="text-xs font-bold tracking-wider text-stone-700 dark:text-stone-300 uppercase">
                       Email
                     </label>
                     <input
@@ -637,7 +637,7 @@ function AccountPage() {
                       name="email"
                       value={profile.email}
                       onChange={handleProfileChange}
-                      className="mt-2 w-full rounded-xl border border-[#e8ded2] bg-[#faf7f2]/60 p-3.5 text-sm text-[#3b2d24] outline-none focus:border-[#3b2d24] focus:bg-white"
+                      className="mt-2 w-full rounded-xl border border-[#e8ded2] dark:border-[#383028] bg-[#faf7f2]/60 dark:bg-[#261f1a] p-3.5 text-sm text-[#3b2d24] dark:text-[#ede4d8] outline-none focus:border-[#3b2d24] dark:focus:border-[#c1a27c] focus:bg-white dark:focus:bg-[#2d251f]"
                     />
                   </div>
 
@@ -645,7 +645,7 @@ function AccountPage() {
                     <button
                       type="submit"
                       disabled={saving}
-                      className="rounded-full bg-[#3b2d24] px-8 py-3.5 text-xs font-bold tracking-wider text-white uppercase shadow-md transition hover:bg-[#534135] disabled:opacity-50"
+                      className="rounded-full bg-[#3b2d24] dark:bg-[#c1a27c] px-8 py-3.5 text-xs font-bold tracking-wider text-white dark:text-[#1e1915] uppercase shadow-md transition hover:bg-[#534135] dark:hover:bg-[#d6ba94] disabled:opacity-50"
                     >
                       {saving
                         ? language === "ru"
@@ -662,27 +662,27 @@ function AccountPage() {
 
             {/* 4. SECURITY TAB */}
             {activeTab === "security" && (
-              <div className="rounded-3xl border border-[#e8ded2] bg-white p-6 shadow-xs sm:p-8">
-                <h2 className="font-serif text-xl font-bold text-[#3b2d24]">
+              <div className="rounded-3xl border border-[#e8ded2] dark:border-[#2d241c] bg-white dark:bg-[#1e1915] p-6 shadow-xs sm:p-8">
+                <h2 className="font-serif text-xl font-bold text-[#3b2d24] dark:text-[#f3ede4]">
                   {language === "ru" ? "Смена пароля" : "Parolni o‘zgartirish"}
                 </h2>
 
                 {passwordMessage && (
-                  <div className="mt-4 flex items-center gap-2 rounded-2xl bg-emerald-50 p-4 text-sm font-semibold text-emerald-800 border border-emerald-200">
-                    <Check className="h-4 w-4 text-emerald-600 shrink-0" />
+                  <div className="mt-4 flex items-center gap-2 rounded-2xl bg-emerald-50 dark:bg-emerald-950/30 p-4 text-sm font-semibold text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+                    <Check className="h-4 w-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
                     <span>{passwordMessage}</span>
                   </div>
                 )}
 
                 {passwordError && (
-                  <div className="mt-4 rounded-2xl bg-rose-50 p-4 text-sm font-semibold text-rose-800 border border-rose-200">
+                  <div className="mt-4 rounded-2xl bg-rose-50 dark:bg-rose-950/30 p-4 text-sm font-semibold text-rose-800 dark:text-rose-300 border border-rose-200 dark:border-rose-800">
                     {passwordError}
                   </div>
                 )}
 
                 <form onSubmit={changePassword} className="mt-6 space-y-4 max-w-lg">
                   <div>
-                    <label className="text-xs font-bold tracking-wider text-stone-700 uppercase">
+                    <label className="text-xs font-bold tracking-wider text-stone-700 dark:text-stone-300 uppercase">
                       {language === "ru" ? "Текущий пароль" : "Amaldagi parol"}
                     </label>
                     <div className="mt-2">
@@ -692,13 +692,13 @@ function AccountPage() {
                         required
                         value={passwordForm.old_password}
                         onChange={handlePasswordChange}
-                        className="w-full rounded-xl border border-[#e8ded2] bg-[#faf7f2]/60 p-3.5 text-sm text-[#3b2d24] outline-none focus:border-[#3b2d24] focus:bg-white"
+                        className="w-full rounded-xl border border-[#e8ded2] dark:border-[#383028] bg-[#faf7f2]/60 dark:bg-[#261f1a] p-3.5 text-sm text-[#3b2d24] dark:text-[#ede4d8] outline-none focus:border-[#3b2d24] dark:focus:border-[#c1a27c] focus:bg-white dark:focus:bg-[#2d251f]"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="text-xs font-bold tracking-wider text-stone-700 uppercase">
+                    <label className="text-xs font-bold tracking-wider text-stone-700 dark:text-stone-300 uppercase">
                       {language === "ru" ? "Новый пароль" : "Yangi parol"}
                     </label>
                     <div className="mt-2">
@@ -708,13 +708,13 @@ function AccountPage() {
                         required
                         value={passwordForm.new_password}
                         onChange={handlePasswordChange}
-                        className="w-full rounded-xl border border-[#e8ded2] bg-[#faf7f2]/60 p-3.5 text-sm text-[#3b2d24] outline-none focus:border-[#3b2d24] focus:bg-white"
+                        className="w-full rounded-xl border border-[#e8ded2] dark:border-[#383028] bg-[#faf7f2]/60 dark:bg-[#261f1a] p-3.5 text-sm text-[#3b2d24] dark:text-[#ede4d8] outline-none focus:border-[#3b2d24] dark:focus:border-[#c1a27c] focus:bg-white dark:focus:bg-[#2d251f]"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="text-xs font-bold tracking-wider text-stone-700 uppercase">
+                    <label className="text-xs font-bold tracking-wider text-stone-700 dark:text-stone-300 uppercase">
                       {language === "ru" ? "Подтвердите новый пароль" : "Yangi parolni tasdiqlang"}
                     </label>
                     <div className="mt-2">
@@ -724,7 +724,7 @@ function AccountPage() {
                         required
                         value={passwordForm.new_password_confirm}
                         onChange={handlePasswordChange}
-                        className="w-full rounded-xl border border-[#e8ded2] bg-[#faf7f2]/60 p-3.5 text-sm text-[#3b2d24] outline-none focus:border-[#3b2d24] focus:bg-white"
+                        className="w-full rounded-xl border border-[#e8ded2] dark:border-[#383028] bg-[#faf7f2]/60 dark:bg-[#261f1a] p-3.5 text-sm text-[#3b2d24] dark:text-[#ede4d8] outline-none focus:border-[#3b2d24] dark:focus:border-[#c1a27c] focus:bg-white dark:focus:bg-[#2d251f]"
                       />
                     </div>
                   </div>
@@ -733,7 +733,7 @@ function AccountPage() {
                     <button
                       type="submit"
                       disabled={changingPassword}
-                      className="rounded-full bg-[#3b2d24] px-8 py-3.5 text-xs font-bold tracking-wider text-white uppercase shadow-md transition hover:bg-[#534135] disabled:opacity-50"
+                      className="rounded-full bg-[#3b2d24] dark:bg-[#c1a27c] px-8 py-3.5 text-xs font-bold tracking-wider text-white dark:text-[#1e1915] uppercase shadow-md transition hover:bg-[#534135] dark:hover:bg-[#d6ba94] disabled:opacity-50"
                     >
                       {changingPassword
                         ? language === "ru"

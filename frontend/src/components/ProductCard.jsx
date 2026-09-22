@@ -59,13 +59,13 @@ function ProductCard({ product }) {
     : [];
 
   return (
-    <article className="group relative flex flex-col overflow-hidden rounded-2xl sm:rounded-3xl border border-[#ebdcca] bg-white shadow-xs transition-all duration-300 hover:-translate-y-1 hover:border-[#8a735e]/50 hover:shadow-xl">
+    <article className="group relative flex flex-col overflow-hidden rounded-2xl sm:rounded-3xl border border-[#ebdcca] dark:border-[#2d241c] bg-white dark:bg-[#1e1915] shadow-xs transition-all duration-300 hover:-translate-y-1 hover:border-[#8a735e]/50 dark:hover:border-[#c1a27c]/50 hover:shadow-xl">
       
       {/* BADGES & FAVORITE BUTTON */}
       <div className="absolute inset-x-3 top-3 z-10 flex items-center justify-between sm:inset-x-4 sm:top-4">
         {product.is_featured ? (
-          <span className="inline-flex items-center gap-1 rounded-full bg-[#3b2d24]/90 px-3 py-1 text-xs font-semibold tracking-wider text-white backdrop-blur-xs shadow-xs">
-            <Sparkles className="h-3.5 w-3.5 text-[#c1a27c]" />
+          <span className="inline-flex items-center gap-1 rounded-full bg-[#3b2d24]/90 dark:bg-[#c1a27c]/90 px-3 py-1 text-xs font-semibold tracking-wider text-white dark:text-[#1e1915] backdrop-blur-xs shadow-xs">
+            <Sparkles className="h-3.5 w-3.5 text-[#c1a27c] dark:text-[#1e1915]" />
             <span>{language === "ru" ? "Хит продаж" : "Tanlangan"}</span>
           </span>
         ) : (
@@ -84,10 +84,10 @@ function ProductCard({ product }) {
                 ? "Добавить в избранное"
                 : "Sevimliga qo‘shish"
           }
-          className={`flex h-10 w-10 items-center justify-center rounded-full border border-[#d8c8b4] bg-white/95 shadow-xs backdrop-blur-xs transition duration-200 hover:scale-110 active:scale-95 ${
+          className={`flex h-10 w-10 items-center justify-center rounded-full border border-[#d8c8b4] dark:border-[#383028] bg-white/95 dark:bg-[#1e1915]/95 shadow-xs backdrop-blur-xs transition duration-200 hover:scale-110 active:scale-95 ${
             favorite
-              ? "text-rose-500 shadow-rose-100"
-              : "text-[#7a6758] hover:text-rose-500"
+              ? "text-rose-500 shadow-rose-100 dark:shadow-rose-950/50"
+              : "text-[#7a6758] dark:text-[#c4a98e] hover:text-rose-500"
           }`}
         >
           <Heart
@@ -103,7 +103,7 @@ function ProductCard({ product }) {
         to={`/products/${product.slug}`}
         className="flex flex-1 flex-col"
       >
-        <div className="relative aspect-4/5 w-full overflow-hidden bg-[#f4efe6]">
+        <div className="relative aspect-4/5 w-full overflow-hidden bg-[#f4efe6] dark:bg-[#261f1a]">
           {primaryImage ? (
             <>
               <img
@@ -122,7 +122,7 @@ function ProductCard({ product }) {
               )}
             </>
           ) : (
-            <div className="flex h-full items-center justify-center text-sm text-[#8a735e]">
+            <div className="flex h-full items-center justify-center text-sm text-[#8a735e] dark:text-[#c4a98e]">
               {language === "ru" ? "Нет изображения" : "Rasm mavjud emas"}
             </div>
           )}
@@ -133,7 +133,7 @@ function ProductCard({ product }) {
           <div>
             {/* CATEGORY & VARIANTS */}
             <div className="flex items-center justify-between gap-2">
-              <span className="text-xs font-bold tracking-wider text-[#8a735e] uppercase">
+              <span className="text-xs font-bold tracking-wider text-[#8a735e] dark:text-[#c4a98e] uppercase">
                 {product.category?.name || "Velmora"}
               </span>
 
@@ -143,7 +143,7 @@ function ProductCard({ product }) {
                   {uniqueColors.map((color, index) => (
                     <span
                       key={index}
-                      className="h-3 w-3 rounded-full border border-white shadow-xs"
+                      className="h-3 w-3 rounded-full border border-white dark:border-[#1e1915] shadow-xs"
                       style={{
                         backgroundColor:
                           color.toLowerCase().includes("beige") ||
@@ -168,18 +168,18 @@ function ProductCard({ product }) {
             </div>
 
             {/* TITLE */}
-            <h3 className="mt-1.5 line-clamp-2 text-base sm:text-lg font-bold tracking-tight text-[#3b2d24] transition-colors group-hover:text-[#8a735e]">
+            <h3 className="mt-1.5 line-clamp-2 text-base sm:text-lg font-bold tracking-tight text-[#3b2d24] dark:text-[#f3ede4] transition-colors group-hover:text-[#8a735e] dark:group-hover:text-[#c1a27c]">
               {product.name}
             </h3>
           </div>
 
           {/* PRICE & ACTION */}
-          <div className="mt-4 flex items-baseline justify-between border-t border-[#f4efe6] pt-3">
+          <div className="mt-4 flex items-baseline justify-between border-t border-[#f4efe6] dark:border-[#2d241c] pt-3">
             <div>
-              <p className="text-xs font-medium text-[#8a735e]">
+              <p className="text-xs font-medium text-[#8a735e] dark:text-[#c4a98e]">
                 {language === "ru" ? "от" : "dan"}
               </p>
-              <p className="text-base sm:text-xl font-bold text-[#3b2d24]">
+              <p className="text-base sm:text-xl font-bold text-[#3b2d24] dark:text-[#c1a27c]">
                 {product.min_price
                   ? `${Number(product.min_price).toLocaleString("uz-UZ")} so‘m`
                   : language === "ru"
@@ -188,7 +188,7 @@ function ProductCard({ product }) {
               </p>
             </div>
 
-            <span className="text-xs sm:text-sm font-bold text-[#8a735e] transition group-hover:translate-x-0.5 group-hover:text-[#3b2d24]">
+            <span className="text-xs sm:text-sm font-bold text-[#8a735e] dark:text-[#c4a98e] transition group-hover:translate-x-0.5 group-hover:text-[#3b2d24] dark:group-hover:text-[#f3ede4]">
               {language === "ru" ? "Подробнее →" : "Batafsil →"}
             </span>
           </div>

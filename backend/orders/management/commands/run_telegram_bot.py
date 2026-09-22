@@ -248,8 +248,9 @@ async def start_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         f"<b>Velmora</b> rasmiy savdo botiga xush kelibsiz! ✨\n\n"
         f"Biz tabiiy va yuqori sifatli matolardan tayyorlangan choyshab to‘plamlari, yozgi va qishgi ko‘rpa to‘plamlari, matraslar hamda yostiq jildlarini ishlab chiqaramiz.\n\n"
         f"🛍 Mahsulotlarimiz bilan tanishish va buyurtma berish uchun saytimizga o‘ting:\n"
-        f"🌐 <b>Sayt:</b> <a href=\"http://localhost:5173\">velmora.uz</a>\n"
-        f"📞 <b>Aloqa:</b> +998930791734\n"
+        f"🌐 <b>Sayt:</b> <a href=\"https://velmora-ecommerce-chi.vercel.app\">velmora-ecommerce-chi.vercel.app</a>\n"
+        f"📞 <b>Asosiy aloqa:</b> +998911652211\n"
+        f"📞 <b>Qo‘shimcha aloqa:</b> +998930791734\n"
         f"💬 <b>Telegram:</b> @velmoramahsulotlari"
     )
     await update.message.reply_text(text, parse_mode="HTML")

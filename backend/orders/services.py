@@ -20,12 +20,22 @@ def create_order(
     validated_data,
     idempotency_key,
 ):
+    actual_user = user if (user and getattr(user, "is_authenticated", False)) else None
+    if not actual_user:
+        from django.contrib.auth import get_user_model
+        UserModel = get_user_model()
+        phone_num = validated_data.get("phone", "").strip()
+        if phone_num:
+            actual_user = UserModel.objects.filter(phone=phone_num).first()
+
+    current_user_id = actual_user.id if actual_user else None
+
     existing_order = Order.objects.filter(
         idempotency_key=idempotency_key
     ).first()
 
     if existing_order:
-        if existing_order.user_id != user.id:
+        if existing_order.user_id != current_user_id:
             raise ValidationError(
                 "Idempotency key boshqa buyurtmaga tegishli."
             )
@@ -64,7 +74,7 @@ def create_order(
     ).first()
 
     if existing_order:
-        if existing_order.user_id != user.id:
+        if existing_order.user_id != current_user_id:
             raise ValidationError(
                 "Idempotency key boshqa buyurtmaga tegishli."
             )
@@ -137,7 +147,7 @@ def create_order(
         )
 
     order = Order.objects.create(
-        user=user,
+        user=actual_user,
 
         recipient_name=validated_data[
             "recipient_name"

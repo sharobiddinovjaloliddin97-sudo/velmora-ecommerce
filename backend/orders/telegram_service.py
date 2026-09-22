@@ -129,7 +129,7 @@ def notify_user_status_changed(order, new_status: str):
         f"<b>{title}</b>\n\n"
         f"📦 Buyurtma raqami: <code>{order.order_number}</code>\n"
         f"{desc}\n\n"
-        f"Savollaringiz bo‘lsa: @velmoramahsulotlari yoki +998930791734"
+        f"Savollaringiz bo‘lsa: @velmoramahsulotlari yoki +998911652211 (asosiy), +998930791734 (qo‘shimcha)"
     )
 
     send_message(chat_id=order.telegram_user_id, text=text)
@@ -244,8 +244,17 @@ def create_order_from_session_sync(session):
         if session.latitude and session.longitude:
             location_url = f"https://maps.google.com/?q={session.latitude},{session.longitude}"
 
+        target_user = session.user
+        if not target_user and session.phone:
+            from django.contrib.auth import get_user_model
+            UserModel = get_user_model()
+            clean_phone = session.phone.strip()
+            digits = "".join(filter(str.isdigit, clean_phone))
+            if len(digits) >= 9:
+                target_user = UserModel.objects.filter(phone__icontains=digits[-9:]).first()
+
         order = Order.objects.create(
-            user=None,
+            user=target_user,
             recipient_name=session.recipient_name or "Telegram Mijoz",
             phone=session.phone or "-",
             city="Toshkent",
@@ -379,8 +388,9 @@ def process_webhook_update(update: dict):
                 f"<b>Velmora</b> rasmiy savdo botiga xush kelibsiz! ✨\n\n"
                 f"Biz tabiiy va yuqori sifatli matolardan tayyorlangan choyshab to‘plamlari, yozgi va qishgi ko‘rpa to‘plamlari, matraslar hamda yostiq jildlarini ishlab chiqaramiz.\n\n"
                 f"🛍 Mahsulotlarimiz bilan tanishish va buyurtma berish uchun saytimizga o‘ting:\n"
-                f"🌐 <b>Sayt:</b> <a href=\"https://velmora-ecommerce-chi.vercel.app\">velmora.uz</a>\n"
-                f"📞 <b>Aloqa:</b> +998930791734\n"
+                f"🌐 <b>Sayt:</b> <a href=\"https://velmora-ecommerce-chi.vercel.app\">velmora-ecommerce-chi.vercel.app</a>\n"
+                f"📞 <b>Asosiy aloqa:</b> +998911652211\n"
+                f"📞 <b>Qo‘shimcha aloqa:</b> +998930791734\n"
                 f"💬 <b>Telegram:</b> @velmoramahsulotlari"
             )
             send_message(chat_id, text_gen)

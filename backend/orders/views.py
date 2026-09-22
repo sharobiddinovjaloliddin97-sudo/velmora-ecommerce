@@ -21,9 +21,15 @@ class OrderListView(ListAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
+        from django.db.models import Q
+        user = self.request.user
+        q = Q(user=user)
+        user_phone = getattr(user, "phone", None)
+        if user_phone:
+            q |= Q(phone=user_phone)
         return (
             Order.objects
-            .filter(user=self.request.user)
+            .filter(q)
             .prefetch_related("items")
             .order_by("-created_at")
         )
@@ -34,14 +40,20 @@ class OrderDetailView(RetrieveAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
+        from django.db.models import Q
+        user = self.request.user
+        q = Q(user=user)
+        user_phone = getattr(user, "phone", None)
+        if user_phone:
+            q |= Q(phone=user_phone)
         return (
             Order.objects
-            .filter(user=self.request.user)
+            .filter(q)
             .prefetch_related("items")
         )
 
 class CheckoutView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = []
 
     @extend_schema(
         request=CheckoutSerializer,
@@ -63,8 +75,11 @@ class CheckoutView(APIView):
         ],
     )
     def post(self, request):
-        idempotency_key = request.headers.get(
-            "Idempotency-Key"
+        idempotency_key = (
+            request.headers.get("Idempotency-Key")
+            or request.headers.get("X-Idempotency-Key")
+            or request.META.get("HTTP_IDEMPOTENCY_KEY")
+            or request.META.get("HTTP_X_IDEMPOTENCY_KEY")
         )
 
         if not idempotency_key:
@@ -96,8 +111,10 @@ class CheckoutView(APIView):
             raise_exception=True
         )
 
+        user = request.user if (request.user and request.user.is_authenticated) else None
+
         order, created = create_order(
-            user=request.user,
+            user=user,
             validated_data=dict(
                 serializer.validated_data
             ),
@@ -187,8 +204,10 @@ class CreateTelegramSessionView(APIView):
             })
 
         session_code = uuid.uuid4().hex[:12]
+        session_user = request.user if (request.user and request.user.is_authenticated) else None
         session = TelegramCheckoutSession.objects.create(
             session_code=session_code,
+            user=session_user,
             items_data=validated_items,
             total_amount=total_amount,
         )

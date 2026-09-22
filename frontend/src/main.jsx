@@ -19,6 +19,10 @@ import {
   LanguageProvider,
 } from "./context/LanguageContext";
 
+import {
+  ThemeProvider,
+} from "./context/ThemeContext";
+
 
 createRoot(
   document.getElementById("root")
@@ -26,21 +30,25 @@ createRoot(
   <StrictMode>
     <BrowserRouter>
 
-      <LanguageProvider>
+      <ThemeProvider>
 
-        <AuthProvider>
+        <LanguageProvider>
 
-          <FavoritesProvider>
+          <AuthProvider>
 
-            <App />
+            <FavoritesProvider>
 
-            <Analytics />
+              <App />
 
-          </FavoritesProvider>
+              <Analytics />
 
-        </AuthProvider>
+            </FavoritesProvider>
 
-      </LanguageProvider>
+          </AuthProvider>
+
+        </LanguageProvider>
+
+      </ThemeProvider>
 
     </BrowserRouter>
   </StrictMode>

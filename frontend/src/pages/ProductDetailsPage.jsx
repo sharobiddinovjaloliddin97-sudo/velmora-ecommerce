@@ -252,32 +252,32 @@ function ProductDetailsPage() {
   if (!product) return null;
 
   return (
-    <div className="bg-[#faf7f2] pb-24 text-[#2d241e]">
+    <div className="bg-[#faf7f2] dark:bg-[#141210] pb-24 text-[#2d241e] dark:text-[#ede4d8] transition-colors duration-300">
       {/* ========================= */}
       {/* BREADCRUMB NAVIGATION */}
       {/* ========================= */}
-      <nav className="border-b border-[#ebdcca] bg-white/60 backdrop-blur-xs">
-        <div className="mx-auto flex max-w-7xl items-center gap-2 px-4 py-3.5 text-xs sm:text-sm text-[#7a6758] sm:px-6">
-          <Link to="/" className="transition hover:text-[#3b2d24]">
+      <nav className="border-b border-[#ebdcca] dark:border-[#2d241c] bg-white/60 dark:bg-[#1e1915]/60 backdrop-blur-xs">
+        <div className="mx-auto flex max-w-7xl items-center gap-2 px-4 py-3.5 text-xs sm:text-sm text-[#7a6758] dark:text-stone-400 sm:px-6">
+          <Link to="/" className="transition hover:text-[#3b2d24] dark:hover:text-[#f3ede4]">
             {language === "ru" ? "Главная" : "Bosh sahifa"}
           </Link>
-          <ChevronRight className="h-3.5 w-3.5 text-stone-400" />
-          <Link to="/catalog" className="transition hover:text-[#3b2d24]">
+          <ChevronRight className="h-3.5 w-3.5 text-stone-400 dark:text-stone-600" />
+          <Link to="/catalog" className="transition hover:text-[#3b2d24] dark:hover:text-[#f3ede4]">
             {language === "ru" ? "Каталог" : "Katalog"}
           </Link>
           {product.category && (
             <>
-              <ChevronRight className="h-3.5 w-3.5 text-stone-400" />
+              <ChevronRight className="h-3.5 w-3.5 text-stone-400 dark:text-stone-600" />
               <Link
                 to={`/catalog?category=${product.category.slug}`}
-                className="transition hover:text-[#3b2d24]"
+                className="transition hover:text-[#3b2d24] dark:hover:text-[#f3ede4]"
               >
                 {product.category.name}
               </Link>
             </>
           )}
-          <ChevronRight className="h-3.5 w-3.5 text-stone-400" />
-          <span className="max-w-[180px] truncate font-semibold text-[#3b2d24] sm:max-w-xs">
+          <ChevronRight className="h-3.5 w-3.5 text-stone-400 dark:text-stone-600" />
+          <span className="max-w-[180px] truncate font-semibold text-[#3b2d24] dark:text-[#f3ede4] sm:max-w-xs">
             {product.name}
           </span>
         </div>
@@ -292,7 +292,7 @@ function ProductDetailsPage() {
           <div className="lg:col-span-7">
             <div className="sticky top-24 space-y-4">
               {/* PRIMARY MAIN IMAGE */}
-              <div className="relative aspect-4/5 overflow-hidden rounded-3xl border border-[#ebdcca] bg-[#f4efe6] shadow-xs sm:rounded-[36px]">
+              <div className="relative aspect-4/5 overflow-hidden rounded-3xl border border-[#ebdcca] dark:border-[#2d241c] bg-[#f4efe6] dark:bg-[#1e1915] shadow-xs sm:rounded-[36px]">
                 {selectedImage ? (
                   <img
                     src={selectedImage}
@@ -300,15 +300,15 @@ function ProductDetailsPage() {
                     className="h-full w-full object-cover transition-all duration-500"
                   />
                 ) : (
-                  <div className="flex h-full items-center justify-center text-sm text-[#8a735e]">
+                  <div className="flex h-full items-center justify-center text-sm text-[#8a735e] dark:text-[#c4a98e]">
                     {language === "ru" ? "Нет изображения" : "Rasm mavjud emas"}
                   </div>
                 )}
 
                 {/* FEATURED BADGE */}
                 {product.is_featured && (
-                  <span className="absolute top-4 left-4 inline-flex items-center gap-1.5 rounded-full bg-[#3b2d24]/90 px-3.5 py-1.5 text-xs font-semibold tracking-wider text-white backdrop-blur-xs shadow-xs">
-                    <Sparkles className="h-3.5 w-3.5 text-[#c1a27c]" />
+                  <span className="absolute top-4 left-4 inline-flex items-center gap-1.5 rounded-full bg-[#3b2d24]/90 dark:bg-[#c1a27c]/90 px-3.5 py-1.5 text-xs font-semibold tracking-wider text-white dark:text-[#1e1915] backdrop-blur-xs shadow-xs">
+                    <Sparkles className="h-3.5 w-3.5 text-[#c1a27c] dark:text-[#1e1915]" />
                     <span>{language === "ru" ? "Хит продаж" : "Tanlangan tovar"}</span>
                   </span>
                 )}
@@ -326,8 +326,8 @@ function ProductDetailsPage() {
                         onClick={() => setSelectedImage(img.image)}
                         className={`aspect-square overflow-hidden rounded-2xl border-2 transition duration-200 ${
                           isCurrent
-                            ? "border-[#3b2d24] ring-2 ring-[#8a735e]/25"
-                            : "border-[#ebdcca] opacity-75 hover:opacity-100"
+                            ? "border-[#3b2d24] dark:border-[#c1a27c] ring-2 ring-[#8a735e]/25 dark:ring-[#c1a27c]/25"
+                            : "border-[#ebdcca] dark:border-[#2d241c] opacity-75 hover:opacity-100"
                         }`}
                       >
                         <img
@@ -347,12 +347,12 @@ function ProductDetailsPage() {
           <div className="space-y-6 lg:col-span-5">
             {/* CATEGORY & TITLE */}
             <div>
-              <span className="text-xs sm:text-sm font-bold tracking-[0.25em] text-[#8a735e] uppercase">
+              <span className="text-xs sm:text-sm font-bold tracking-[0.25em] text-[#8a735e] dark:text-[#c4a98e] uppercase">
                 {product.category?.name || "Velmora"}
               </span>
 
               <div className="mt-2 flex items-start justify-between gap-4">
-                <h1 className="font-serif text-3xl sm:text-4xl font-bold tracking-tight text-[#3b2d24]">
+                <h1 className="font-serif text-3xl sm:text-4xl font-bold tracking-tight text-[#3b2d24] dark:text-[#f3ede4]">
                   {product.name}
                 </h1>
 
@@ -360,8 +360,8 @@ function ProductDetailsPage() {
                   type="button"
                   onClick={handleFavorite}
                   aria-label={favorite ? "Удалить из избранного" : "Добавить в избранное"}
-                  className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-[#d8c8b4] bg-white shadow-xs transition hover:scale-110 active:scale-95 ${
-                    favorite ? "text-rose-500 shadow-rose-100" : "text-[#7a6758] hover:text-rose-500"
+                  className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-[#d8c8b4] dark:border-[#383028] bg-white dark:bg-[#1e1915] shadow-xs transition hover:scale-110 active:scale-95 ${
+                    favorite ? "text-rose-500 shadow-rose-100 dark:shadow-rose-950/50" : "text-[#7a6758] dark:text-[#c4a98e] hover:text-rose-500"
                   }`}
                 >
                   <Heart
@@ -374,12 +374,12 @@ function ProductDetailsPage() {
             </div>
 
             {/* PRICE */}
-            <div className="rounded-3xl border border-[#ebdcca] bg-white p-6 shadow-xs">
-              <span className="text-xs sm:text-sm font-medium text-[#7a6758]">
+            <div className="rounded-3xl border border-[#ebdcca] dark:border-[#2d241c] bg-white dark:bg-[#1e1915] p-6 shadow-xs">
+              <span className="text-xs sm:text-sm font-medium text-[#7a6758] dark:text-stone-400">
                 {language === "ru" ? "Стоимость" : "Narxi"}
               </span>
               <div className="mt-1 flex items-baseline gap-3">
-                <span className="font-serif text-3xl sm:text-4xl font-bold text-[#3b2d24]">
+                <span className="font-serif text-3xl sm:text-4xl font-bold text-[#3b2d24] dark:text-[#c1a27c]">
                   {selectedVariant
                     ? `${Number(selectedVariant.price).toLocaleString("uz-UZ")} so‘m`
                     : product.min_price
@@ -393,14 +393,14 @@ function ProductDetailsPage() {
               {/* STOCK BADGE */}
               <div className="mt-2.5 flex items-center gap-2">
                 {selectedVariant && selectedVariant.stock > 0 ? (
-                  <span className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1 text-xs sm:text-sm font-bold text-emerald-800 border border-emerald-200">
+                  <span className="inline-flex items-center gap-2 rounded-full bg-emerald-50 dark:bg-emerald-950/30 px-3 py-1 text-xs sm:text-sm font-bold text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
                     <span className="h-2 w-2 rounded-full bg-emerald-600" />
                     {language === "ru"
                       ? `В наличии: ${selectedVariant.stock} шт.`
                       : `Omborda mavjud: ${selectedVariant.stock} dona`}
                   </span>
                 ) : (
-                  <span className="inline-flex items-center gap-2 rounded-full bg-rose-50 px-3 py-1 text-xs sm:text-sm font-bold text-rose-800 border border-rose-200">
+                  <span className="inline-flex items-center gap-2 rounded-full bg-rose-50 dark:bg-rose-950/30 px-3 py-1 text-xs sm:text-sm font-bold text-rose-800 dark:text-rose-300 border border-rose-200 dark:border-rose-800">
                     <span className="h-2 w-2 rounded-full bg-rose-600" />
                     {language === "ru" ? "Нет в наличии" : "Hozircha omborda yo‘q"}
                   </span>
@@ -410,7 +410,7 @@ function ProductDetailsPage() {
 
             {/* DESCRIPTION */}
             {product.description && (
-              <p className="text-base sm:text-lg leading-relaxed text-[#5c4a3d]">
+              <p className="text-base sm:text-lg leading-relaxed text-[#5c4a3d] dark:text-[#b8a99a]">
                 {product.description}
               </p>
             )}
@@ -418,7 +418,7 @@ function ProductDetailsPage() {
             {/* VARIANTS PICKER */}
             {product.variants && product.variants.length > 0 && (
               <div className="space-y-3">
-                <label className="text-xs sm:text-sm font-bold tracking-wider text-[#3b2d24] uppercase">
+                <label className="text-xs sm:text-sm font-bold tracking-wider text-[#3b2d24] dark:text-[#f3ede4] uppercase">
                   {language === "ru" ? "Выберите вариант (Цвет / Размер)" : "Variantni tanlang (Rang / O‘lcham)"}
                 </label>
 
@@ -439,23 +439,23 @@ function ProductDetailsPage() {
                         }}
                         className={`flex items-center justify-between rounded-2xl border p-4 text-left transition-all ${
                           isSelected
-                            ? "border-[#3b2d24] bg-[#8a735e]/10 shadow-xs ring-1 ring-[#3b2d24]"
+                            ? "border-[#3b2d24] dark:border-[#c1a27c] bg-[#8a735e]/10 dark:bg-[#c1a27c]/15 shadow-xs ring-1 ring-[#3b2d24] dark:ring-[#c1a27c]"
                             : isOutOfStock
-                              ? "border-[#ebdcca] bg-stone-100/60 opacity-50 cursor-not-allowed"
-                              : "border-[#d6c6b3] bg-white hover:border-[#8a735e]"
+                              ? "border-[#ebdcca] dark:border-[#2d241c] bg-stone-100/60 dark:bg-stone-900/40 opacity-50 cursor-not-allowed"
+                              : "border-[#d6c6b3] dark:border-[#383028] bg-white dark:bg-[#1e1915] hover:border-[#8a735e] dark:hover:border-[#c1a27c]"
                         }`}
                       >
                         <div className="min-w-0">
-                          <p className="text-sm font-bold text-[#3b2d24]">
+                          <p className="text-sm font-bold text-[#3b2d24] dark:text-[#f3ede4]">
                             {variant.color} • {variant.size}
                           </p>
-                          <p className="mt-0.5 text-xs sm:text-sm font-semibold text-[#8a735e]">
+                          <p className="mt-0.5 text-xs sm:text-sm font-semibold text-[#8a735e] dark:text-[#c4a98e]">
                             {Number(variant.price).toLocaleString("uz-UZ")} so‘m
                           </p>
                         </div>
 
                         {isSelected && (
-                          <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#3b2d24] text-white">
+                          <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#3b2d24] dark:bg-[#c1a27c] text-white dark:text-[#1e1915]">
                             <Check className="h-3.5 w-3.5" />
                           </span>
                         )}
@@ -475,17 +475,17 @@ function ProductDetailsPage() {
             <div className="space-y-3 pt-2">
               <div className="flex items-center gap-4">
                 {/* STEPPER COUNTER */}
-                <div className="flex h-14 items-center rounded-full border border-[#d6c6b3] bg-white p-1.5 shadow-xs">
+                <div className="flex h-14 items-center rounded-full border border-[#d6c6b3] dark:border-[#383028] bg-white dark:bg-[#1e1915] p-1.5 shadow-xs">
                   <button
                     type="button"
                     onClick={decrementQty}
                     disabled={quantity <= 1}
-                    className="flex h-11 w-11 items-center justify-center rounded-full text-[#3b2d24] transition hover:bg-[#f4efe6] disabled:opacity-30"
+                    className="flex h-11 w-11 items-center justify-center rounded-full text-[#3b2d24] dark:text-[#ede4d8] transition hover:bg-[#f4efe6] dark:hover:bg-[#28211a] disabled:opacity-30"
                   >
                     <Minus className="h-5 w-5" />
                   </button>
 
-                  <span className="w-12 text-center font-serif text-lg font-bold text-[#3b2d24]">
+                  <span className="w-12 text-center font-serif text-lg font-bold text-[#3b2d24] dark:text-[#f3ede4]">
                     {quantity}
                   </span>
 
@@ -493,7 +493,7 @@ function ProductDetailsPage() {
                     type="button"
                     onClick={incrementQty}
                     disabled={!selectedVariant || quantity >= selectedVariant.stock}
-                    className="flex h-11 w-11 items-center justify-center rounded-full text-[#3b2d24] transition hover:bg-[#f4efe6] disabled:opacity-30"
+                    className="flex h-11 w-11 items-center justify-center rounded-full text-[#3b2d24] dark:text-[#ede4d8] transition hover:bg-[#f4efe6] dark:hover:bg-[#28211a] disabled:opacity-30"
                   >
                     <Plus className="h-5 w-5" />
                   </button>
@@ -504,7 +504,7 @@ function ProductDetailsPage() {
                   type="button"
                   onClick={handleAddToCart}
                   disabled={!selectedVariant || selectedVariant.stock <= 0}
-                  className="flex flex-1 items-center justify-center gap-2.5 rounded-full bg-[#3b2d24] px-8 py-4 text-base font-semibold tracking-wide text-white shadow-lg transition-all hover:bg-[#271f19] hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-40 cursor-pointer"
+                  className="flex flex-1 items-center justify-center gap-2.5 rounded-full bg-[#3b2d24] dark:bg-[#c1a27c] px-8 py-4 text-base font-semibold tracking-wide text-white dark:text-[#1e1915] shadow-lg transition-all hover:bg-[#271f19] dark:hover:bg-[#d6ba94] hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-40 cursor-pointer"
                 >
                   <ShoppingBag className="h-5 w-5" />
                   <span>
@@ -530,9 +530,9 @@ function ProductDetailsPage() {
 
               {/* FEEDBACK NOTIFICATION */}
               {successToast && (
-                <div className="flex items-center justify-between rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm font-semibold text-emerald-900 shadow-xs animate-in fade-in slide-in-from-top-2">
+                <div className="flex items-center justify-between rounded-2xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/30 p-4 text-sm font-semibold text-emerald-900 dark:text-emerald-300 shadow-xs animate-in fade-in slide-in-from-top-2">
                   <div className="flex items-center gap-2.5">
-                    <Check className="h-5 w-5 text-emerald-600" />
+                    <Check className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
                     <span>
                       {language === "ru"
                         ? "Товар успешно добавлен в корзину!"
@@ -541,7 +541,7 @@ function ProductDetailsPage() {
                   </div>
                   <Link
                     to="/cart"
-                    className="underline hover:text-emerald-950 font-bold ml-2 shrink-0"
+                    className="underline hover:text-emerald-950 dark:hover:text-emerald-200 font-bold ml-2 shrink-0"
                   >
                     {language === "ru" ? "Открыть корзину →" : "Savatchaga o‘tish →"}
                   </Link>
@@ -549,7 +549,7 @@ function ProductDetailsPage() {
               )}
 
               {error && (
-                <div className="rounded-2xl border border-red-200 bg-red-50 p-4 text-sm font-semibold text-red-700">
+                <div className="rounded-2xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950/30 p-4 text-sm font-semibold text-red-700 dark:text-red-300">
                   {error}
                 </div>
               )}
@@ -558,27 +558,27 @@ function ProductDetailsPage() {
             {/* ========================= */}
             {/* ACCORDIONS / DETAILS TABS */}
             {/* ========================= */}
-            <div className="divide-y divide-[#ebdcca] rounded-3xl border border-[#ebdcca] bg-white">
+            <div className="divide-y divide-[#ebdcca] dark:divide-[#2d241c] rounded-3xl border border-[#ebdcca] dark:border-[#2d241c] bg-white dark:bg-[#1e1915]">
               {/* TAB 1: FABRIC & COMPOSITION */}
               <div className="p-5 sm:p-6">
                 <button
                   type="button"
                   onClick={() => setOpenTab(openTab === "details" ? "" : "details")}
-                  className="flex w-full items-center justify-between text-left font-serif text-lg font-bold text-[#3b2d24]"
+                  className="flex w-full items-center justify-between text-left font-serif text-lg font-bold text-[#3b2d24] dark:text-[#f3ede4]"
                 >
                   <span>{language === "ru" ? "Ткань и комплектация" : "Mato va to‘plam tarkibi"}</span>
                   <ChevronDown
-                    className={`h-5 w-5 text-[#8a735e] transition-transform duration-200 ${
+                    className={`h-5 w-5 text-[#8a735e] dark:text-[#c4a98e] transition-transform duration-200 ${
                       openTab === "details" ? "rotate-180" : ""
                     }`}
                   />
                 </button>
 
                 {openTab === "details" && (
-                  <div className="mt-3.5 space-y-2 text-sm sm:text-base leading-relaxed text-[#6b584a]">
+                  <div className="mt-3.5 space-y-2 text-sm sm:text-base leading-relaxed text-[#6b584a] dark:text-[#b8a99a]">
                     {product.fabric && (
                       <p>
-                        <strong className="text-[#3b2d24]">
+                        <strong className="text-[#3b2d24] dark:text-[#f3ede4]">
                           {language === "ru" ? "Материал: " : "Mato turi: "}
                         </strong>
                         {product.fabric}
@@ -586,7 +586,7 @@ function ProductDetailsPage() {
                     )}
                     {product.composition && (
                       <p>
-                        <strong className="text-[#3b2d24]">
+                        <strong className="text-[#3b2d24] dark:text-[#f3ede4]">
                           {language === "ru" ? "Состав: " : "Tarkibi: "}
                         </strong>
                         {product.composition}
@@ -608,18 +608,18 @@ function ProductDetailsPage() {
                 <button
                   type="button"
                   onClick={() => setOpenTab(openTab === "care" ? "" : "care")}
-                  className="flex w-full items-center justify-between text-left font-serif text-lg font-bold text-[#3b2d24]"
+                  className="flex w-full items-center justify-between text-left font-serif text-lg font-bold text-[#3b2d24] dark:text-[#f3ede4]"
                 >
                   <span>{language === "ru" ? "Рекомендации по уходу" : "Parvarish bo‘yicha tavsiyalar"}</span>
                   <ChevronDown
-                    className={`h-5 w-5 text-[#8a735e] transition-transform duration-200 ${
+                    className={`h-5 w-5 text-[#8a735e] dark:text-[#c4a98e] transition-transform duration-200 ${
                       openTab === "care" ? "rotate-180" : ""
                     }`}
                   />
                 </button>
 
                 {openTab === "care" && (
-                  <div className="mt-3.5 text-sm sm:text-base leading-relaxed text-[#6b584a]">
+                  <div className="mt-3.5 text-sm sm:text-base leading-relaxed text-[#6b584a] dark:text-[#b8a99a]">
                     {product.care ? (
                       <p>{product.care}</p>
                     ) : (
@@ -650,26 +650,26 @@ function ProductDetailsPage() {
                 <button
                   type="button"
                   onClick={() => setOpenTab(openTab === "shipping" ? "" : "shipping")}
-                  className="flex w-full items-center justify-between text-left font-serif text-lg font-bold text-[#3b2d24]"
+                  className="flex w-full items-center justify-between text-left font-serif text-lg font-bold text-[#3b2d24] dark:text-[#f3ede4]"
                 >
                   <span>{language === "ru" ? "Доставка и оплата" : "Yetkazib berish va to‘lov"}</span>
                   <ChevronDown
-                    className={`h-5 w-5 text-[#8a735e] transition-transform duration-200 ${
+                    className={`h-5 w-5 text-[#8a735e] dark:text-[#c4a98e] transition-transform duration-200 ${
                       openTab === "shipping" ? "rotate-180" : ""
                     }`}
                   />
                 </button>
 
                 {openTab === "shipping" && (
-                  <div className="mt-3.5 space-y-2 text-sm sm:text-base leading-relaxed text-[#6b584a]">
+                  <div className="mt-3.5 space-y-2 text-sm sm:text-base leading-relaxed text-[#6b584a] dark:text-[#b8a99a]">
                     <p>
-                      <strong className="text-[#3b2d24]">{language === "ru" ? "Ташкент: " : "Toshkent: "}</strong>
+                      <strong className="text-[#3b2d24] dark:text-[#f3ede4]">{language === "ru" ? "Ташкент: " : "Toshkent: "}</strong>
                       {language === "ru"
                         ? "Бесплатная курьерская доставка прямо до вашей двери (0 сум)."
                         : "Kuryer orqali eshikkacha mutlaqo bepul yetkazib beriladi (0 so‘m)."}
                     </p>
                     <p>
-                      <strong className="text-[#3b2d24]">{language === "ru" ? "Оплата: " : "To‘lov: "}</strong>
+                      <strong className="text-[#3b2d24] dark:text-[#f3ede4]">{language === "ru" ? "Оплата: " : "To‘lov: "}</strong>
                       {language === "ru"
                         ? "Оплата наличными при получении заказа после проверки качества ткани."
                         : "Mahsulotni qabul qilib, ko‘zdan kechirgach kuryerga naqd to‘lov qilinadi."}
@@ -681,16 +681,16 @@ function ProductDetailsPage() {
 
             {/* TRUST PILL BADGES */}
             <div className="grid grid-cols-2 gap-3.5 pt-2">
-              <div className="flex items-center gap-3 rounded-2xl border border-[#ebdcca] bg-white p-4 shadow-xs">
-                <Truck className="h-6 w-6 shrink-0 text-[#8a735e]" />
-                <span className="text-xs sm:text-sm font-bold text-[#3b2d24]">
+              <div className="flex items-center gap-3 rounded-2xl border border-[#ebdcca] dark:border-[#2d241c] bg-white dark:bg-[#1e1915] p-4 shadow-xs">
+                <Truck className="h-6 w-6 shrink-0 text-[#8a735e] dark:text-[#c4a98e]" />
+                <span className="text-xs sm:text-sm font-bold text-[#3b2d24] dark:text-[#f3ede4]">
                   {language === "ru" ? "Бесплатная доставка" : "Bepul yetkazish"}
                 </span>
               </div>
 
-              <div className="flex items-center gap-3 rounded-2xl border border-[#ebdcca] bg-white p-4 shadow-xs">
-                <ShieldCheck className="h-6 w-6 shrink-0 text-[#8a735e]" />
-                <span className="text-xs sm:text-sm font-bold text-[#3b2d24]">
+              <div className="flex items-center gap-3 rounded-2xl border border-[#ebdcca] dark:border-[#2d241c] bg-white dark:bg-[#1e1915] p-4 shadow-xs">
+                <ShieldCheck className="h-6 w-6 shrink-0 text-[#8a735e] dark:text-[#c4a98e]" />
+                <span className="text-xs sm:text-sm font-bold text-[#3b2d24] dark:text-[#f3ede4]">
                   {language === "ru" ? "100% Качество" : "100% Kafolat"}
                 </span>
               </div>

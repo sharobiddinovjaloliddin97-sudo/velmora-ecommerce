@@ -20,7 +20,7 @@ function PasswordInput({
       <button
         type="button"
         onClick={() => setShowPassword((prev) => !prev)}
-        className="absolute right-3.5 top-1/2 -translate-y-1/2 text-stone-400 hover:text-[#3b2d24] transition-colors p-1 focus:outline-none"
+        className="absolute right-3.5 top-1/2 -translate-y-1/2 text-stone-400 hover:text-[#3b2d24] dark:hover:text-[#c1a27c] transition-colors p-1 focus:outline-none"
         aria-label={showPassword ? hideLabel : showLabel}
         title={showPassword ? hideLabel : showLabel}
       >
