@@ -150,11 +150,11 @@ function AboutPage() {
               <div className="relative mx-auto max-w-md lg:max-w-none">
                 <div className="rounded-3xl bg-white dark:bg-[#1e1915] p-8 sm:p-10 text-center shadow-[0_15px_45px_-15px_rgba(59,45,36,0.1)] dark:shadow-[0_15px_45px_-15px_rgba(0,0,0,0.5)] border border-[#ebdcca] dark:border-[#2d241c]">
                   {/* Real Logo */}
-                  <div className="mx-auto w-32 h-32 sm:w-40 sm:h-40 rounded-2xl overflow-hidden bg-[#faf7f2] dark:bg-[#261f1a] p-2 flex items-center justify-center border border-[#dfd2c0]/60 dark:border-[#383028] shadow-inner mb-6">
+                  <div className="mx-auto w-32 h-32 sm:w-40 sm:h-40 rounded-2xl overflow-hidden bg-white dark:bg-[#221c17] p-3 flex items-center justify-center border border-[#dfd2c0] dark:border-[#383028] shadow-inner mb-6">
                     <img
                       src="/logo.png"
                       alt="Velmora Logo"
-                      className="w-full h-full object-contain"
+                      className="w-full h-full object-contain dark:brightness-125"
                     />
                   </div>
 
@@ -291,24 +291,25 @@ function AboutPage() {
           </p>
 
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4 sm:gap-6">
+            {/* Telegram Button */}
             <a
               href="https://t.me/velmoramahsulotlari"
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-[#0088cc] text-white font-semibold text-base transition-all duration-300 shadow-md hover:bg-[#0077b5] hover:shadow-lg"
+              className="inline-flex items-center gap-3 px-7 py-3.5 rounded-full bg-[#3b2d24] dark:bg-[#261f1a] text-white dark:text-[#f2e6d6] border border-[#524134] dark:border-[#3d3228] font-semibold text-sm sm:text-base transition-all duration-300 shadow-md hover:bg-[#271f19] dark:hover:bg-[#322923] hover:shadow-lg"
             >
-              <Send className="w-5 h-5" />
+              <Send className="w-5 h-5 text-[#c1a27c]" />
               <span>t.me/velmoramahsulotlari</span>
             </a>
 
             {/* Primary Phone */}
             <a
               href="tel:+998911652211"
-              className="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-[#3b2d24] dark:bg-[#c1a27c] text-white dark:text-[#1e1915] font-semibold text-base transition-all duration-300 shadow-md hover:bg-[#271f19] dark:hover:bg-[#d6ba94] hover:shadow-lg"
+              className="inline-flex items-center gap-3 px-7 py-3.5 rounded-full bg-[#3b2d24] dark:bg-[#261f1a] text-white dark:text-[#f2e6d6] border border-[#524134] dark:border-[#3d3228] font-semibold text-sm sm:text-base transition-all duration-300 shadow-md hover:bg-[#271f19] dark:hover:bg-[#322923] hover:shadow-lg"
             >
-              <Phone className="w-5 h-5 text-[#c1a27c] dark:text-[#1e1915]" />
+              <Phone className="w-5 h-5 text-[#c1a27c]" />
               <div className="text-left leading-tight">
-                <span className="block text-[11px] uppercase tracking-wider opacity-80">{language === "ru" ? "Основной" : "Asosiy"}</span>
+                <span className="block text-[11px] uppercase tracking-wider text-[#c1a27c] font-bold">{language === "ru" ? "Основной" : "Asosiy"}</span>
                 <span>+998 91 165 22 11</span>
               </div>
             </a>
@@ -316,11 +317,11 @@ function AboutPage() {
             {/* Secondary Phone */}
             <a
               href="tel:+998930791734"
-              className="inline-flex items-center gap-3 px-8 py-4 rounded-full border border-[#d6c6b3] dark:border-[#3d3228] bg-white dark:bg-[#1e1915] text-[#3b2d24] dark:text-[#ede4d8] font-semibold text-base transition-all duration-300 shadow-sm hover:bg-[#f4efe6] dark:hover:bg-[#29221c]"
+              className="inline-flex items-center gap-3 px-7 py-3.5 rounded-full bg-[#3b2d24] dark:bg-[#261f1a] text-white dark:text-[#f2e6d6] border border-[#524134] dark:border-[#3d3228] font-semibold text-sm sm:text-base transition-all duration-300 shadow-md hover:bg-[#271f19] dark:hover:bg-[#322923] hover:shadow-lg"
             >
-              <Phone className="w-5 h-5 text-[#8a735e] dark:text-[#c4a98e]" />
+              <Phone className="w-5 h-5 text-[#c1a27c]" />
               <div className="text-left leading-tight">
-                <span className="block text-[11px] uppercase tracking-wider opacity-80">{language === "ru" ? "Дополнительный" : "Qo‘shimcha"}</span>
+                <span className="block text-[11px] uppercase tracking-wider text-[#b3a191] font-medium">{language === "ru" ? "Дополнительный" : "Qo‘shimcha"}</span>
                 <span>+998 93 079 17 34</span>
               </div>
             </a>

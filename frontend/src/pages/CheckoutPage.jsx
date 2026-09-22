@@ -170,6 +170,7 @@ function CheckoutPage() {
       const idempotencyKey = crypto.randomUUID();
       const response = await sendCheckout(idempotencyKey);
       clearCart();
+      window.dispatchEvent(new Event("velmora:refresh-notifications"));
       navigate("/order-success", {
         replace: true,
         state: {

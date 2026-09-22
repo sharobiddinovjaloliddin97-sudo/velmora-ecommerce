@@ -385,6 +385,20 @@ async def send_confirmation_prompt(update: Update, session):
     )
 
 
+def build_ptb_admin_keyboard(order_id, current_status):
+    s = (current_status or "NEW").upper()
+    return InlineKeyboardMarkup([
+        [
+            InlineKeyboardButton(f"{'🔘 ' if s == 'CONFIRMED' else ''}✅ Qabul qilish", callback_data=f"adm_st:CONFIRMED:{str(order_id)}"),
+            InlineKeyboardButton(f"{'🔘 ' if s == 'SHIPPING' else ''}🚚 Kuryerga berish", callback_data=f"adm_st:SHIPPING:{str(order_id)}"),
+        ],
+        [
+            InlineKeyboardButton(f"{'🔘 ' if s == 'DELIVERED' else ''}🎉 Yetkazildi", callback_data=f"adm_st:DELIVERED:{str(order_id)}"),
+            InlineKeyboardButton(f"{'🔘 ' if s == 'CANCELLED' else ''}❌ Bekor qilish", callback_data=f"adm_st:CANCELLED:{str(order_id)}"),
+        ],
+    ])
+
+
 async def callback_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
@@ -427,33 +441,45 @@ async def callback_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     # ADMIN BUTTONS: adm_st:<STATUS>:<ORDER_ID>
     if data.startswith("adm_st:"):
-        _, new_status, order_id = data.split(":")
-        order = await change_order_status_db(order_id, new_status)
-        if not order:
-            await query.answer("Buyurtma topilmadi!", show_alert=True)
-            return
+        parts = data.split(":")
+        if len(parts) == 3:
+            _, new_status, order_id = parts
+            order = await change_order_status_db(order_id, new_status)
+            if not order:
+                await query.answer("Buyurtma topilmadi!", show_alert=True)
+                return
 
-        status_text = {
-            "CONFIRMED": "✅ QABUL QILINDI",
-            "SHIPPING": "🚚 KURYERGA BERILDI",
-            "CANCELLED": "❌ BEKOR QILINDI",
-        }.get(new_status, new_status)
+            status_text = {
+                "CONFIRMED": "✅ QABUL QILINDI",
+                "SHIPPING": "🚚 KURYERGA BERILDI",
+                "DELIVERED": "🎉 YETKAZILDI",
+                "CANCELLED": "❌ BEKOR QILINDI",
+            }.get(new_status, new_status)
 
-        admin_name = user.first_name or user.username or "Admin"
-        
-        # Send user update via bot
-        try:
-            notify_user_status_changed(order, new_status)
-        except Exception as e:
-            logger.error(f"Error notifying user: {e}")
+            admin_name = user.first_name or user.username or "Admin"
+            
+            # Send user update via bot
+            try:
+                notify_user_status_changed(order, new_status)
+            except Exception as e:
+                logger.error(f"Error notifying user: {e}")
 
-        new_caption = f"{query.message.text}\n\n━━━━━━━━━━━━━━━━━━━\n🔄 <b>Holat: {status_text}</b> (Admin: {admin_name})"
-        try:
-            await query.edit_message_text(new_caption, parse_mode="HTML")
-        except Exception:
-            pass
+            import re
+            current_text = query.message.text or ""
+            base_text = re.split(r"\n*━━━━━━━━━━━━━━━━━━━\n*🔄\s*Holat:", current_text)[0]
+            base_text = re.split(r"\n*🔄\s*Holat:", base_text)[0].strip()
 
-        await query.answer(f"Buyurtma holati: {status_text} ga o‘zgartirildi!")
+            new_caption = f"{base_text}\n\n━━━━━━━━━━━━━━━━━━━\n🔄 <b>Holat: {status_text}</b> (Admin: {admin_name})"
+            try:
+                await query.edit_message_text(
+                    new_caption,
+                    parse_mode="HTML",
+                    reply_markup=build_ptb_admin_keyboard(order.id, new_status),
+                )
+            except Exception as e:
+                logger.error(f"Error editing message: {e}")
+
+            await query.answer(f"Buyurtma holati: {status_text} ga o‘zgartirildi!")
 
 
 # ==========================================
