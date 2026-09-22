@@ -328,6 +328,127 @@ def create_order_from_session_sync(session):
         return order
 
 
+def handle_telegram_photo(chat_id: int | str, photo_file_id: str):
+    """
+    Downloads photo sent to Telegram bot, analyzes room style via AI,
+    and replies with Velmora interior designer recommendations.
+    """
+    if not TELEGRAM_BOT_TOKEN:
+        return
+
+    # Send initial loading message
+    loading_res = send_message(
+        chat_id,
+        "🎨 <i>AI xonangiz interyeri va ranglarini tahlil qilmoqda...\nIltimos, bir necha soniya kuting...</i>",
+    )
+    loading_msg_id = loading_res.get("result", {}).get("message_id") if isinstance(loading_res, dict) else None
+
+    try:
+        # 1. Fetch file metadata
+        file_info = send_telegram_request("getFile", {"file_id": photo_file_id})
+        file_path = file_info.get("result", {}).get("file_path")
+        if not file_path:
+            raise RuntimeError("Telegram faylini olib bo‘lmadi.")
+
+        # 2. Download file bytes
+        download_url = f"https://api.telegram.org/file/bot{TELEGRAM_BOT_TOKEN}/{file_path}"
+        req = urllib.request.Request(download_url)
+        with urllib.request.urlopen(req, timeout=25) as resp:
+            photo_bytes = resp.read()
+
+        # Determine MIME
+        mime_type = "image/jpeg"
+        if file_path.lower().endswith(".png"):
+            mime_type = "image/png"
+        elif file_path.lower().endswith(".webp"):
+            mime_type = "image/webp"
+
+        # 3. Call AI Service
+        from catalog.ai_service import get_interior_recommendations
+        result = get_interior_recommendations(photo_bytes, mime_type=mime_type)
+
+        # 4. Format stylish designer response
+        palette_list = result.get("palette", [])
+        palette_str = " ".join([f"<code>{p}</code>" for p in palette_list]) if palette_list else "Iliq tabiiy ranglar"
+
+        lines = [
+            "✨ <b>Velmora AI Interyer Maslahatchisi</b>",
+            "━━━━━━━━━━━━━━━━━━━",
+            f"🏠 <b>Xona uslubi:</b> {result.get('room_style_uz', 'Zamonaviy')}",
+            f"💡 <b>Yorug‘lik:</b> {result.get('lighting_uz', 'Iliq tabiiy yorug‘lik')}",
+            f"🎨 <b>Ranglar palitrasi:</b> {palette_str}",
+            "",
+            f"💬 <b>Dizayner maslahati:</b>",
+            f"<i>{result.get('designer_advice_uz', 'Ushbu xonaga yumshoq va uyg‘un to‘plamlar mos keladi.')}</i>",
+            "",
+            "━━━━━━━━━━━━━━━━━━━",
+            "🛏 <b>Xonangizga eng mos Velmora to‘plamlari:</b>",
+        ]
+
+        recs = result.get("recommendations", [])[:3]
+        if not recs:
+            lines.append("\nKatalogimizdagi barcha to‘plamlar bilan saytimizda tanishishingiz mumkin.")
+        else:
+            for idx, rec in enumerate(recs, 1):
+                price_fmt = f"{int(rec.get('price', 0)):,}".replace(",", " ")
+                name = rec.get("name_uz", "Velmora to‘plami")
+                color = rec.get("recommended_color_uz", "")
+                why = rec.get("why_matched_uz", "")
+                slug = rec.get("slug", "")
+                link = f"https://velmora-ecommerce-chi.vercel.app/catalog/{slug}" if slug else "https://velmora-ecommerce-chi.vercel.app/catalog"
+
+                lines.append(
+                    f"\n<b>{idx}. {name}</b>\n"
+                    f"   💰 Narxi: <b>{price_fmt} so‘m</b>\n"
+                    + (f"   🎨 Mos rang: <i>{color}</i>\n" if color else "")
+                    + (f"   💡 <i>{why}</i>\n" if why else "")
+                    + f"   👉 <a href=\"{link}\">Saytda ko‘rish</a>"
+                )
+
+        lines.append("\n━━━━━━━━━━━━━━━━━━━\n🛍 Saytimiz orqali buyurtma berishingiz yoki to‘plam haqida batafsil ma’lumot olishingiz mumkin.")
+        final_text = "\n".join(lines)
+
+        reply_kb = {
+            "inline_keyboard": [
+                [
+                    {"text": "🛍 Saytda to‘plamlarni ko‘rish", "url": "https://velmora-ecommerce-chi.vercel.app/catalog"},
+                ],
+                [
+                    {"text": "💬 Dizayner bilan bog‘lanish", "url": "https://t.me/velmoramahsulotlari"},
+                ]
+            ]
+        }
+
+        if loading_msg_id:
+            send_telegram_request("editMessageText", {
+                "chat_id": chat_id,
+                "message_id": loading_msg_id,
+                "text": final_text,
+                "parse_mode": "HTML",
+                "reply_markup": reply_kb,
+                "disable_web_page_preview": True,
+            })
+        else:
+            send_message(chat_id, final_text, reply_markup=reply_kb)
+
+    except Exception as e:
+        logger.exception(f"Telegram photo AI analysis error: {e}")
+        err_text = (
+            "😔 Kechirasiz, xona rasmini tahlil qilishda xatolik yuz berdi.\n"
+            "Iltimos, boshqa burchakdan olingan sifatliroq rasm yuborib ko‘ring yoki saytimizdagi AI maslahatchisidan foydalaning: "
+            "<a href=\"https://velmora-ecommerce-chi.vercel.app\">velmora.uz</a>"
+        )
+        if loading_msg_id:
+            send_telegram_request("editMessageText", {
+                "chat_id": chat_id,
+                "message_id": loading_msg_id,
+                "text": err_text,
+                "parse_mode": "HTML",
+            })
+        else:
+            send_message(chat_id, err_text)
+
+
 def process_webhook_update(update: dict):
     """Processes incoming Telegram updates via Webhook."""
     # 1. MESSAGE
@@ -340,8 +461,16 @@ def process_webhook_update(update: dict):
         first_name = from_user.get("first_name", "")
         text = message.get("text", "")
 
+        # Check Photo (AI Interior Recommender)
+        photos = message.get("photo")
+        if photos:
+            best_photo = photos[-1]
+            handle_telegram_photo(chat_id, best_photo.get("file_id"))
+            return
+
         # Check /id or /setup command
         if text.startswith("/id") or text.startswith("/setup"):
+
             chat_type = "Guruh" if message["chat"]["type"] in ["group", "supergroup"] else "Shaxsiy chat"
             os.environ["TELEGRAM_ADMIN_CHAT_ID"] = str(chat_id)
             resp_text = (
@@ -406,8 +535,10 @@ def process_webhook_update(update: dict):
             # General /start
             text_gen = (
                 f"Assalomu alaykum, <b>{first_name}</b>!\n\n"
-                f"<b>Velmora</b> rasmiy savdo botiga xush kelibsiz! ✨\n\n"
-                f"Biz tabiiy va yuqori sifatli matolardan tayyorlangan choyshab to‘plamlari, yozgi va qishgi ko‘rpa to‘plamlari, matraslar hamda yostiq jildlarini ishlab chiqaramiz.\n\n"
+                f"<b>Velmora Uy Tekstili</b> rasmiy botiga xush kelibsiz! ✨\n\n"
+                f"Biz tabiiy va premium matolardan tayyorlangan shinam choyshab to‘plamlari, yozgi va qishgi ko‘rpa to‘plamlari hamda matraslarni taqdim etamiz.\n\n"
+                f"✨ <b>Yangi: AI Interyer Maslahatchisi!</b>\n"
+                f"Xonangiz yoki yotoqxonangiz rasmini ushbu botga yuboring — sun'iy intellekt xonangiz ranglari va uslubini tahlil qilib, unga eng mos tushadigan to‘shak to‘plamlarini tavsiya etadi! 📸\n\n"
                 f"🛍 Mahsulotlarimiz bilan tanishish va buyurtma berish uchun saytimizga o‘ting:\n"
                 f"🌐 <b>Sayt:</b> <a href=\"https://velmora-ecommerce-chi.vercel.app\">velmora-ecommerce-chi.vercel.app</a>\n"
                 f"📞 <b>Asosiy aloqa:</b> +998911652211\n"
@@ -416,6 +547,7 @@ def process_webhook_update(update: dict):
             )
             send_message(chat_id, text_gen)
             return
+
 
         # Contact received
         contact = message.get("contact")

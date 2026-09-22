@@ -232,9 +232,99 @@ function HomePage() {
       </section>
 
       {/* ========================= */}
+      {/* AI INTERIOR CONSULTANT BANNER */}
+      {/* ========================= */}
+      <section className="mx-auto max-w-7xl px-4 sm:px-6">
+        <div className="relative overflow-hidden rounded-3xl sm:rounded-[36px] border border-[#d8c8b4] dark:border-[#382f27] bg-gradient-to-br from-[#f5ede3] via-[#faf7f2] to-[#ebdcca] dark:from-[#1e1915] dark:via-[#191512] dark:to-[#26201a] p-6 sm:p-10 shadow-lg">
+          {/* Decorative background glow */}
+          <div className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-[#c1a27c]/20 blur-3xl" />
+          <div className="pointer-events-none absolute -left-16 -bottom-16 h-64 w-64 rounded-full bg-[#8a735e]/15 blur-3xl" />
+
+          <div className="relative grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+            <div className="lg:col-span-8 space-y-4">
+              <div className="inline-flex items-center gap-2 rounded-full border border-[#c1a27c]/40 bg-[#c1a27c]/15 px-3 py-1 text-xs font-bold text-[#8a735e] dark:text-[#e5b378]">
+                <Sparkles className="h-3.5 w-3.5 text-[#c1a27c] animate-pulse" />
+                <span>{language === "ru" ? "Инновация в Velmora" : "Velmora innovatsiyasi"}</span>
+              </div>
+
+              <h2 className="font-serif text-2xl sm:text-4xl font-bold tracking-tight text-[#3b2d24] dark:text-[#f2e6d6]">
+                {language === "ru"
+                  ? "AI Интерьер-Консультант и Синтез Цветов"
+                  : "AI Interyer Maslahatchisi va Ranglar Sintezi"}
+              </h2>
+
+              <p className="text-sm sm:text-base text-[#6b584a] dark:text-[#c4b6a8] max-w-2xl leading-relaxed">
+                {language === "ru"
+                  ? "Сомневаетесь, подойдёт ли комплект к обоям, шторам или мебели? Загрузите фото вашей комнаты — искусственный интеллект определит палитру, стиль и порекомендует идеальный текстиль с комментариями дизайнера."
+                  : "Ushbu ko‘rpa-to‘shak xonangiz mebeli, devorlari yoki pardalariga mos kelarmikan deb o‘ylanyapsizmi? Yotoqxonangiz rasmini yuklang — AI ranglar va uslubni tahlil qilib, katalogimizdagi eng ideal to‘plamlarni tanlab beradi."}
+              </p>
+
+              <div className="flex flex-wrap items-center gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => window.dispatchEvent(new CustomEvent("velmora:open-ai-interior"))}
+                  className="flex items-center gap-2 rounded-full bg-gradient-to-r from-[#3b2d24] via-[#5c4a3d] to-[#3b2d24] dark:from-[#c1a27c] dark:via-[#e5b378] dark:to-[#c1a27c] px-6 py-3.5 text-sm sm:text-base font-bold text-white dark:text-[#1c1917] shadow-md hover:brightness-110 transition cursor-pointer"
+                >
+                  <Sparkles className="h-4 w-4 animate-pulse" />
+                  <span>{language === "ru" ? "Подобрать под мою комнату" : "Xonamga mosini AI bilan topish"}</span>
+                  <ArrowRight className="h-4 w-4" />
+                </button>
+
+                <a
+                  href="https://t.me/velmora_silkbot"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center gap-2 rounded-full border border-[#d8c8b4] dark:border-[#3d342c] bg-white/80 dark:bg-[#25201c] px-5 py-3.5 text-sm font-semibold text-[#5c4a3d] dark:text-[#c4b6a8] hover:bg-white dark:hover:bg-[#2d2621] transition"
+                >
+                  <span>{language === "ru" ? "В Telegram боте" : "Telegram botda sinash"}</span>
+                </a>
+              </div>
+            </div>
+
+            {/* Visual preview card on right */}
+            <div className="lg:col-span-4 flex justify-center lg:justify-end">
+              <div
+                onClick={() => window.dispatchEvent(new CustomEvent("velmora:open-ai-interior"))}
+                className="w-full max-w-xs rounded-2xl border border-[#ebdcca] dark:border-[#382f27] bg-white/90 dark:bg-[#211c18] p-4 shadow-md hover:scale-102 transition-transform cursor-pointer group"
+              >
+                <div className="flex items-center justify-between pb-3 border-b border-[#ebdcca] dark:border-[#2e261f]">
+                  <span className="text-xs font-bold text-[#8a735e] dark:text-[#c1a27c]">
+                    {language === "ru" ? "Анализ стиля и цвета" : "Uslub va rang tahlili"}
+                  </span>
+                  <span className="h-2 w-2 rounded-full bg-emerald-500 animate-ping" />
+                </div>
+                <div className="my-3 space-y-2">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-stone-500">Palitra:</span>
+                    <div className="flex gap-1">
+                      <span className="h-3 w-3 rounded-full bg-[#E5DEC9] border border-black/10" />
+                      <span className="h-3 w-3 rounded-full bg-[#5C4A3D] border border-black/10" />
+                      <span className="h-3 w-3 rounded-full bg-[#C1A27C] border border-black/10" />
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-stone-500">Uslub:</span>
+                    <span className="font-semibold text-[#3b2d24] dark:text-[#e8ded4]">Skandinaviya</span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-stone-500">Tavsiya:</span>
+                    <span className="font-semibold text-[#8a735e] dark:text-[#e5b378]">3 ta to‘plam</span>
+                  </div>
+                </div>
+                <div className="rounded-xl bg-[#faf7f2] dark:bg-[#191512] py-2 text-center text-xs font-bold text-[#8a735e] dark:text-[#c1a27c] group-hover:bg-[#8a735e] group-hover:text-white dark:group-hover:bg-[#c1a27c] dark:group-hover:text-[#1c1917] transition-colors">
+                  {language === "ru" ? "Нажмите для анализа 📸" : "Rasm yuklash 📸"}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ========================= */}
       {/* 2. CATEGORIES OVERVIEW */}
       {/* ========================= */}
       <section className="mx-auto max-w-7xl px-4 sm:px-6">
+
         <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <span className="text-xs sm:text-sm font-bold tracking-[0.2em] text-[#8a735e] dark:text-[#c4a98e] uppercase">

@@ -6,6 +6,7 @@ from .views import (
     FavoriteListCreateView,
     ProductViewSet,
 )
+from .views_ai import AIInteriorAdviceView
 
 
 router = DefaultRouter()
@@ -34,5 +35,11 @@ urlpatterns = router.urls + [
         "favorites/<int:product_id>/",
         FavoriteDeleteView.as_view(),
         name="favorite-delete",
+    ),
+
+    path(
+        "ai-interior-advice/",
+        AIInteriorAdviceView.as_view(),
+        name="ai-interior-advice",
     ),
 ]

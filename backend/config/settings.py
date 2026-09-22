@@ -363,6 +363,9 @@ CONTACT_NOTIFICATION_EMAIL = os.getenv(
     BREVO_SENDER_EMAIL,
 )
 
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
+
 
 LOGGING = {
     "version": 1,

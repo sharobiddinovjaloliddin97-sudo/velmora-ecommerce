@@ -183,6 +183,22 @@ function CatalogPage() {
                 ? "Комплекты постельного белья, одеяла, матрасы и наволочки из натуральных качественных тканей."
                 : "Tabiiy matolardan tayyorlangan choyshab to‘plamlari, ko‘rpalar, matraslar hamda yostiq jildlari."}
             </p>
+
+            {/* AI INTERIOR CALLOUT BUTTON */}
+            <div className="mt-4 flex flex-wrap items-center gap-3">
+              <button
+                type="button"
+                onClick={() => window.dispatchEvent(new CustomEvent("velmora:open-ai-interior"))}
+                className="inline-flex items-center gap-2 rounded-full border border-[#c1a27c]/70 bg-gradient-to-r from-[#c1a27c]/20 via-[#8a735e]/15 to-[#c1a27c]/20 px-4 py-2 text-xs sm:text-sm font-bold text-[#8a735e] dark:text-[#e5b378] hover:border-[#c1a27c] hover:bg-[#c1a27c]/30 shadow-2xs transition-all cursor-pointer"
+              >
+                <Sparkles className="h-4 w-4 text-[#c1a27c] animate-pulse" />
+                <span>
+                  {language === "ru"
+                    ? "✨ Подобрать текстиль под интерьер (AI)"
+                    : "✨ Xonamga mosini AI bilan topish"}
+                </span>
+              </button>
+            </div>
           </div>
 
           {/* TOP CATEGORY PILLS BAR */}
@@ -400,6 +416,28 @@ function CatalogPage() {
                   placeholder="200x220, 160x200, 50x70..."
                   className="mt-2 w-full rounded-xl border border-[#d6c6b3] dark:border-[#383028] bg-[#faf7f2]/60 dark:bg-[#261f1a] p-3 text-sm text-[#2d241e] dark:text-[#ede4d8] outline-none focus:border-[#3b2d24] dark:focus:border-[#c1a27c] focus:bg-white dark:focus:bg-[#2d251f]"
                 />
+              </div>
+
+              {/* AI ASSISTANT CARD IN SIDEBAR */}
+              <div
+                onClick={() => window.dispatchEvent(new CustomEvent("velmora:open-ai-interior"))}
+                className="mt-6 rounded-2xl border border-[#c1a27c]/50 bg-gradient-to-br from-[#fbf6ee] to-[#f4ece1] dark:from-[#251f1a] dark:to-[#1e1915] p-4 cursor-pointer hover:border-[#c1a27c] transition-all group"
+              >
+                <div className="flex items-center gap-2 mb-1.5 text-[#8a735e] dark:text-[#e5b378]">
+                  <Sparkles className="h-4 w-4 animate-pulse text-[#c1a27c]" />
+                  <span className="text-xs font-bold uppercase tracking-wider">
+                    {language === "ru" ? "AI Консультант" : "AI Dizayner"}
+                  </span>
+                </div>
+                <p className="text-xs text-[#6b584a] dark:text-[#c4b6a8] leading-relaxed mb-3">
+                  {language === "ru"
+                    ? "Загрузите фото спальни — AI подберёт гармоничный комплект под цвета."
+                    : "Xonangiz rasmini yuklang — AI ranglarga mos to‘plamni topadi."}
+                </p>
+                <div className="inline-flex items-center gap-1 text-xs font-bold text-[#3b2d24] dark:text-[#e8ded4] group-hover:text-[#8a735e] dark:group-hover:text-[#e5b378]">
+                  <span>{language === "ru" ? "Попробовать" : "Sinab ko‘rish"}</span>
+                  <span className="transition-transform group-hover:translate-x-1">→</span>
+                </div>
               </div>
             </div>
           </aside>

@@ -26,6 +26,7 @@ import { useFavorites } from "../context/FavoritesContext";
 import { useLanguage } from "../context/LanguageContext";
 import { getCart } from "../utils/cart";
 import ThemeToggle from "./ThemeToggle";
+import AIInteriorModal from "./AIInteriorModal";
 
 function Header() {
   const navigate = useNavigate();
@@ -47,6 +48,15 @@ function Header() {
   const [cartCount, setCartCount] = useState(calculateCartCount);
   const [notifications, setNotifications] = useState([]);
   const [notificationOpen, setNotificationOpen] = useState(false);
+  const [aiModalOpen, setAiModalOpen] = useState(false);
+
+  useEffect(() => {
+    const handleOpenAi = () => setAiModalOpen(true);
+    window.addEventListener("velmora:open-ai-interior", handleOpenAi);
+    return () => {
+      window.removeEventListener("velmora:open-ai-interior", handleOpenAi);
+    };
+  }, []);
 
   const unreadCount = notifications.filter(
     (notification) => !notification.is_read
@@ -234,6 +244,19 @@ function Header() {
             <NavLink to="/contact" className={navClass}>
               {t("contact")}
             </NavLink>
+
+            {/* AI DESIGNER BUTTON */}
+            <button
+              type="button"
+              onClick={() => setAiModalOpen(true)}
+              className="flex items-center gap-1.5 rounded-full border border-[#c1a27c]/60 bg-gradient-to-r from-[#c1a27c]/15 to-[#8a735e]/15 px-3.5 py-1.5 text-xs font-semibold text-[#8a735e] dark:text-[#e5b378] hover:border-[#c1a27c] hover:bg-[#c1a27c]/25 transition shadow-2xs group cursor-pointer"
+            >
+              <Sparkles className="h-3.5 w-3.5 text-[#c1a27c] group-hover:rotate-12 transition-transform animate-pulse" />
+              <span>{language === "ru" ? "AI Дизайнер" : "AI Dizayner"}</span>
+              <span className="rounded-full bg-[#c1a27c] px-1.5 py-0.2 text-[9px] font-bold text-white uppercase">
+                New
+              </span>
+            </button>
           </nav>
 
           {/* RIGHT UTILITIES */}
@@ -534,6 +557,33 @@ function Header() {
                 )}
               </div>
 
+              {/* AI DESIGNER BUTTON ON MOBILE */}
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  setAiModalOpen(true);
+                }}
+                className="w-full flex items-center justify-between rounded-2xl bg-gradient-to-r from-[#c1a27c]/20 to-[#8a735e]/15 border border-[#c1a27c]/50 p-3.5 text-sm font-bold text-[#3b2d24] dark:text-[#f5efe6] transition hover:brightness-105 shadow-xs text-left cursor-pointer"
+              >
+                <div className="flex items-center gap-2.5">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-tr from-[#8a735e] to-[#c1a27c] text-white">
+                    <Sparkles className="h-4 w-4 animate-pulse" />
+                  </div>
+                  <div>
+                    <div className="text-xs sm:text-sm font-bold">
+                      {language === "ru" ? "AI Интерьер-Консультант" : "AI Interyer Maslahatchisi"}
+                    </div>
+                    <div className="text-[10px] text-[#8a735e] dark:text-[#c1a27c] font-normal">
+                      {language === "ru" ? "Подбор комплекта под фото комнаты" : "Xonangiz rasmi orqali to‘plam tanlash"}
+                    </div>
+                  </div>
+                </div>
+                <span className="rounded-full bg-[#c1a27c] px-2 py-0.5 text-[9px] font-bold text-white uppercase">
+                  New
+                </span>
+              </button>
+
               {/* NAV LINKS */}
               <nav className="flex flex-col gap-1.5">
                 <NavLink
@@ -647,6 +697,12 @@ function Header() {
           </div>
         )}
       </header>
+
+      {/* AI INTERIOR MODAL */}
+      <AIInteriorModal
+        isOpen={aiModalOpen}
+        onClose={() => setAiModalOpen(false)}
+      />
     </>
   );
 }
