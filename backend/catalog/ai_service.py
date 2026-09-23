@@ -381,3 +381,74 @@ Javobni FAQAT quyidagi JSON formatida qaytar:
     result = call_gemini_json(prompt)
     result["recommendations"] = enrich_product_recommendations(result.get("recommendations", []))
     return result
+
+
+def chat_with_velmora_ai(message: str, history: list = None, lang: str = "uz") -> dict:
+    """
+    Conversational AI Assistant for Velmora customers.
+    Answers any questions about bedding sets, fabrics, sizes, delivery, prices,
+    and returns relevant product recommendations and follow-up suggested questions.
+    """
+    catalog = get_catalog_context()
+    catalog_json_str = json.dumps(catalog, ensure_ascii=False)
+
+    history_lines = []
+    if history and isinstance(history, list):
+        for msg in history[-6:]:
+            role = "Mijoz" if msg.get("role") in ["user", "mijoz"] else "Velmora AI"
+            content = msg.get("content", "").strip()
+            if content:
+                history_lines.append(f"{role}: {content}")
+    history_str = "\n".join(history_lines) if history_lines else "Suhbat yangi boshlandi."
+
+    prompt = f"""
+Sen "Velmora Uy Tekstili" rasmiy onlayn do'konining Shaxsiy Aqlli Maslahatchisi va Konsultantisan.
+Sening vazifang — xaridor bilan nihoyatda xushmuomala, samimiy, premium va professional tarzda suhbatlashish, ularning savollariga aniq javob berish va zarurat tug'ilganda katalogimizdagi mos mahsulotlarni tavsiya qilish.
+
+Velmora brendi haqida asosiy ma'lumotlar:
+- Mahsulotlar: 100% tabiiy paxtadan tayyorlangan yuqori sifatli choyshab to'plamlari (Ranfors, Satin, Jakard), yozgi va qishgi yumshoq ko'rpa to'plamlari, ortopedik qulay matraslar va yostiq jildlari.
+- Matolar sifati: 100% paxta, tana bilan bevosita nafas oluvchi, yozda salqin, terlatmaydigan, qishda esa iliq va shinam, gipoallergen (teri uchun xavfsiz), rangi o'chmaydi va yuvilganda siqilmaydi.
+- O'lchamlar: 1.5 kishilik (150x215 sm), 2 kishilik (180x215 sm), Evro (200x220 sm), Oila to'plami (2 ta adyol jildli).
+- Yetkazib berish: Toshkent shahri bo'ylab yetkazib berish BEPUL! Butun O'zbekiston viloyatlari bo'ylab tezkor yetkazib berish xizmati mavjud.
+- To'lov: Xaridor mahsulotni eshik oldida tekshirib olgandan keyin naqd yoki karta (Uzcard/Humo/Click/Payme) orqali to'laydi.
+- Aloqa: +998 91 165 22 11 (Asosiy), +998 93 079 17 34, Telegram: @velmoramahsulotlari.
+
+Velmora Mahsulotlar Katalogi:
+{catalog_json_str}
+
+Oldingi suhbat tarixi:
+{history_str}
+
+Mijozning hozirgi xabari:
+"{message}"
+
+Ko'rsatmalar:
+1. Mijozning savoliga samimiy, professional va lo'nda javob ber. Agar mijoz to'shak, rang, mato, sovg'a yoki narx haqida so'ragan bo'lsa, katalogdagi mahsulotlarni tahlil qil.
+2. Agar mijozning savoliga mos keladigan mahsulotlar bo'lsa, "recommendations" ro'yxatida ularning "product_id" larini (1 tadan 3 tagacha) va nega mos ekanligini qaytar. Agar shunchaki umumiy savol bo'lsa (masalan, salomlashish yoki manzil haqida), "recommendations" bo'sh [] bo'lishi mumkin.
+3. Mijoz suhbatni oson davom ettirishi uchun 2-3 ta qisqa va qiziqarli keyingi savollarni (suggested_questions) taklif qil.
+
+Javobni FAQAT quyidagi JSON formatida qaytar:
+{{
+  "reply_uz": "Mijozga O'zbek tilidagi to'liq, samimiy va chiroyli javob matni",
+  "reply_ru": "Полный, вежливый и подробный ответ клиенту на русском языке",
+  "recommendations": [
+    {{
+      "product_id": 1,
+      "why_matched_uz": "Nima sababdan ushbu mahsulot mos kelishi haqida qisqa tushuntirish",
+      "why_matched_ru": "Краткое объяснение, почему этот комплект подходит клиенту"
+    }}
+  ],
+  "suggested_questions_uz": [
+    "Masalan: Ranfors va Satin farqi nima?",
+    "Masalan: Toshkentga yetkazib berish qancha vaqt oladi?"
+  ],
+  "suggested_questions_ru": [
+    "Например: В чем разница между сатином и ранфорсом?",
+    "Например: Сколько времени занимает доставка?"
+  ]
+}}
+"""
+    result = call_gemini_json(prompt)
+    result["recommendations"] = enrich_product_recommendations(result.get("recommendations", []))
+    return result
+

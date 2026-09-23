@@ -4,6 +4,7 @@ import Footer from "../components/Footer";
 import Header from "../components/Header";
 import MobileBottomNav from "../components/MobileBottomNav";
 import ScrollToTop from "../components/ScrollToTop";
+import AIChatFloatingButton from "../components/AIChatFloatingButton";
 
 function MainLayout() {
   return (
@@ -16,6 +17,7 @@ function MainLayout() {
       </main>
 
       <Footer />
+      <AIChatFloatingButton />
       <MobileBottomNav />
     </div>
   );

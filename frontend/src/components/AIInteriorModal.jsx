@@ -19,9 +19,11 @@ import {
   Feather,
   ShieldCheck,
   Moon,
+  MessageSquare,
 } from "lucide-react";
 import api from "../api/client";
 import { useLanguage } from "../context/LanguageContext";
+import AIChatView from "./AIChatView";
 
 // 3 sample room images encoded as SVG data URLs for instantaneous 1-click testing
 const PRESET_ROOMS = [
@@ -122,11 +124,11 @@ const PRESET_ROOMS = [
   },
 ];
 
-export default function AIInteriorModal({ isOpen, onClose, initialTab = "interior" }) {
+export default function AIInteriorModal({ isOpen, onClose, initialTab = "chat" }) {
   const { language } = useLanguage();
   const fileInputRef = useRef(null);
 
-  // Active Tab: "interior" | "gift" | "fabric"
+  // Active Tab: "chat" | "interior" | "gift" | "fabric"
   const [activeTab, setActiveTab] = useState(initialTab);
   const [prevInitialTab, setPrevInitialTab] = useState(initialTab);
 
@@ -409,13 +411,13 @@ export default function AIInteriorModal({ isOpen, onClose, initialTab = "interio
                     {language === "ru" ? "Velmora AI Hub" : "Velmora AI Markazi"}
                   </h3>
                   <span className="rounded-full bg-[#c1a27c]/20 px-2 py-0.5 text-[10px] font-bold tracking-wider text-[#8a735e] dark:text-[#e5b378] uppercase">
-                    3 in 1
+                    4 in 1
                   </span>
                 </div>
                 <p className="text-[11px] sm:text-xs text-[#786352] dark:text-[#a69688]">
                   {language === "ru"
-                    ? "Умный интерьер, идеальные подарки и экспертный гид по тканям"
-                    : "Interyer maslahatchisi, sovg‘a & tabriknoma hamda mato eksperti"}
+                    ? "Умный чат-консультант, интерьер, подарки и гид по тканям"
+                    : "Jonli AI suhbat, interyer, sovg‘a & tabriknoma hamda mato eksperti"}
                 </p>
               </div>
             </div>
@@ -430,12 +432,27 @@ export default function AIInteriorModal({ isOpen, onClose, initialTab = "interio
             </button>
           </div>
 
-          {/* 3-IN-1 SEGMENTED TABS */}
-          <div className="grid grid-cols-3 gap-1.5 p-1 rounded-2xl bg-[#ebe2d5] dark:bg-[#251f1a] border border-[#dfd2c0] dark:border-[#342b23]">
+          {/* 4-IN-1 SEGMENTED TABS */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 p-1 rounded-2xl bg-[#ebe2d5] dark:bg-[#251f1a] border border-[#dfd2c0] dark:border-[#342b23]">
+            <button
+              type="button"
+              onClick={() => setActiveTab("chat")}
+              className={`flex items-center justify-center gap-1.5 py-2 px-2 sm:px-3 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                activeTab === "chat"
+                  ? "bg-white dark:bg-[#181411] text-[#3b2d24] dark:text-[#f3ede4] shadow-xs"
+                  : "text-[#7a6758] dark:text-[#a69688] hover:text-[#3b2d24] dark:hover:text-[#f3ede4]"
+              }`}
+            >
+              <MessageSquare className="h-3.5 w-3.5 shrink-0 text-[#c1a27c]" />
+              <span className="truncate">
+                {language === "ru" ? "1. AI Чат" : "1. AI Suhbat"}
+              </span>
+            </button>
+
             <button
               type="button"
               onClick={() => setActiveTab("interior")}
-              className={`flex items-center justify-center gap-1.5 py-2 px-2 sm:px-3 rounded-xl text-xs font-bold transition-all ${
+              className={`flex items-center justify-center gap-1.5 py-2 px-2 sm:px-3 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                 activeTab === "interior"
                   ? "bg-white dark:bg-[#181411] text-[#3b2d24] dark:text-[#f3ede4] shadow-xs"
                   : "text-[#7a6758] dark:text-[#a69688] hover:text-[#3b2d24] dark:hover:text-[#f3ede4]"
@@ -443,14 +460,14 @@ export default function AIInteriorModal({ isOpen, onClose, initialTab = "interio
             >
               <Camera className="h-3.5 w-3.5 shrink-0 text-[#c1a27c]" />
               <span className="truncate">
-                {language === "ru" ? "1. Интерьер (Фото)" : "1. Interyer (Rasm)"}
+                {language === "ru" ? "2. Интерьер" : "2. Interyer"}
               </span>
             </button>
 
             <button
               type="button"
               onClick={() => setActiveTab("gift")}
-              className={`flex items-center justify-center gap-1.5 py-2 px-2 sm:px-3 rounded-xl text-xs font-bold transition-all ${
+              className={`flex items-center justify-center gap-1.5 py-2 px-2 sm:px-3 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                 activeTab === "gift"
                   ? "bg-white dark:bg-[#181411] text-[#3b2d24] dark:text-[#f3ede4] shadow-xs"
                   : "text-[#7a6758] dark:text-[#a69688] hover:text-[#3b2d24] dark:hover:text-[#f3ede4]"
@@ -458,14 +475,14 @@ export default function AIInteriorModal({ isOpen, onClose, initialTab = "interio
             >
               <Gift className="h-3.5 w-3.5 shrink-0 text-[#c1a27c]" />
               <span className="truncate">
-                {language === "ru" ? "2. Подарки" : "2. Sovg‘a & Tabrik"}
+                {language === "ru" ? "3. Подарки" : "3. Sovg‘a"}
               </span>
             </button>
 
             <button
               type="button"
               onClick={() => setActiveTab("fabric")}
-              className={`flex items-center justify-center gap-1.5 py-2 px-2 sm:px-3 rounded-xl text-xs font-bold transition-all ${
+              className={`flex items-center justify-center gap-1.5 py-2 px-2 sm:px-3 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                 activeTab === "fabric"
                   ? "bg-white dark:bg-[#181411] text-[#3b2d24] dark:text-[#f3ede4] shadow-xs"
                   : "text-[#7a6758] dark:text-[#a69688] hover:text-[#3b2d24] dark:hover:text-[#f3ede4]"
@@ -473,7 +490,7 @@ export default function AIInteriorModal({ isOpen, onClose, initialTab = "interio
             >
               <Feather className="h-3.5 w-3.5 shrink-0 text-[#c1a27c]" />
               <span className="truncate">
-                {language === "ru" ? "3. Гид по тканям" : "3. Mato va Uyqu"}
+                {language === "ru" ? "4. Ткани и сон" : "4. Mato & Uyqu"}
               </span>
             </button>
           </div>
@@ -483,6 +500,11 @@ export default function AIInteriorModal({ isOpen, onClose, initialTab = "interio
         {/* MODAL BODY (SCROLLABLE) */}
         {/* ========================================== */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6">
+          {/* ========================================================================= */}
+          {/* TAB 0: AI CONVERSATIONAL CHAT */}
+          {/* ========================================================================= */}
+          {activeTab === "chat" && <AIChatView onClose={handleClose} />}
+
           {/* ========================================================================= */}
           {/* TAB 1: INTERIOR VISION */}
           {/* ========================================================================= */}
