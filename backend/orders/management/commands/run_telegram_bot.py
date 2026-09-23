@@ -345,6 +345,25 @@ async def text_address_handler(update: Update, context: ContextTypes.DEFAULT_TYP
 
     session = await get_latest_user_session(user.id)
     if not session or session.step not in ["WAITING_LOCATION", "WAITING_PHONE"]:
+        loading_msg = await update.message.reply_text("💬 <i>Velmora AI maslahatchisi javob yozmoqda...</i>", parse_mode="HTML")
+        try:
+            from catalog.ai_service import chat_with_velmora_ai
+            ai_data = await sync_to_async(chat_with_velmora_ai)(message=text, lang="uz")
+            reply_text = ai_data.get("reply_uz", "")
+            recs = ai_data.get("recommendations", [])
+            lines = [reply_text]
+            if recs:
+                lines.append("\n━━━━━━━━━━━━━━━━━━━\n🛏 <b>Tavsiya etilgan to‘plamlar:</b>")
+                for idx, r in enumerate(recs[:2], 1):
+                    price_fmt = f"{int(r.get('price', 0)):,}".replace(",", " ")
+                    slug = r.get("slug", "")
+                    link = f"https://velmora-ecommerce-chi.vercel.app/catalog/{slug}" if slug else "https://velmora-ecommerce-chi.vercel.app/catalog"
+                    lines.append(f"\n<b>{idx}. {r.get('name_uz')}</b> ({price_fmt} so‘m)\n   👉 <a href=\"{link}\">Saytda ko‘rish</a>")
+            final_text = "\n".join(lines)
+            await loading_msg.edit_text(final_text, parse_mode="HTML", disable_web_page_preview=True)
+        except Exception as e:
+            logger.exception(f"Telegram polling AI chat error: {e}")
+            await loading_msg.edit_text("Kechirasiz, javob tayyorlashda xatolik yuz berdi. Iltimos, qaytadan yozib ko‘ring.")
         return
 
     await update_session(

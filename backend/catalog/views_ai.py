@@ -10,6 +10,7 @@ from .ai_service import (
     get_interior_recommendations,
     recommend_gift_package,
     recommend_fabric_and_sleep,
+    chat_with_velmora_ai,
 )
 
 logger = logging.getLogger(__name__)
@@ -195,3 +196,58 @@ class AIFabricAdvisorView(APIView):
                 else "Mato bo‘yicha maslahat olishda xatolik yuz berdi. Iltimos, qaytadan urinib ko‘ring."
             )
             return Response({"error": msg}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class AIChatAdvisorView(APIView):
+    """
+    POST /api/v1/ai-chat/
+    Conversational AI consultant endpoint for Velmora customers.
+    Accepts message, history, lang.
+    Returns reply, recommended products, and follow-up suggestion chips.
+    """
+    permission_classes = [AllowAny]
+    parser_classes = [JSONParser, FormParser, MultiPartParser]
+
+    def post(self, request):
+        allowed, user_key, usage_count = check_rate_limit(request, prefix="ai_chat_limit", max_count=50)
+        if not allowed:
+            return Response(
+                {"error": "Bir soatlik AI suhbat limiti tugadi. Iltimos, birozdan so‘ng qayta urinib ko‘ring."},
+                status=status.HTTP_429_TOO_MANY_REQUESTS,
+            )
+
+        message = request.data.get("message", "").strip()
+        if not message:
+            return Response(
+                {"error": "Iltimos, xabaringizni yozing."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        history = request.data.get("history", [])
+        lang = (request.query_params.get("lang") or request.data.get("lang") or "uz").lower()
+
+        try:
+            result = chat_with_velmora_ai(
+                message=message,
+                history=history,
+                lang=lang,
+            )
+            cache.set(user_key, usage_count + 1, timeout=3600)
+            return Response(result, status=status.HTTP_200_OK)
+        except ValueError as e:
+            logger.warning(f"AI chat config error: {e}")
+            msg = (
+                "Сервис AI чата временно не настроен."
+                if lang == "ru"
+                else "AI suhbat xizmati hozirda sozlanmagan."
+            )
+            return Response({"error": msg}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
+        except Exception as e:
+            logger.exception(f"AI chat error: {e}")
+            msg = (
+                "Произошла ошибка в чате. Пожалуйста, попробуйте еще раз."
+                if lang == "ru"
+                else "Suhbatda xatolik yuz berdi. Iltimos, qaytadan urinib ko‘ring."
+            )
+            return Response({"error": msg}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+

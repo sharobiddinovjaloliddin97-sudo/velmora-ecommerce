@@ -253,19 +253,19 @@ function Header() {
               {t("contact")}
             </NavLink>
 
-            {/* VELMORA AI HUB (3-IN-1) BUTTON */}
+            {/* VELMORA AI HUB (4-IN-1) BUTTON */}
             <button
               type="button"
               onClick={() => {
-                setInitialAiTab("interior");
+                setInitialAiTab("chat");
                 setAiModalOpen(true);
               }}
               className="flex items-center gap-1.5 rounded-full border border-[#c1a27c]/60 bg-gradient-to-r from-[#c1a27c]/15 to-[#8a735e]/15 px-3.5 py-1.5 text-xs font-semibold text-[#8a735e] dark:text-[#e5b378] hover:border-[#c1a27c] hover:bg-[#c1a27c]/25 transition shadow-2xs group cursor-pointer"
             >
               <Sparkles className="h-3.5 w-3.5 text-[#c1a27c] group-hover:rotate-12 transition-transform animate-pulse" />
-              <span>{language === "ru" ? "Velmora AI (3 в 1)" : "Velmora AI (3 in 1)"}</span>
+              <span>{language === "ru" ? "Velmora AI (4 в 1)" : "Velmora AI (4 in 1)"}</span>
               <span className="rounded-full bg-[#c1a27c] px-1.5 py-0.2 text-[9px] font-bold text-white uppercase">
-                Hub
+                Chat & Hub
               </span>
             </button>
           </nav>
@@ -568,12 +568,12 @@ function Header() {
                 )}
               </div>
 
-              {/* VELMORA AI HUB (3-IN-1) ON MOBILE */}
+              {/* VELMORA AI HUB (4-IN-1) ON MOBILE */}
               <button
                 type="button"
                 onClick={() => {
                   setMobileMenuOpen(false);
-                  setInitialAiTab("interior");
+                  setInitialAiTab("chat");
                   setAiModalOpen(true);
                 }}
                 className="w-full flex items-center justify-between rounded-2xl bg-gradient-to-r from-[#c1a27c]/20 to-[#8a735e]/15 border border-[#c1a27c]/50 p-3.5 text-sm font-bold text-[#3b2d24] dark:text-[#f5efe6] transition hover:brightness-105 shadow-xs text-left cursor-pointer"
@@ -584,17 +584,17 @@ function Header() {
                   </div>
                   <div>
                     <div className="text-xs sm:text-sm font-bold">
-                      {language === "ru" ? "Velmora AI Hub (3 в 1)" : "Velmora AI Hub (3 in 1)"}
+                      {language === "ru" ? "Velmora AI Hub (4 в 1)" : "Velmora AI Hub (4 in 1)"}
                     </div>
                     <div className="text-[10px] text-[#8a735e] dark:text-[#c1a27c] font-normal">
                       {language === "ru"
-                        ? "Интерьер, Подарки и Гид по тканям"
-                        : "Interyer, Sovg‘a & Tabrik, Mato gidi"}
+                        ? "Чат-консультант, Интерьер, Подарки и Ткани"
+                        : "AI Suhbat, Interyer, Sovg‘a va Mato gidi"}
                     </div>
                   </div>
                 </div>
                 <span className="rounded-full bg-[#c1a27c] px-2 py-0.5 text-[9px] font-bold text-white uppercase">
-                  3 in 1
+                  4 in 1
                 </span>
               </button>
 

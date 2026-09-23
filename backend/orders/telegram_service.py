@@ -696,6 +696,44 @@ def process_webhook_update(update: dict):
                 send_session_confirmation(chat_id, session)
                 return
 
+            # AI Chat consultation in Telegram
+            loading_res = send_message(chat_id, "💬 <i>Velmora AI maslahatchisi javob yozmoqda...</i>")
+            loading_msg_id = loading_res.get("result", {}).get("message_id") if isinstance(loading_res, dict) else None
+            try:
+                from catalog.ai_service import chat_with_velmora_ai
+                ai_data = chat_with_velmora_ai(message=text, lang="uz")
+                reply_text = ai_data.get("reply_uz", "")
+
+                recs = ai_data.get("recommendations", [])
+                lines = [reply_text]
+                if recs:
+                    lines.append("\n━━━━━━━━━━━━━━━━━━━\n🛏 <b>Tavsiya etilgan to‘plamlar:</b>")
+                    for idx, r in enumerate(recs[:2], 1):
+                        price_fmt = f"{int(r.get('price', 0)):,}".replace(",", " ")
+                        slug = r.get("slug", "")
+                        link = f"https://velmora-ecommerce-chi.vercel.app/catalog/{slug}" if slug else "https://velmora-ecommerce-chi.vercel.app/catalog"
+                        lines.append(f"\n<b>{idx}. {r.get('name_uz')}</b> ({price_fmt} so‘m)\n   👉 <a href=\"{link}\">Saytda ko‘rish</a>")
+
+                final_text = "\n".join(lines)
+                if loading_msg_id:
+                    send_telegram_request("editMessageText", {
+                        "chat_id": chat_id,
+                        "message_id": loading_msg_id,
+                        "text": final_text,
+                        "parse_mode": "HTML",
+                        "disable_web_page_preview": True,
+                    })
+                else:
+                    send_message(chat_id, final_text)
+            except Exception as e:
+                logger.exception(f"Telegram AI chat error: {e}")
+                err_text = "Kechirasiz, savolingizga javob berishda xatolik yuz berdi. Iltimos, qaytadan yozib ko‘ring yoki saytimizdagi AI maslahatchisiga kiring."
+                if loading_msg_id:
+                    send_telegram_request("editMessageText", {"chat_id": chat_id, "message_id": loading_msg_id, "text": err_text})
+                else:
+                    send_message(chat_id, err_text)
+            return
+
     # 2. CALLBACK QUERY
     callback_query = update.get("callback_query")
     if callback_query:

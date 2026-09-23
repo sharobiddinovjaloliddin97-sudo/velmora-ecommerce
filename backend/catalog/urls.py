@@ -7,6 +7,7 @@ from .views import (
     ProductViewSet,
 )
 from .views_ai import (
+    AIChatAdvisorView,
     AIFabricAdvisorView,
     AIGiftAdvisorView,
     AIInteriorAdviceView,
@@ -57,5 +58,11 @@ urlpatterns = router.urls + [
         "ai-fabric-advisor/",
         AIFabricAdvisorView.as_view(),
         name="ai-fabric-advisor",
+    ),
+
+    path(
+        "ai-chat/",
+        AIChatAdvisorView.as_view(),
+        name="ai-chat",
     ),
 ]

@@ -12,6 +12,7 @@ import {
   Feather,
   Gift,
   HeartHandshake,
+  MessageSquare,
   ShieldCheck,
   Sparkles,
   Truck,
@@ -484,7 +485,7 @@ function HomePage() {
                 <Sparkles className="h-3.5 w-3.5 text-[#c1a27c] animate-pulse" />
                 <span>{language === "ru" ? "Искусственный интеллект Velmora" : "Sun'iy Intellekt Texnologiyasi"}</span>
                 <span className="rounded-full bg-[#c1a27c] px-1.5 py-0.2 text-[9px] font-bold text-white uppercase">
-                  3 in 1
+                  4 in 1
                 </span>
               </div>
 
@@ -496,29 +497,60 @@ function HomePage() {
 
               <p className="text-sm sm:text-base text-[#6b584a] dark:text-[#b8a99a] leading-relaxed">
                 {language === "ru"
-                  ? "Три мощных инструмента: визуальный анализ комнаты, персонализированный подбор подарка с открыткой и экспертный гид по тканям для здорового сна."
-                  : "Interyeringizga mos ranglar, yaqinlaringiz uchun tabriknomali sovg‘a va sog‘lom uyqu uchun tabiiy matoni tanlashda sun'iy intellekt yordam beradi."}
+                  ? "Четыре мощных инструмента: живой онлайн чат-консультант, визуальный анализ комнаты, персонализированный подбор подарка с открыткой и гид по тканям."
+                  : "To‘rtta qulay vosita: jonli AI chat-maslahatchisi, xona rasmi tahlili, tabriknomali sovg‘a tanlash hamda sog‘lom uyqu uchun matolar gidi."}
               </p>
             </div>
 
-            <div className="shrink-0">
+            <div className="shrink-0 flex items-center gap-3">
               <button
                 type="button"
-                onClick={() => handleOpenAiTab("interior")}
-                className="inline-flex items-center gap-2 rounded-full bg-[#3b2d24] dark:bg-[#c1a27c] px-6 py-3.5 text-xs sm:text-sm font-bold text-white dark:text-[#181411] hover:bg-[#5c4a3d] dark:hover:bg-[#d4b58e] transition shadow-md group cursor-pointer"
+                onClick={() => handleOpenAiTab("chat")}
+                className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#8a735e] via-[#c1a27c] to-[#8a735e] px-6 py-3.5 text-xs sm:text-sm font-bold text-white hover:brightness-110 transition shadow-md group cursor-pointer"
               >
-                <span>{language === "ru" ? "Открыть AI Hub" : "AI Markazini ochish"}</span>
+                <MessageSquare className="h-4 w-4" />
+                <span>{language === "ru" ? "Начать чат с AI" : "AI bilan suhbatlashish"}</span>
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </button>
             </div>
           </div>
 
-          {/* 3 INTERACTIVE FEATURE CARDS */}
-          <div className="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+          {/* 4 INTERACTIVE FEATURE CARDS */}
+          <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+            {/* CARD 0: AI CHAT */}
+            <div
+              onClick={() => handleOpenAiTab("chat")}
+              className="group flex flex-col justify-between rounded-3xl border border-[#c1a27c]/70 bg-gradient-to-b from-[#faf5ee] to-white dark:from-[#251e18] dark:to-[#1a1613] p-5 hover:border-[#8a735e] dark:hover:border-[#c1a27c] hover:shadow-xl transition-all cursor-pointer shadow-xs"
+            >
+              <div className="space-y-3">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-tr from-[#3b2d24] to-[#5c4a3d] dark:from-[#c1a27c] dark:to-[#e5b378] text-white dark:text-[#181411] shadow-xs group-hover:scale-105 transition-transform">
+                  <MessageSquare className="h-6 w-6" />
+                </div>
+                <div className="space-y-1">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#8a735e] dark:text-[#c1a27c]">
+                    Live Assistant
+                  </span>
+                  <h3 className="font-serif text-lg font-bold text-[#3b2d24] dark:text-[#f3ede4]">
+                    {language === "ru" ? "1. Чат-консультант" : "1. AI Maslahatchi"}
+                  </h3>
+                </div>
+                <p className="text-xs text-[#6b584a] dark:text-[#a69688] leading-relaxed">
+                  {language === "ru"
+                    ? "Задайте любой вопрос: размеры, цены, наличие или подбор — AI мгновенно ответит и покажет товары."
+                    : "Istalgan savolingizni bering: o‘lchamlar, narxlar yoki mos to‘plamlar — AI tezkor javob beradi va saralaydi."}
+                </p>
+              </div>
+
+              <div className="pt-4 mt-4 border-t border-[#ebdcca]/80 dark:border-[#2e261f] flex items-center justify-between text-xs font-bold text-[#8a735e] dark:text-[#e5b378]">
+                <span>{language === "ru" ? "Открыть чат →" : "Suhbatni boshlash →"}</span>
+                <span className="rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 px-2 py-0.5 text-[10px]">Online</span>
+              </div>
+            </div>
+
             {/* CARD 1: INTERIOR VISION */}
             <div
               onClick={() => handleOpenAiTab("interior")}
-              className="group flex flex-col justify-between rounded-3xl border border-[#ebdcca] dark:border-[#382f27] bg-white/80 dark:bg-[#1f1915]/80 p-5 sm:p-6 hover:border-[#8a735e] dark:hover:border-[#c1a27c] hover:shadow-lg transition-all cursor-pointer"
+              className="group flex flex-col justify-between rounded-3xl border border-[#ebdcca] dark:border-[#382f27] bg-white/80 dark:bg-[#1f1915]/80 p-5 hover:border-[#8a735e] dark:hover:border-[#c1a27c] hover:shadow-lg transition-all cursor-pointer shadow-xs"
             >
               <div className="space-y-3">
                 <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-tr from-[#8a735e] to-[#c1a27c] text-white shadow-xs group-hover:scale-105 transition-transform">
@@ -529,10 +561,10 @@ function HomePage() {
                     Vision AI
                   </span>
                   <h3 className="font-serif text-lg font-bold text-[#3b2d24] dark:text-[#f3ede4]">
-                    {language === "ru" ? "1. Интерьер по фото" : "1. Interyer Maslahatchisi"}
+                    {language === "ru" ? "2. Интерьер по фото" : "2. Interyer Maslahatchisi"}
                   </h3>
                 </div>
-                <p className="text-xs sm:text-sm text-[#6b584a] dark:text-[#a69688] leading-relaxed">
+                <p className="text-xs text-[#6b584a] dark:text-[#a69688] leading-relaxed">
                   {language === "ru"
                     ? "Загрузите фото спальни — AI определит стиль, освещение и палитру, подобрав гармоничный комплект."
                     : "Xonangiz rasmini yuklang — AI ranglar va yorug‘likni tahlil qilib, eng uyg‘un to‘plamlarni saralaydi."}
@@ -541,14 +573,14 @@ function HomePage() {
 
               <div className="pt-4 mt-4 border-t border-[#ebdcca]/80 dark:border-[#2e261f] flex items-center justify-between text-xs font-bold text-[#8a735e] dark:text-[#e5b378]">
                 <span>{language === "ru" ? "Анализ комнаты →" : "Xonani tahlil qilish →"}</span>
-                <span className="rounded-full bg-[#8a735e]/15 px-2 py-0.5 text-[10px]">Foto</span>
+                <span className="rounded-full bg-[#8a735e]/15 px-2 py-0.5 text-[10px]">Photo</span>
               </div>
             </div>
 
             {/* CARD 2: GIFT FINDER */}
             <div
               onClick={() => handleOpenAiTab("gift")}
-              className="group flex flex-col justify-between rounded-3xl border border-[#ebdcca] dark:border-[#382f27] bg-white/80 dark:bg-[#1f1915]/80 p-5 sm:p-6 hover:border-[#8a735e] dark:hover:border-[#c1a27c] hover:shadow-lg transition-all cursor-pointer"
+              className="group flex flex-col justify-between rounded-3xl border border-[#ebdcca] dark:border-[#382f27] bg-white/80 dark:bg-[#1f1915]/80 p-5 hover:border-[#8a735e] dark:hover:border-[#c1a27c] hover:shadow-lg transition-all cursor-pointer shadow-xs"
             >
               <div className="space-y-3">
                 <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-tr from-[#c1a27c] to-[#e5b378] text-[#181411] shadow-xs group-hover:scale-105 transition-transform">
@@ -559,10 +591,10 @@ function HomePage() {
                     Personalized AI
                   </span>
                   <h3 className="font-serif text-lg font-bold text-[#3b2d24] dark:text-[#f3ede4]">
-                    {language === "ru" ? "2. Подарок & Открытка" : "2. Sovg‘a & Tabriknoma"}
+                    {language === "ru" ? "3. Подарок & Открытка" : "3. Sovg‘a & Tabriknoma"}
                   </h3>
                 </div>
-                <p className="text-xs sm:text-sm text-[#6b584a] dark:text-[#a69688] leading-relaxed">
+                <p className="text-xs text-[#6b584a] dark:text-[#a69688] leading-relaxed">
                   {language === "ru"
                     ? "Укажите получателя и повод — AI подберет премиум комплект и напишет персональную открытку в коробку."
                     : "Kim uchun va qanday sabab ekanini tanlang — AI to‘plam tanlaydi va qutiga solish uchun samimiy tabriknoma yozadi."}
@@ -578,7 +610,7 @@ function HomePage() {
             {/* CARD 3: FABRIC EXPERT */}
             <div
               onClick={() => handleOpenAiTab("fabric")}
-              className="group flex flex-col justify-between rounded-3xl border border-[#ebdcca] dark:border-[#382f27] bg-white/80 dark:bg-[#1f1915]/80 p-5 sm:p-6 hover:border-[#8a735e] dark:hover:border-[#c1a27c] hover:shadow-lg transition-all cursor-pointer"
+              className="group flex flex-col justify-between rounded-3xl border border-[#ebdcca] dark:border-[#382f27] bg-white/80 dark:bg-[#1f1915]/80 p-5 hover:border-[#8a735e] dark:hover:border-[#c1a27c] hover:shadow-lg transition-all cursor-pointer shadow-xs"
             >
               <div className="space-y-3">
                 <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-tr from-[#5c4a3d] to-[#8a735e] text-white shadow-xs group-hover:scale-105 transition-transform">
@@ -589,18 +621,18 @@ function HomePage() {
                     Fabric Science
                   </span>
                   <h3 className="font-serif text-lg font-bold text-[#3b2d24] dark:text-[#f3ede4]">
-                    {language === "ru" ? "3. Гид по тканям и сну" : "3. Mato va Uyqu Eksperti"}
+                    {language === "ru" ? "4. Гид по тканям и сну" : "4. Mato va Uyqu Eksperti"}
                   </h3>
                 </div>
-                <p className="text-xs sm:text-sm text-[#6b584a] dark:text-[#a69688] leading-relaxed">
+                <p className="text-xs text-[#6b584a] dark:text-[#a69688] leading-relaxed">
                   {language === "ru"
-                    ? "Прохлада летом, чувствительная кожа или уход без глажки — узнайте свойства тканей и советы для здорового сна."
+                    ? "Прохлада летом, чувствительная кожа или уход без глажки — узнайте свойства тканей и советы для сна."
                     : "Yozgi salqinlik, nozik teri yoki dazmolsiz qulaylik — matolar sirlarini o‘rganing va sog‘lom uyquga erishing."}
                 </p>
               </div>
 
               <div className="pt-4 mt-4 border-t border-[#ebdcca]/80 dark:border-[#2e261f] flex items-center justify-between text-xs font-bold text-[#8a735e] dark:text-[#e5b378]">
-                <span>{language === "ru" ? "Гид по материалам →" : "Mato gidini ko‘rish →"}</span>
+                <span>{language === "ru" ? "Гид по тканям →" : "Mato gidini ko‘rish →"}</span>
                 <span className="rounded-full bg-[#5c4a3d]/15 px-2 py-0.5 text-[10px]">Sleep care</span>
               </div>
             </div>
